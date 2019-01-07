@@ -2,13 +2,28 @@
 #include "window.h"
 #include "keyboard.h"
 #include "spaceship.h"
+#include "path.h"
+#include "level.h"
 
+static SPACESHIP *player =  NULL;
+
+static void game_update_keyboard(ALLEGRO_EVENT *e);
 
 int main()
 {
     window_init();
 
-    struct spaceship *player = spaceship_get_player(SHIP_P1);
+    player = spaceship_get_player(SHIP_P1);
+    spaceship_set_default_flags(player);
+  ;
+
+    LEVEL teste;
+    level_start(&teste);
+
+    level_save(get_window_display(), &teste, "teste01.cbm");
+
+
+    //level_save(get_window_display(), )
 
 
     while(window_open()){
@@ -23,11 +38,6 @@ int main()
        if(event.type == ALLEGRO_EVENT_TIMER){
            if(event.timer.source == get_window_timer()){
                spaceship_update(SHIP_P1);
-               printf("%lld\n", get_window_time_ms());
-
-               if(get_window_time_ms() > (get_window_time_ms() + 80) ){
-                   printf("CHEGOU!!");
-               }
 
            }
 
@@ -37,33 +47,27 @@ int main()
            }
        }
 
-       if(event.type == ALLEGRO_EVENT_KEY_UP){
-            keyboard_key_up(&event);
-             spaceship_keys_handle_up(SHIP_P1);
-       }
-
-       if(event.type == ALLEGRO_EVENT_KEY_DOWN){
-            keyboard_key_down(&event);
-             spaceship_keys_handle_down(SHIP_P1);
-
-
-       }
-
 
        if(event.type == ALLEGRO_EVENT_DISPLAY_RESIZE){
             al_acknowledge_resize(get_window_display());
        }
 
 
+        game_update_keyboard(&event);
+
+
         if(al_is_event_queue_empty(get_window_queue())){
             al_clear_to_color(al_map_rgb(0,0,0));
-
-            al_draw_filled_rectangle(player->x, player->y, 32 + player->x, 32 + player->y,al_map_rgb(255,0,0));
-
+            al_draw_filled_rectangle(player->x, player->y, 32 + player->x, 32 + player->y,al_map_rgb(255,0,255));
             al_flip_display();
         }
 
     }
-    window_close();
+
+    window_gracefully_quit("Quit END OF MAIN");
     return 0;
+}
+
+static void game_update_keyboard(ALLEGRO_EVENT *e){
+    keyboard_map(e);
 }

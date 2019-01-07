@@ -1,5 +1,6 @@
 #include "window.h"
 #include "keyboard.h"
+#include "mixer.h"
 
 static ALLEGRO_EVENT_QUEUE *g_queue;
 static ALLEGRO_DISPLAY *g_display;
@@ -15,6 +16,7 @@ static ALLEGRO_BITMAP *g_screen;
 
 
 static bool is_window_open = false;
+static bool issue_gracefully_close = false;
 
 
 static int64_t timer_milliseconds = 0;
@@ -82,9 +84,10 @@ static int init_allegro(void) {
     al_set_target_bitmap(al_get_backbuffer(g_display));
 
 
-    g_timer = al_create_timer( (double) 1.0f / TICKSPERFRAME );
-    g_time = al_create_timer(0.1);
-    g_queue = al_create_event_queue();
+    g_timer = al_create_timer( (double) 1.0f / TICKSPERFRAME ); // main game timer updates every 1/60 secs (0.013 ms)
+    g_time = al_create_timer(0.1); // 100 ms (to convert in seconds)
+    g_queue = al_create_event_queue(); //create event queue
+
 
     al_register_event_source(g_queue, al_get_display_event_source(g_display));
     al_register_event_source(g_queue, al_get_keyboard_event_source());
@@ -142,4 +145,20 @@ int64_t get_window_time_ms(void){
 
 void set_window_time_ms(int64_t time){
     timer_milliseconds = time;
+}
+
+void window_gracefully_quit(const char *msg){
+    issue_gracefully_close = true;
+    if(is_window_open) window_exit_loop();  // finish the main loop isnt finished
+    if(msg == NULL){
+        fprintf(stdout, "---- GRACEFULLY QUITED: No Message ----\n\n");
+    }
+    fprintf(stdout, "---- GRACEFULLY QUITED: %s ----\n\n", msg);
+    mixer_destroy();
+    window_close();
+}
+
+
+bool window_request_gracefully_closing(void){
+    return issue_gracefully_close;
 }

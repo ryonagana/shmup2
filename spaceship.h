@@ -6,9 +6,9 @@
 #define SHIP_P1 (0)
 #define SHIP_P2 (1)
 
-#define MAX_SPACESHIPS (1) //leading zero
+#define MAX_SPACESHIPS (2) //leading zero
 
-struct spaceship{
+typedef struct SPACESHIP{
     float x;
     float y;
     float speed;
@@ -17,19 +17,18 @@ struct spaceship{
         uint32_t all_flags;
         struct {
             uint32_t controlled: 1;
-            uint32_t invincible: 1;
+            uint32_t god_mode: 1;
             uint32_t alive: 1;
             uint32_t cheat: 1;
         };
     };
     int direction;
-};
+} SPACESHIP;
 
 
 void spaceship_move(int num,   float x, float y);
-struct spaceship* spaceship_get_player(int num);
-void spaceship_keys_handle_up(int player_num);
-void spaceship_keys_handle_down(int player_num);
+SPACESHIP* spaceship_get_player(int num);
 void spaceship_update(int player_num);
+void spaceship_set_default_flags(SPACESHIP *sp);
 
 #endif

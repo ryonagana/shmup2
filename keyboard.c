@@ -10,15 +10,17 @@ void keyboard_start(void){
 }
 
 
-void keyboard_key_up(ALLEGRO_EVENT *ev){
-    key_list[ev->keyboard.keycode] = 1;
-}
-
-void keyboard_key_down(ALLEGRO_EVENT *ev){
-      key_list[ev->keyboard.keycode] = 0;
-}
-
 
 int keyboard_pressed(int key){
     return (int)key_list[key];
+}
+
+void keyboard_map(ALLEGRO_EVENT *e){
+    if(e->type == ALLEGRO_EVENT_KEY_UP) {
+        key_list[e->keyboard.keycode] = 0;
+    }
+
+    if(e->type == ALLEGRO_EVENT_KEY_DOWN){
+        key_list[e->keyboard.keycode] = 1;
+    }
 }

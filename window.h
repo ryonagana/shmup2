@@ -19,6 +19,8 @@ void window_init(void);
 void window_close(void);
 bool window_open(void);
 void window_exit_loop(void);
+void window_gracefully_quit(const char *msg);
+bool window_request_gracefully_closing(void);
 
 ALLEGRO_DISPLAY* get_window_display(void);
 ALLEGRO_EVENT_QUEUE* get_window_queue(void);
