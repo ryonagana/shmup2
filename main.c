@@ -15,7 +15,7 @@ int main()
 
     player = spaceship_get_player(SHIP_P1);
     spaceship_set_default_flags(player);
-  ;
+
 
     LEVEL teste;
     level_start(&teste);

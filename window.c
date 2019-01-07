@@ -1,6 +1,7 @@
 #include "window.h"
 #include "keyboard.h"
 #include "mixer.h"
+#include "path.h"
 
 static ALLEGRO_EVENT_QUEUE *g_queue;
 static ALLEGRO_DISPLAY *g_display;
@@ -107,10 +108,14 @@ static int init_allegro(void) {
 void window_init(void){
     init_allegro();
     keyboard_start();
+    init_path();
+    mixer_init(2);
     is_window_open = true;
 }
 
 void window_close(void){
+    destroy_path();
+    mixer_destroy();
     if (g_display != NULL) al_destroy_display(g_display);
     if(g_queue    != NULL) al_destroy_event_queue(g_queue);
     if(g_screen   != NULL) al_destroy_bitmap(g_screen);
@@ -148,7 +153,7 @@ void set_window_time_ms(int64_t time){
 }
 
 void window_gracefully_quit(const char *msg){
-    issue_gracefully_close = true;
+    if(!issue_gracefully_close) issue_gracefully_close = true;
     if(is_window_open) window_exit_loop();  // finish the main loop isnt finished
     if(msg == NULL){
         fprintf(stdout, "---- GRACEFULLY QUITED: No Message ----\n\n");

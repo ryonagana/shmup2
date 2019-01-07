@@ -2,9 +2,16 @@
 #include "path.h"
 #include <string.h>
 
+/*
+    this level module cant be done without help of Neil Roy's Deluxe Pacman Source code help
+    made me understand how to load files properly, its easier use allegro I/O funcs than stdio!!!
+    https://nitehackr.github.io/games_index.html
+    Thanks for the Source!
+*/
+
 void level_start(LEVEL* level){
 
-    strncpy(level->magic, MAP_ID, 4);
+    strncpy(level->magic, MAP_ID, 5);
     level->ver = 1;
     level->player_pos.x = 100;
     level->player_pos.y = 100;
@@ -27,9 +34,36 @@ void level_start(LEVEL* level){
 
 }
 
-bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char name){
+bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname){
+    const char *filepath = get_file_path("map", mapname);
 
-    return false;
+    ALLEGRO_FILECHOOSER *openfile_diag = al_create_native_file_dialog(filepath, "Load MAP:", "*.*", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
+
+    if(!al_show_native_file_dialog(display, openfile_diag)){
+        if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
+        return false;
+    }
+
+    filepath = al_get_native_file_dialog_path(openfile_diag,0);
+
+    char path_lowercase[4096] = "";
+
+    strncpy(path_lowercase, filepath, strlen(filepath) + 1);
+
+    #ifdef _WIN32
+    for(int i = 0; path_lowercase[i];i++){
+        path_lowercase[i] = (char) tolower(path_lowercase[i]);
+    }
+    #endif
+
+    ALLEGRO_FILE *fp = al_fopen(path_lowercase,"rb");
+
+    al_fread(fp, lvl->magic, sizeof(strlen(lvl->magic)));
+    lvl->ver= al_fgetc(fp);
+
+    al_fclose(fp);
+
+    return true;
 }
 
 
@@ -49,9 +83,11 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname){
 
     strncpy(file_lc, filepath, strlen(filepath) + 1);
 
+    #ifdef __WIN32
     for(int i = 0; file_lc[i];i++){
         file_lc[i] = (char) tolower(file_lc[i]);
     }
+    #endif
 
 
 
