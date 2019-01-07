@@ -14,7 +14,7 @@
 
 
 #define MAP_ID "CBMAP"
-
+#define MAP_VER 1
 typedef struct TILE {
     unsigned char id;
     bool passable;
@@ -27,7 +27,7 @@ typedef struct MAPCOORD {
 
 
 typedef struct LEVEL {
-    char magic[4]; // CBL
+    char magic[6]; // CBL
     int  ver;
     MAPCOORD player_pos;
     MAPCOORD keys[4];

@@ -12,7 +12,7 @@
 void level_start(LEVEL* level){
 
     strncpy(level->magic, MAP_ID, 5);
-    level->ver = 1;
+    level->ver = MAP_VER;
     level->player_pos.x = 100;
     level->player_pos.y = 100;
     level->background_id = 0;
