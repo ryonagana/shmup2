@@ -2,6 +2,7 @@
 #include "keyboard.h"
 #include "mixer.h"
 #include "path.h"
+#include "shared.h"
 
 static ALLEGRO_EVENT_QUEUE *g_queue;
 static ALLEGRO_DISPLAY *g_display;
@@ -27,6 +28,7 @@ static int init_allegro(void) {
 
 
     if (!al_init()){
+        CRITICAL("Error: Cannot Initialize Allegro :-(");
 
         //DEBUG_PRINT("Error: Cannot Initialize Allegro :-(");
         return -1;
@@ -34,11 +36,13 @@ static int init_allegro(void) {
     }
 
     if(!al_install_keyboard()){
+        CRITICAL("Error: Cannot Install Keyboard");
         //DEBUG_PRINT(("Cannot Install Keyboard"));
         return -1;
     }
 
     if(!al_install_mouse()){
+        CRITICAL("Error: NO MOUSE FOR YOU");
         return -1;
     }
 
@@ -156,9 +160,10 @@ void window_gracefully_quit(const char *msg){
     if(!issue_gracefully_close) issue_gracefully_close = true;
     if(is_window_open) window_exit_loop();  // finish the main loop isnt finished
     if(msg == NULL){
-        fprintf(stdout, "---- GRACEFULLY QUITED: No Message ----\n\n");
+        LOG("---- GRACEFULLY QUITED: No Message ----\n\n");
     }
-    fprintf(stdout, "---- GRACEFULLY QUITED: %s ----\n\n", msg);
+
+    LOG("---- GRACEFULLY QUITED: %s ----\n\n", msg);
     mixer_destroy();
     window_close();
 }

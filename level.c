@@ -18,8 +18,8 @@ void level_start(LEVEL* level){
     level->background_id = 0;
 
     for(unsigned int i = 0; i < 4; i++){
-        level->keys[i].x = 99;
-        level->keys[i].y = 99;
+        level->keys[i].x = 25;
+        level->keys[i].y = 25;
     }
 
     for(int y = 0; y < MAX_GRID_H; y++){
@@ -50,6 +50,8 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname){
 
     strncpy(path_lowercase, filepath, strlen(filepath) + 1);
 
+    /* linux is case sensitive its almost waste of time converting to  lowercase since 99% of folder, and files already lowercase */
+    /* let this issue to windows */
     #ifdef _WIN32
     for(int i = 0; path_lowercase[i];i++){
         path_lowercase[i] = (char) tolower(path_lowercase[i]);
@@ -60,6 +62,10 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname){
 
     al_fread(fp, lvl->magic, sizeof(strlen(lvl->magic)));
     lvl->ver= al_fgetc(fp);
+
+    if( strncmp(lvl->magic, MAP_ID, strnlen(lvl->magic,6)) != 0 ){
+
+    }
 
     al_fclose(fp);
 
@@ -83,6 +89,8 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname){
 
     strncpy(file_lc, filepath, strlen(filepath) + 1);
 
+    /* linux is case sensitive its almost waste of time converting to  lowercase since 99% of folder, and files already lowercase */
+    /* let this issue to windows */
     #ifdef __WIN32
     for(int i = 0; file_lc[i];i++){
         file_lc[i] = (char) tolower(file_lc[i]);

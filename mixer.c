@@ -1,5 +1,5 @@
 #include "mixer.h"
-
+#include "shared.h"
 
 static ALLEGRO_VOICE *voice = NULL;
 static ALLEGRO_MIXER *mixer = NULL;
@@ -34,7 +34,7 @@ void mixer_load_sound(GAME_SFX* sfx, const char* sound_path){
     sfx->sample = al_load_sample(sound_path);
 
     if(sfx->sample == NULL){
-        fprintf(stderr, "mixer_load_sound(): cannot load  %s sound file...", sound_path);
+        WARN("mixer_load_sound(): cannot load  %s sound file...", sound_path);
         return;
     }
 

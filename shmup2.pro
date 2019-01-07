@@ -3,7 +3,8 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CC=-std=gnu11
+QMAKE_CC=gcc #change to mingw-w64-gcc ?
+QMAKE_CFLAGS=-std=c11
 
 SOURCES += \
         main.c \

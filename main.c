@@ -4,6 +4,7 @@
 #include "spaceship.h"
 #include "path.h"
 #include "level.h"
+#include "shared.h"
 
 static SPACESHIP *player =  NULL;
 
@@ -19,7 +20,6 @@ int main()
 
     LEVEL teste;
     level_start(&teste);
-
     level_save(get_window_display(), &teste, "teste01.cbm");
 
 
