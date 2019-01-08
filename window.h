@@ -1,4 +1,6 @@
 #ifndef WINDOW_HEADER
+#define WINDOW_HEADER
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -32,6 +34,5 @@ ALLEGRO_TIMER *get_window_actual_time(void);
 
 int64_t get_window_time_ms(void);
 void     set_window_time_ms(int64_t time);
-
 
 #endif

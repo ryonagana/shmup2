@@ -16,18 +16,41 @@ void level_init_default(LEVEL* level){
     level->ver = MAP_VER;
     level->player_pos.x = 100;
     level->player_pos.y = 100;
+    level->map_width = 75;
+    level->map_height = 22;
     level->background_id = 0;
+    level->valid_file = false;
+
+    strncpy(level->mapname, "Mapa Teste", 19);
 
     for(unsigned int i = 0; i < 4; i++){
         level->keys[i].x = 25;
         level->keys[i].y = 25;
     }
 
+
+
     for(int y = 0; y < MAX_GRID_Y; y++){
         for(int x = 0; x < MAX_GRID_X;x++){
-            level->map[y][x].id = 0;
-            level->map[y][x].block = false;
-            level->map[y][x].passable = false;
+            level->bg_layer[y][x].id = 0;
+            level->bg_layer[y][x].block = false;
+            level->bg_layer[y][x].passable = true;
+        }
+    }
+
+    for(int y = 0; y < MAX_GRID_Y; y++){
+        for(int x = 0; x < MAX_GRID_X;x++){
+            level->map_layer[y][x].id = 0;
+            level->map_layer[y][x].block = false;
+            level->map_layer[y][x].passable = false;
+        }
+    }
+
+    for(int y = 0; y < MAX_GRID_Y; y++){
+        for(int x = 0; x < MAX_GRID_X;x++){
+            level->obj_layer[y][x].id = 0;
+            level->obj_layer[y][x].block = false;
+            level->obj_layer[y][x].passable = true;
         }
     }
 
@@ -51,17 +74,13 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname){
 
     strncpy(path_lowercase, filepath, strlen(filepath) + 1);
 
-    /* linux is case sensitive its almost waste of time converting to  lowercase since 99% of folder, and files already lowercase */
-    /* let this issue to windows */
-    #ifdef _WIN32
-    for(int i = 0; path_lowercase[i];i++){
-        path_lowercase[i] = (char) tolower(path_lowercase[i]);
-    }
-    #endif
+
 
     ALLEGRO_FILE *fp = al_fopen(path_lowercase,"rb");
 
     al_fread(fp, lvl->magic, sizeof (char) * strlen(MAP_ID));
+
+
     lvl->ver= al_fgetc(fp);
     bool valid_header = false;
 
@@ -87,17 +106,48 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname){
          lvl->keys[i].y = (unsigned char) al_fgetc(fp);
      }
 
+
+
+     lvl->map_width = (unsigned char) al_fgetc(fp);
+     lvl->map_height = (unsigned char) al_fgetc(fp);
+
+     if(lvl->map_width > MAX_GRID_X) lvl->map_width =  MAX_GRID_X;
+     if(lvl->map_height > MAX_GRID_Y) lvl->map_width =  MAX_GRID_Y;
+
      lvl->background_id = (unsigned char)al_fgetc(fp);
+
+     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+         for(unsigned int x = 0; x < MAX_GRID_X;x++){
+             lvl->bg_layer[y][x].id = (unsigned char) al_fgetc(fp);
+             lvl->bg_layer[y][x].block = (unsigned char) al_fgetc(fp);
+             lvl->bg_layer[y][x].passable = (unsigned char) al_fgetc(fp);
+         }
+     }
+
+     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+         for(unsigned int x = 0; x < MAX_GRID_X;x++){
+             lvl->map_layer[y][x].id = (unsigned char) al_fgetc(fp);
+             lvl->map_layer[y][x].block = (unsigned char) al_fgetc(fp);
+             lvl->map_layer[y][x].passable = (unsigned char) al_fgetc(fp);
+         }
+     }
 
 
      for(unsigned int y = 0; y < MAX_GRID_Y;y++){
          for(unsigned int x = 0; x < MAX_GRID_X;x++){
-             lvl->map[y][x].id = (unsigned char) al_fgetc(fp);
-             lvl->map[y][x].block = (unsigned char) al_fgetc(fp);
-             lvl->map[y][x].passable = (unsigned char) al_fgetc(fp);
+             lvl->obj_layer[y][x].id = (unsigned char) al_fgetc(fp);
+             lvl->obj_layer[y][x].block = (unsigned char) al_fgetc(fp);
+             lvl->obj_layer[y][x].passable = (unsigned char) al_fgetc(fp);
          }
      }
 
+
+     lvl->valid_file = (unsigned char)al_fgetc(fp);
+
+     if(lvl->valid_file == valid_header)
+     {
+        LOG("MAP LOADED SUCCESS!");
+     }
 
       if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
       al_fclose(fp);
@@ -130,15 +180,6 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname){
 
     strncpy(file_lc, filepath, strlen(filepath) + 1);
 
-    /* linux is case sensitive its almost waste of time converting to  lowercase since 99% of folder, and files already lowercase */
-    /* let this issue to windows */
-    #ifdef __WIN32
-    for(int i = 0; file_lc[i];i++){
-        file_lc[i] = (char) tolower(file_lc[i]);
-    }
-    #endif
-
-
 
     ALLEGRO_FILE *fp = NULL;
     printf("path to save :%s", file_lc);
@@ -151,6 +192,7 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname){
     }
 
     al_fwrite(fp, lvl->magic, strlen(lvl->magic));
+
     al_fputc(fp, lvl->ver);
     al_fputc(fp, lvl->player_pos.x);
     al_fputc(fp, lvl->player_pos.y);
@@ -160,15 +202,36 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname){
         al_fputc(fp, lvl->keys[i].y);
     }
 
+    al_fputc(fp, lvl->map_width);
+    al_fputc(fp, lvl->map_height);
+
     al_fputc(fp, lvl->background_id);
 
     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
         for(unsigned int x = 0; x < MAX_GRID_X;x++){
-            al_fputc(fp, lvl->map[y][x].id);
-            al_fputc(fp, lvl->map[y][x].block);
-            al_fputc(fp, lvl->map[y][x].passable);
+            al_fputc(fp, lvl->bg_layer[y][x].id);
+            al_fputc(fp, lvl->bg_layer[y][x].block);
+            al_fputc(fp, lvl->bg_layer[y][x].passable);
         }
     }
+
+    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+        for(unsigned int x = 0; x < MAX_GRID_X;x++){
+            al_fputc(fp, lvl->map_layer[y][x].id);
+            al_fputc(fp, lvl->map_layer[y][x].block);
+            al_fputc(fp, lvl->map_layer[y][x].passable);
+        }
+    }
+
+    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+        for(unsigned int x = 0; x < MAX_GRID_X;x++){
+            al_fputc(fp, lvl->obj_layer[y][x].id);
+            al_fputc(fp, lvl->obj_layer[y][x].block);
+            al_fputc(fp, lvl->obj_layer[y][x].passable);
+        }
+    }
+
+    lvl->valid_file = true;
 
     al_fclose(fp);
 

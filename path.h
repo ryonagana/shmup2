@@ -1,4 +1,6 @@
 #ifndef PATH_HEADER
+#define PATH_HEADER
+
 #include <stdio.h>
 #include <allegro5/allegro5.h>
 

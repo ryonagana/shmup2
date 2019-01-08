@@ -3,6 +3,8 @@
 #include "mixer.h"
 #include "path.h"
 #include "shared.h"
+#include "tiles.h"
+#include "config.h"
 
 static ALLEGRO_EVENT_QUEUE *g_queue;
 static ALLEGRO_DISPLAY *g_display;
@@ -114,12 +116,29 @@ void window_init(void){
     keyboard_start();
     init_path();
     mixer_init(2);
+
+
+    if(!config_init()){
+        const char *root = get_file_path(NULL, "config.ini");
+        ALLEGRO_FILE * fp = al_fopen(root, "w");
+        config_create_default(fp);
+        al_fclose(fp);
+    }
+
+    if(!tiles_init()){
+        CRITICAL("Error When tried to load spritesheet");
+        is_window_open = false;
+        return;
+    }
     is_window_open = true;
 }
 
 void window_close(void){
     destroy_path();
     mixer_destroy();
+    config_destroy();
+
+
     if (g_display != NULL) al_destroy_display(g_display);
     if(g_queue    != NULL) al_destroy_event_queue(g_queue);
     if(g_screen   != NULL) al_destroy_bitmap(g_screen);
@@ -164,7 +183,6 @@ void window_gracefully_quit(const char *msg){
     }
 
     LOG("---- GRACEFULLY QUITED: %s ----\n\n", msg);
-    mixer_destroy();
     window_close();
 }
 

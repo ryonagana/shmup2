@@ -1,4 +1,5 @@
-#ifndef SPACESHIP_H
+#ifndef SPACESHIP_HEADER
+#define SPACESHIP_HEADER
 #include <stdio.h>
 #include <allegro5/allegro.h>
 

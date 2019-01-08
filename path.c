@@ -24,7 +24,10 @@ const char* get_root_dir(void){
 
 const char* get_file_path(const char *folder, const char *filename){
 
-    al_append_path_component(root_path, folder);
+    if(folder != NULL ){
+        al_append_path_component(root_path, folder);
+    }
+
     al_set_path_filename(root_path, filename);
     const char* path = al_path_cstr(root_path, ALLEGRO_NATIVE_PATH_SEP);
     return path;

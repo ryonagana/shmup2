@@ -1,4 +1,5 @@
 #ifndef SHARED_HEADER
+#define SHARED_HEADER
 #include <stdio.h>
 
 
@@ -27,4 +28,5 @@ enum MSG_DEBUG_TYPES {
 #define LOG(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, msg, ##__VA_ARGS__)
 #define WARN(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, msg, ##__VA_ARGS__)
 #define CRITICAL(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__,msg,  ##__VA_ARGS__)
+
 #endif

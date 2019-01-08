@@ -13,15 +13,15 @@
 
     default:
     case MSG_LOG:
-        fprintf(stdout, "LOG: FILE:%s(%d)  %s\n", file, line, buf);
+        fprintf(stdout, "\n\nLOG: FILE:%s(%d)  %s\n", file, line, buf);
         break;
 
     case MSG_WARNING:
-        fprintf(stderr, "WARNING: FILE:%s(%d)  %s\n", file, line, buf);
+        fprintf(stderr, "\n\nWARNING: FILE:%s(%d)  %s\n", file, line, buf);
         break;
 
      case MSG_CRITICAL:
-        fprintf(stderr, "CRITICAL: FILE:%s(%d)  %s\n", file, line, buf);
+        fprintf(stderr, "----------------------------CRITICAL: FILE:%s(%d)  %s\n----------------------------", file, line, buf);
         break;
 
     }

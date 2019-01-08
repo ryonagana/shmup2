@@ -1,4 +1,6 @@
 #ifndef LEVEL_HEADER
+#define LEVEL_HEADER
+
 #include <stdio.h>
 #include <ctype.h>
 #include <stdint.h>
@@ -29,15 +31,23 @@ typedef struct MAPCOORD {
 typedef struct LEVEL {
     char magic[6]; // CBL
     int  ver;
+    char mapname[20];
     MAPCOORD player_pos;
     MAPCOORD keys[4];
+    bool valid_file;
+    unsigned char map_width;
+    unsigned char map_height;
     uint16_t powerup_count;
     unsigned char background_id;
-    TILE map[MAX_GRID_Y][MAX_GRID_X];
+    TILE bg_layer [MAX_GRID_Y][MAX_GRID_X];
+    TILE map_layer[MAX_GRID_Y][MAX_GRID_X];
+    TILE obj_layer[MAX_GRID_Y][MAX_GRID_X];
 
     //TODO ENEMIES
     //TODO ITEMS
 }LEVEL;
+
+
 
 void level_init_default(LEVEL* level);
 bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char * mapname);

@@ -1,10 +1,5 @@
-#include <stdio.h>
-#include "window.h"
-#include "keyboard.h"
-#include "spaceship.h"
-#include "path.h"
-#include "level.h"
-#include "shared.h"
+#include "main.h"
+
 
 static SPACESHIP *player =  NULL;
 static SCROLLING p1_scroll;
@@ -28,7 +23,7 @@ int main()
 
     LEVEL teste;
     level_init_default(&teste);
-    //level_save(get_window_display(), &teste, "level01");
+    level_save(get_window_display(), &teste, "level01");
 
 
     if(!level_load(get_window_display(), &teste, "level01")){
@@ -73,17 +68,13 @@ int main()
 
 
         if(al_is_event_queue_empty(get_window_queue())){
-            al_clear_to_color(al_map_rgb(0,0,0));
 
 
-            //render map?
-            for(int y = 0; y < MAX_GRID_Y; y++){
-                for (int x = 0; x < MAX_GRID_X ; x++) {
-                    al_draw_rectangle((32 * x) - p1_scroll.x, (32 * y) - p1_scroll.y, 32 - p1_scroll.x, 32 - p1_scroll.y, al_map_rgba(0,0,255,255), 1.0);
 
-                    //al_draw_line(32 * x, 32 * y, 0 , 0, al_map_rgba(0,0,255,255), 1.0);
-                }
-            }
+
+              render_background_color(&teste);
+              render_tilemap(&teste, &p1_scroll);
+
              al_draw_bitmap(spr_player, player->x - p1_scroll.x, player->y - p1_scroll.y, 0);
             //al_draw_filled_rectangle(player->x - p1_scroll.x, player->y - p1_scroll.y, 32 + player->x, 32 + player->y,al_map_rgb(255,0,255));
 
@@ -99,3 +90,5 @@ int main()
 static void game_update_keyboard(ALLEGRO_EVENT *e){
     keyboard_map(e);
 }
+
+
