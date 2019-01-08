@@ -1,6 +1,7 @@
 #include "level.h"
 #include "path.h"
 #include <string.h>
+#include "shared.h"
 
 /*
     this level module cant be done without help of Neil Roy's Deluxe Pacman Source code help
@@ -22,8 +23,8 @@ void level_start(LEVEL* level){
         level->keys[i].y = 25;
     }
 
-    for(int y = 0; y < MAX_GRID_H; y++){
-        for(int x = 0; x < MAX_GRID_W;x++){
+    for(int y = 0; y < MAX_GRID_Y; y++){
+        for(int x = 0; x < MAX_GRID_X;x++){
             level->map[y][x].id = 0;
             level->map[y][x].block = false;
             level->map[y][x].passable = false;
@@ -60,16 +61,56 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname){
 
     ALLEGRO_FILE *fp = al_fopen(path_lowercase,"rb");
 
-    al_fread(fp, lvl->magic, sizeof(strlen(lvl->magic)));
+    al_fread(fp, lvl->magic, sizeof (char) * strlen(MAP_ID));
     lvl->ver= al_fgetc(fp);
+    bool valid_header = false;
 
-    if( strncmp(lvl->magic, MAP_ID, strnlen(lvl->magic,6)) != 0 ){
-
+    if(lvl->magic[0] == 'C' && lvl->magic[1] == 'B' && lvl->magic[2] == 'M' && lvl->magic[3] == 'A' && lvl->magic[4] == 'P'){
+        valid_header = true;
+    }else {
+        WARN("MAP HEADER INVALID");
+        goto FINISH;
     }
 
-    al_fclose(fp);
 
-    return true;
+
+    if(lvl->ver > MAP_VER){
+       WARN("%s map version incorrect ", filepath);
+       goto FINISH;
+    }
+
+     lvl->player_pos.x = (unsigned char) al_fgetc(fp);
+     lvl->player_pos.y = (unsigned char) al_fgetc(fp);
+
+     for(unsigned int i = 0;i < 4; i++){
+         lvl->keys[i].x = (unsigned char) al_fgetc(fp);
+         lvl->keys[i].y = (unsigned char) al_fgetc(fp);
+     }
+
+     lvl->background_id = (unsigned char)al_fgetc(fp);
+
+
+     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+         for(unsigned int x = 0; x < MAX_GRID_X;x++){
+             lvl->map[y][x].id = (unsigned char) al_fgetc(fp);
+             lvl->map[y][x].block = (unsigned char) al_fgetc(fp);
+             lvl->map[y][x].passable = (unsigned char) al_fgetc(fp);
+         }
+     }
+
+
+      if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
+      al_fclose(fp);
+      return true;
+
+FINISH:
+        if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
+        if(fp)al_fclose(fp);
+        return false;
+
+
+
+
 }
 
 
@@ -121,8 +162,8 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname){
 
     al_fputc(fp, lvl->background_id);
 
-    for(unsigned int y = 0; y < MAX_GRID_H;y++){
-        for(unsigned int x = 0; x < MAX_GRID_W;x++){
+    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+        for(unsigned int x = 0; x < MAX_GRID_X;x++){
             al_fputc(fp, lvl->map[y][x].id);
             al_fputc(fp, lvl->map[y][x].block);
             al_fputc(fp, lvl->map[y][x].passable);

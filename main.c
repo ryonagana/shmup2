@@ -20,7 +20,8 @@ int main()
 
     LEVEL teste;
     level_start(&teste);
-    level_save(get_window_display(), &teste, "teste01.cbm");
+    //level_save(get_window_display(), &teste, "level01");
+    level_load(get_window_display(), &teste, "level01");
 
 
     //level_save(get_window_display(), )

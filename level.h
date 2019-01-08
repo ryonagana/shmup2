@@ -6,8 +6,8 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
-#define MAX_GRID_W 200
-#define MAX_GRID_H 80
+#define MAX_GRID_X 200
+#define MAX_GRID_Y 80
 
 #define MAX_ENEMIES_MAP 50
 #define MAX_ITEMS_MAP 25
@@ -33,7 +33,7 @@ typedef struct LEVEL {
     MAPCOORD keys[4];
     uint16_t powerup_count;
     unsigned char background_id;
-    TILE map[MAX_GRID_W][MAX_GRID_H];
+    TILE map[MAX_GRID_Y][MAX_GRID_X];
 
     //TODO ENEMIES
     //TODO ITEMS
