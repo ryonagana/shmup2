@@ -10,7 +10,7 @@
     Thanks for the Source!
 */
 
-void level_start(LEVEL* level){
+void level_init_default(LEVEL* level){
 
     strncpy(level->magic, MAP_ID, 5);
     level->ver = MAP_VER;

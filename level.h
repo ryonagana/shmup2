@@ -39,7 +39,7 @@ typedef struct LEVEL {
     //TODO ITEMS
 }LEVEL;
 
-void level_start(LEVEL* level);
+void level_init_default(LEVEL* level);
 bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char * mapname);
 bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname);
 
