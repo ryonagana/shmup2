@@ -22,6 +22,9 @@ void window_exit_loop(void);
 void window_gracefully_quit(const char *msg);
 bool window_request_gracefully_closing(void);
 
+int window_get_width(void);
+int window_get_height(void);
+
 ALLEGRO_DISPLAY* get_window_display(void);
 ALLEGRO_EVENT_QUEUE* get_window_queue(void);
 ALLEGRO_TIMER *get_window_timer(void);

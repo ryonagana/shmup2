@@ -172,3 +172,11 @@ void window_gracefully_quit(const char *msg){
 bool window_request_gracefully_closing(void){
     return issue_gracefully_close;
 }
+
+
+int window_get_width(void){
+    return al_get_display_width(g_display);
+}
+int window_get_height(void){
+     return al_get_display_height(g_display);
+}

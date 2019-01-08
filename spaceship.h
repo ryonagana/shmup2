@@ -25,10 +25,19 @@ typedef struct SPACESHIP{
     int direction;
 } SPACESHIP;
 
+typedef struct SCROLLING {
+    float x,y;
+    int width,height;
+}SCROLLING;
+
 
 void spaceship_move(int num,   float x, float y);
 SPACESHIP* spaceship_get_player(int num);
 void spaceship_update(int player_num);
 void spaceship_set_default_flags(SPACESHIP *sp);
+
+
+
+void spaceship_scrolling_update(SPACESHIP *spaceship, SCROLLING *scrolling);
 
 #endif

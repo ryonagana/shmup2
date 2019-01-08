@@ -1,6 +1,11 @@
 #include "spaceship.h"
 #include "keyboard.h"
+#include "window.h"
 
+static SCROLLING player_scrolling[MAX_SPACESHIPS] = {
+    {0,0,0,0},
+    {0,0,0,0}
+};
 
 static struct SPACESHIP  player_list[MAX_SPACESHIPS]=
 {
@@ -10,6 +15,12 @@ static struct SPACESHIP  player_list[MAX_SPACESHIPS]=
 
 
 
+
+
+void spaceship_scrolling_update(SPACESHIP *spaceship, SCROLLING *scrolling){
+    scrolling->x = (spaceship->x) - window_get_width() /  2;
+    scrolling->y = (spaceship->y) - window_get_height() / 2;
+}
 
 void spaceship_move(int num,   float x, float y)
 {
