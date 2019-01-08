@@ -27,7 +27,7 @@ int main()
 
 
     LEVEL teste;
-    level_start(&teste);
+    level_init_default(&teste);
     //level_save(get_window_display(), &teste, "level01");
 
 
@@ -79,7 +79,7 @@ int main()
             //render map?
             for(int y = 0; y < MAX_GRID_Y; y++){
                 for (int x = 0; x < MAX_GRID_X ; x++) {
-                    al_draw_rectangle((32 * x) - p1_scroll.x, (32 * y) - p1_scroll.y, 32, 32, al_map_rgba(0,0,255,255), 1.0);
+                    al_draw_rectangle((32 * x) - p1_scroll.x, (32 * y) - p1_scroll.y, 32 - p1_scroll.x, 32 - p1_scroll.y, al_map_rgba(0,0,255,255), 1.0);
 
                     //al_draw_line(32 * x, 32 * y, 0 , 0, al_map_rgba(0,0,255,255), 1.0);
                 }
