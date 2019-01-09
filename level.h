@@ -15,6 +15,9 @@
 #define MAX_ITEMS_MAP 25
 
 
+#define TILE_SIZE 32
+
+
 #define MAP_ID "CBMAP"
 #define MAP_VER 1
 typedef struct TILE {
@@ -50,6 +53,10 @@ typedef struct LEVEL {
 
 
 void level_init_default(LEVEL* level);
+
+bool level_load_i(LEVEL *lvl, char * mapname);
+bool level_save_i(LEVEL *lvl, char * mapname);
+
 bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char * mapname, bool dialog);
 bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog);
 

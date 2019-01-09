@@ -26,11 +26,16 @@ int main()
     level_save(get_window_display(), &teste, "teste01.cbm", false);
 
 
+
+    spaceship_camera_init(&p1_scroll, player);
+
+
+
     if(!level_load(get_window_display(), &teste, "teste01.cbm", false)){
         CRITICAL("level not loaded correctly, sorry");
     }
 
-     spaceship_scrolling_update(player, &p1_scroll);
+
 
     //level_save(get_window_display(), )
 
@@ -46,8 +51,10 @@ int main()
 
        if(event.type == ALLEGRO_EVENT_TIMER){
            if(event.timer.source == get_window_timer()){
-               spaceship_update(SHIP_P1);
-                spaceship_scrolling_update(player, &p1_scroll);
+                spaceship_update(SHIP_P1);
+                spaceship_scrolling_update(player, &p1_scroll, teste.map_width, teste.map_height);
+
+
 
            }
 

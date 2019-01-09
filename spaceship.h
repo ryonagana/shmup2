@@ -28,7 +28,6 @@ typedef struct SPACESHIP{
 
 typedef struct CAMERA {
     float x,y;
-    float cam_x, cam_y;
     int width,height;
 }CAMERA;
 
@@ -36,10 +35,11 @@ typedef struct CAMERA {
 void spaceship_move(int num,   float x, float y);
 SPACESHIP* spaceship_get_player(int num);
 void spaceship_update(int player_num);
+bool spaceship_map_limit(SPACESHIP *ship, CAMERA *cam, int level_w, int level_h);
 void spaceship_set_default_flags(SPACESHIP *sp);
 
 
-
-void spaceship_scrolling_update(SPACESHIP *spaceship, CAMERA *scrolling);
+void spaceship_camera_init(CAMERA *camera, SPACESHIP* ship);
+void spaceship_scrolling_update(SPACESHIP *spaceship, CAMERA *scrolling, int level_width, int level_height);
 
 #endif
