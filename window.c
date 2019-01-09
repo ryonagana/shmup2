@@ -159,7 +159,7 @@ void window_close(void){
     destroy_path();
     mixer_destroy();
     config_destroy();
-
+    tiles_destroy();
 
     if (g_display != NULL) al_destroy_display(g_display);
     if(g_queue    != NULL) al_destroy_event_queue(g_queue);

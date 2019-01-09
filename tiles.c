@@ -26,3 +26,7 @@ ALLEGRO_BITMAP* tilemap_get_bmp(void){
     if(tileset == NULL) return NULL;
     return tileset;
 }
+
+void tiles_destroy(void){
+    if(tileset) al_destroy_bitmap(tileset);
+}

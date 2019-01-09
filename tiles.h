@@ -26,6 +26,7 @@ enum TILE_ID {
 
 
 bool tiles_init(void);
+void tiles_destroy(void);
 ALLEGRO_BITMAP *tilemap_get_bmp(void);
 
 #endif
