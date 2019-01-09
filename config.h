@@ -16,6 +16,7 @@ typedef struct SETTINGS {
     SETTING_FIELD sfx_on;
     SETTING_FIELD music_on;
     SETTING_FIELD opengl;
+    SETTING_FIELD fullscreen;
 
 }SETTINGS;
 
@@ -23,6 +24,7 @@ typedef struct SETTINGS {
 bool config_init(void);
 void config_destroy(void);
 void config_create_default(ALLEGRO_FILE *fp_cfg);
-//const char *config_get_key(ALLEGRO_CONFIG *cfg, const char *key);
+const char *config_get_key(ALLEGRO_CONFIG *cfg, const char *key);
 void config_set_key(ALLEGRO_CONFIG *cfg, const char *key, const char *fmt, ...);
+SETTINGS* config_get(void);
 #endif

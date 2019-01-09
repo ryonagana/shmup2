@@ -48,6 +48,18 @@ static int init_allegro(void) {
         return -1;
     }
 
+    if(!config_init()){
+        char *root = get_file_path(NULL, "config.ini");
+        ALLEGRO_FILE * fp = al_fopen(root, "w");
+        config_create_default(fp);
+        al_fclose(fp);
+        if(root) free(root);
+    }
+
+
+
+
+
 
 
     //init_phyfs();
@@ -75,6 +87,20 @@ static int init_allegro(void) {
         al_set_new_display_flags(ALLEGRO_FULLSCREEN | ALLEGRO_OPENGL_3_0 | ALLEGRO_RESIZABLE);
     }
     */
+
+    SETTINGS *settings = config_get();
+
+    if(settings->fullscreen.b_field && settings->opengl.b_field){
+        al_set_new_display_flags(ALLEGRO_OPENGL | ALLEGRO_FULLSCREEN);
+    }else if(settings->opengl.b_field){
+        al_set_new_display_flags(ALLEGRO_OPENGL | ALLEGRO_WINDOWED);
+    }
+
+
+
+
+    al_set_new_bitmap_flags(ALLEGRO_MAG_LINEAR);
+
 
     g_display =  al_create_display(800, 600);
 
@@ -118,13 +144,7 @@ void window_init(void){
     mixer_init(2);
 
 
-    if(!config_init()){
-        char *root = get_file_path(NULL, "config.ini");
-        ALLEGRO_FILE * fp = al_fopen(root, "w");
-        config_create_default(fp);
-        al_fclose(fp);
-        if(root) free(root);
-    }
+
 
     if(!tiles_init()){
         CRITICAL("Error When tried to load spritesheet");
