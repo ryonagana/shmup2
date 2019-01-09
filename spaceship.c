@@ -13,9 +13,15 @@ static struct SPACESHIP  player_list[MAX_SPACESHIPS]=
 
 
 
-void spaceship_scrolling_update(SPACESHIP *spaceship, SCROLLING *scrolling){
+void spaceship_scrolling_update(SPACESHIP *spaceship, CAMERA *scrolling){
     scrolling->x = (spaceship->x) - window_get_width() /  2;
     scrolling->y = (spaceship->y) - window_get_height() / 2;
+
+    scrolling->cam_x = scrolling->x / 32 + spaceship->x;
+    scrolling->cam_y = scrolling->y / 32 + spaceship->y;
+
+
+
 }
 
 void spaceship_move(int num,   float x, float y)

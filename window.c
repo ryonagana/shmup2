@@ -119,15 +119,17 @@ void window_init(void){
 
 
     if(!config_init()){
-        const char *root = get_file_path(NULL, "config.ini");
+        char *root = get_file_path(NULL, "config.ini");
         ALLEGRO_FILE * fp = al_fopen(root, "w");
         config_create_default(fp);
         al_fclose(fp);
+        if(root) free(root);
     }
 
     if(!tiles_init()){
         CRITICAL("Error When tried to load spritesheet");
         is_window_open = false;
+
         return;
     }
     is_window_open = true;

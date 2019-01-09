@@ -12,7 +12,7 @@
 
 void level_init_default(LEVEL* level){
 
-    strncpy(level->magic, MAP_ID, 5);
+    strncpy(level->magic, MAP_ID, 6);
     level->ver = MAP_VER;
     level->player_pos.x = 100;
     level->player_pos.y = 100;
@@ -58,17 +58,19 @@ void level_init_default(LEVEL* level){
 
 }
 
-bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname){
-    const char *filepath = get_file_path("map", mapname);
+bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog){
+    char *filepath = get_file_path("map", mapname);
+    ALLEGRO_FILECHOOSER *openfile_diag = NULL;
+    if(dialog){
+     openfile_diag = al_create_native_file_dialog(filepath, "Load MAP:", "*.*", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
+        if(!al_show_native_file_dialog(display, openfile_diag)){
+            if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
+            return false;
+        }
 
-    ALLEGRO_FILECHOOSER *openfile_diag = al_create_native_file_dialog(filepath, "Load MAP:", "*.*", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
+        filepath = al_get_native_file_dialog_path(openfile_diag,0);
 
-    if(!al_show_native_file_dialog(display, openfile_diag)){
-        if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
-        return false;
     }
-
-    filepath = al_get_native_file_dialog_path(openfile_diag,0);
 
     char path_lowercase[4096] = "";
 
@@ -149,12 +151,18 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname){
         LOG("MAP LOADED SUCCESS!");
      }
 
-      if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
+     if(dialog){
+         if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
+     }
+
       al_fclose(fp);
+      if(filepath) free(filepath);
       return true;
 
 FINISH:
+      if(dialog){
         if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
+      }
         if(fp)al_fclose(fp);
         return false;
 
@@ -164,17 +172,21 @@ FINISH:
 }
 
 
-bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname){
-    const char * filepath = get_file_path("map", mapname);
+bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname, bool dialog){
+    char * filepath = get_file_path("map", mapname);
 
-    ALLEGRO_FILECHOOSER *chooser_diag = al_create_native_file_dialog(filepath, "Save File..", "*.*", ALLEGRO_FILECHOOSER_SAVE);
+    ALLEGRO_FILECHOOSER *chooser_diag = NULL;
 
-    if(!al_show_native_file_dialog(display, chooser_diag)){
-        if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
-        return false;
+    if(dialog){
+        chooser_diag = al_create_native_file_dialog(filepath, "Save File..", "*.*", ALLEGRO_FILECHOOSER_SAVE);
+
+        if(!al_show_native_file_dialog(display, chooser_diag)){
+            if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
+            return false;
+        }
+
+        filepath = al_get_native_file_dialog_path(chooser_diag,0);
     }
-
-    filepath = al_get_native_file_dialog_path(chooser_diag,0);
 
     char file_lc[4096] =  ""; // need to fit not only the filename but full path, on windows this  can be huge, so we need to use a big buffer to store the path
 
@@ -235,9 +247,10 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname){
 
     al_fclose(fp);
 
-    if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
+    if(dialog){
+        if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
+    }
 
-
-
+    if(filepath) free(filepath);
     return true;
 }

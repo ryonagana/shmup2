@@ -20,10 +20,11 @@ void  render_background_color(LEVEL *level){
     al_clear_to_color(col);
 }
 
-void  render_tilemap(LEVEL *level, SCROLLING *scroll){
+void  render_tilemap(LEVEL *level, CAMERA *scroll){
 
     for(int y = 0; y < level->map_height; y++){
         for (int x = 0; x < level->map_width ; x++) {
+
             al_draw_rectangle((32 * x) - scroll->x, (32 * y) - scroll->y, 32 - scroll->x, 32 - scroll->y, al_map_rgba(0,0,255,127), 1.0);
 
             //background

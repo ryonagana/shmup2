@@ -5,7 +5,7 @@
 static ALLEGRO_BITMAP *tileset = NULL;
 
 bool tiles_init(void){
-    const char *filepath = get_file_path("tile", "spritesheet.png");
+    char *filepath = get_file_path("tile", "spritesheet.png");
 
     if(!filepath){
        CRITICAL("%s not found!", filepath);
@@ -16,6 +16,7 @@ bool tiles_init(void){
 
     LOG("Spritesheet: %s successfully loaded!", filepath);
 
+    if(filepath) free(filepath);
     return true;
 
 }

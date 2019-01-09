@@ -2,7 +2,7 @@
 
 
 static SPACESHIP *player =  NULL;
-static SCROLLING p1_scroll;
+static CAMERA p1_scroll;
 
 static ALLEGRO_BITMAP *spr_player = NULL; //test
 
@@ -23,10 +23,10 @@ int main()
 
     LEVEL teste;
     level_init_default(&teste);
-    level_save(get_window_display(), &teste, "level01");
+    level_save(get_window_display(), &teste, "teste01.cbm", false);
 
 
-    if(!level_load(get_window_display(), &teste, "level01")){
+    if(!level_load(get_window_display(), &teste, "teste01.cbm", false)){
         CRITICAL("level not loaded correctly, sorry");
     }
 
@@ -48,7 +48,6 @@ int main()
            if(event.timer.source == get_window_timer()){
                spaceship_update(SHIP_P1);
                 spaceship_scrolling_update(player, &p1_scroll);
-
 
            }
 
@@ -74,6 +73,7 @@ int main()
 
               render_background_color(&teste);
               render_tilemap(&teste, &p1_scroll);
+
 
              al_draw_bitmap(spr_player, player->x - p1_scroll.x, player->y - p1_scroll.y, 0);
             //al_draw_filled_rectangle(player->x - p1_scroll.x, player->y - p1_scroll.y, 32 + player->x, 32 + player->y,al_map_rgb(255,0,255));

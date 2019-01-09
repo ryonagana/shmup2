@@ -11,6 +11,6 @@ ALLEGRO_PATH* get_root_path(void);
 
 
 const char* get_root_dir(void);
-const char* get_file_path(const char *folder, const char *filename);
+char* get_file_path(const char *folder, const char *filename);
 
 #endif

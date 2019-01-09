@@ -32,7 +32,7 @@ void config_create_default(ALLEGRO_FILE *fp_cfg){
 }
 
 bool config_init(void){
-    const char *path = get_file_path(NULL, "config.ini");
+    char *path = get_file_path(NULL, "config.ini");
     ALLEGRO_FILE *fp =  NULL;
 
     if(!al_filename_exists(path)){
@@ -45,7 +45,7 @@ bool config_init(void){
 
     settings_conf = al_load_config_file(path);
     if(fp) al_fclose(fp);
-
+    if(path) free(path);
     return true;
 
 }

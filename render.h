@@ -8,7 +8,7 @@
 #include "level.h"
 
 void  render_background_color(LEVEL *level);
-void  render_tilemap(LEVEL *level, SCROLLING *scroll);
+void  render_tilemap(LEVEL *level, CAMERA *scroll);
 
 
 #endif
