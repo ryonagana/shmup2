@@ -8,6 +8,7 @@ CBEditorMain::CBEditorMain(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    this->setWindowTitle("CB Editor ");
 
     this->callConnectMenu();
 
@@ -35,8 +36,16 @@ void CBEditorMain::onActionClickExit(){
 void CBEditorMain::callConnectMenu(void){
     connect(ui->acExit, SIGNAL(triggered()), SLOT(onActionClickExit()));
     connect(ui->acLoadMap, SIGNAL(triggered()), SLOT(onActionClickLoadMap()));
+    connect(ui->acAboutMe, SIGNAL(triggered()), SLOT(onActionClickAboutMe()));
 }
 
 void CBEditorMain::onActionClickLoadMap(){
-    map.loadMap();
+    if(map.loadMap()){
+        this->setWindowTitle( this->windowTitle() + " - " + map.getFileName());
+    }
+}
+
+
+void CBEditorMain::onActionClickAboutMe(){
+    QMessageBox(QMessageBox::Icon::Information, "Me?", "I'm Nobody", QMessageBox::StandardButton::Ok).exec();
 }

@@ -29,20 +29,14 @@ SOURCES += \
         cbeditormain.cpp \ 
        render.cpp \
        levelmap.cpp \
-        ../tiles.c \
-        ../level.c \
-        ../path.c \
-        ../shared.c \
+    level.cpp
 
 
 HEADERS += \
-        cbeditormain.h \
-        ../tiles.h \
-        ../level.h \
-        ../path.h \
-        ../shared.h \
+    cbeditormain.h \
     render.h \
-    levelmap.h
+    levelmap.h \
+    level.h
 
 FORMS += \
         cbeditormain.ui
@@ -53,10 +47,3 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
 
-#only reason to add allegro as dependencies because my levels uses allegro internals like (ALLEGRO_FILE, ALLEGRO_PATH)
-#to access in my editor i need to include
-win32: {
-    LIBS += -L$$PWD/../../../libs/allegro-5.0.10-mingw-4.7.0/lib/ -lallegro-5.0.10-monolith-mt
-    INCLUDEPATH += $$PWD/../../../libs/allegro-5.0.10-mingw-4.7.0/include
-    DEPENDPATH += $$PWD/../../../libs/allegro-5.0.10-mingw-4.7.0/include
-}

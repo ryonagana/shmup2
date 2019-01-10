@@ -24,6 +24,7 @@ private:
 private slots:
     void on_acAboutQt_triggered();
     void onActionClickExit();
+    void onActionClickAboutMe();
 
     void onActionClickLoadMap();
 

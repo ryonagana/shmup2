@@ -6,16 +6,18 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-#include "../level.h"
+#include "level.h"
 
 class LevelMap : public QWidget
 {
     Q_OBJECT
 public:
     explicit LevelMap(QWidget *parent = nullptr);
-    void loadMap(void);
+    bool loadMap(void);
     char *toChar(QString qs);
+    QString getFileName();
 private:
+
     QString mapname;
     LEVEL   mapData;
     int     width;
