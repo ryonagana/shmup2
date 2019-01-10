@@ -37,7 +37,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
-       <widget class="QGraphicsView" name="mainGrid">
+       <widget class="QGraphicsView" name="gridGraphics">
         <property name="autoFillBackground">
          <bool>true</bool>
         </property>
@@ -64,7 +64,7 @@
      </layout>
     </widget>
    </widget>
-   <widget class="QTabWidget" name="mainTools">
+   <widget class="QTabWidget" name="tabTools">
     <property name="geometry">
      <rect>
       <x>760</x>
@@ -73,14 +73,17 @@
       <height>581</height>
      </rect>
     </property>
-    <widget class="QWidget" name="tab">
+    <property name="currentIndex">
+     <number>1</number>
+    </property>
+    <widget class="QWidget" name="tabSprites">
      <attribute name="title">
-      <string>Tab 1</string>
+      <string>Sprite</string>
      </attribute>
     </widget>
-    <widget class="QWidget" name="tab_2">
+    <widget class="QWidget" name="tabObjects">
      <attribute name="title">
-      <string>Tab 2</string>
+      <string>Objects</string>
      </attribute>
     </widget>
    </widget>
@@ -103,6 +106,8 @@
     <addaction name="acSave"/>
     <addaction name="acSaveAs"/>
     <addaction name="separator"/>
+    <addaction name="acCloseMap"/>
+    <addaction name="separator"/>
     <addaction name="acExit"/>
    </widget>
    <widget class="QMenu" name="menuView">
@@ -115,7 +120,7 @@
     <property name="title">
      <string>Tools</string>
     </property>
-    <addaction name="acToolsResizeMap"/>
+    <addaction name="acResizeGrid"/>
    </widget>
    <widget class="QMenu" name="menuAbout">
     <property name="title">
@@ -171,7 +176,7 @@
     <string>Show Grid..</string>
    </property>
   </action>
-  <action name="acToolsResizeMap">
+  <action name="acResizeGrid">
    <property name="text">
     <string>Resize Map</string>
    </property>
@@ -184,6 +189,11 @@
   <action name="acAboutQt">
    <property name="text">
     <string>About Qt...</string>
+   </property>
+  </action>
+  <action name="acCloseMap">
+   <property name="text">
+    <string>Close Map</string>
    </property>
   </action>
  </widget>

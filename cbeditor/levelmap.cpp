@@ -2,6 +2,7 @@
 #include <iostream>
 LevelMap::LevelMap(QWidget *parent) : QWidget(parent)
 {
+    this->level_default_values(&mapData);
 
 }
 
@@ -46,7 +47,7 @@ bool LevelMap::LoadMapFromDisk(QString filepath){
 
     this->mapname = fp.fileName();
 
-    fp.read(mapData.magic, strlen("CBMAP"));
+    fp.read(mapData.magic, sizeof(char) * strlen(MAP_ID));
     fp.getChar(&data);
     mapData.ver = data;
 
@@ -66,7 +67,7 @@ bool LevelMap::LoadMapFromDisk(QString filepath){
 
      mapData.player_pos.x = static_cast<unsigned char>(data);
      fp.getChar(&data);
-     mapData.player_pos.x = static_cast<unsigned char>(data);
+     mapData.player_pos.y = static_cast<unsigned char>(data);
 
 
      for(unsigned int i = 0;i < 4; i++){
@@ -83,7 +84,12 @@ bool LevelMap::LoadMapFromDisk(QString filepath){
      mapData.map_height = static_cast<unsigned char>(data);
 
      if(mapData.map_width > MAX_GRID_X) mapData.map_width =  MAX_GRID_X;
-     if(mapData.map_height > MAX_GRID_Y) mapData.map_width =  MAX_GRID_Y;
+     if(mapData.map_height > MAX_GRID_Y) mapData.map_height =  MAX_GRID_Y;
+
+
+
+
+
 
      fp.getChar(&data);
      mapData.background_id = static_cast<unsigned char>(data);
@@ -143,8 +149,127 @@ bool LevelMap::LoadMapFromDisk(QString filepath){
 
 
 }
+bool LevelMap::SaveToDisk(QString filepath){
+     QFile fp(filepath);
+
+     if(!fp.open(QIODevice::WriteOnly)) return false;
+     bool header_valid = false;
+
+     this->mapname = fp.fileName();
+
+     fp.write(MAP_ID, strlen(MAP_ID));
+     fp.putChar( static_cast<char>(mapData.ver));
+     fp.putChar(static_cast<char>(mapData.player_pos.x));
+     fp.putChar(static_cast<char>(mapData.player_pos.y));
+
+
+     for(unsigned int i = 0;i < 4; i++){
+         fp.putChar(static_cast<char>(mapData.keys[i].x));
+         fp.putChar(static_cast<char>(mapData.keys[i].y));
+     }
+
+     if(mapData.map_width < MAX_GRID_X){
+        fp.putChar(static_cast<char>(mapData.map_width));
+     }else {
+         fp.putChar(static_cast<char>(MAX_GRID_X));
+     }
+
+     if(mapData.map_width < MAX_GRID_Y){
+       fp.putChar(static_cast<char>(mapData.map_height));
+     }else {
+       fp.putChar(static_cast<char>(MAX_GRID_Y));
+     }
+
+     fp.putChar(static_cast<char>( mapData.background_id));
+
+
+     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+         for(unsigned int x = 0; x < MAX_GRID_X;x++){
+             fp.putChar(static_cast<char>(mapData.bg_layer[y][x].id));
+             fp.putChar(static_cast<char>(mapData.bg_layer[y][x].block));
+             fp.putChar(static_cast<char>(mapData.bg_layer[y][x].passable));
+         }
+     }
+
+     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+         for(unsigned int x = 0; x < MAX_GRID_X;x++){
+             fp.putChar(static_cast<char>(mapData.map_layer[y][x].id));
+             fp.putChar(static_cast<char>(mapData.map_layer[y][x].block));
+             fp.putChar(static_cast<char>(mapData.map_layer[y][x].passable));
+         }
+     }
+
+
+     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+         for(unsigned int x = 0; x < MAX_GRID_X;x++){
+             fp.putChar(static_cast<char>(mapData.obj_layer[y][x].id));
+             fp.putChar(static_cast<char>(mapData.obj_layer[y][x].block));
+             fp.putChar(static_cast<char>(mapData.obj_layer[y][x].passable));
+         }
+     }
+
+
+    fp.putChar(static_cast<char>(header_valid));
+    fp.close();
+
+
+     return true;
+}
 
 
 QString LevelMap::getFileName(){
     return this->mapname;
+
+
 }
+
+
+
+void  LevelMap::level_default_values(LEVEL* level){
+
+    strncpy(level->magic, MAP_ID, 6);
+    level->ver = MAP_VER;
+    level->player_pos.x = 100;
+    level->player_pos.y = 100;
+    level->map_width = 75;
+    level->map_height = 22;
+    level->background_id = 0;
+    level->valid_file = false;
+
+    strncpy(level->mapname, "Mapa Teste", 19);
+
+    for(unsigned int i = 0; i < 4; i++){
+        level->keys[i].x = 25;
+        level->keys[i].y = 25;
+    }
+
+
+
+    for(int y = 0; y < MAX_GRID_Y; y++){
+        for(int x = 0; x < MAX_GRID_X;x++){
+            level->bg_layer[y][x].id = 0;
+            level->bg_layer[y][x].block = false;
+            level->bg_layer[y][x].passable = true;
+        }
+    }
+
+    for(int y = 0; y < MAX_GRID_Y; y++){
+        for(int x = 0; x < MAX_GRID_X;x++){
+            level->map_layer[y][x].id = 0;
+            level->map_layer[y][x].block = false;
+            level->map_layer[y][x].passable = false;
+        }
+    }
+
+    for(int y = 0; y < MAX_GRID_Y; y++){
+        for(int x = 0; x < MAX_GRID_X;x++){
+            level->obj_layer[y][x].id = 0;
+            level->obj_layer[y][x].block = false;
+            level->obj_layer[y][x].passable = true;
+        }
+    }
+
+    level->powerup_count = 0;
+
+}
+

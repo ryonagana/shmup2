@@ -6,10 +6,14 @@
 
 QT       += core gui
 
+CONFIG += static
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = cbeditor
 TEMPLATE = app
+
+
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -29,14 +33,14 @@ SOURCES += \
         cbeditormain.cpp \ 
        render.cpp \
        levelmap.cpp \
-    level.cpp
+       cbeditor_level.cpp
 
 
 HEADERS += \
     cbeditormain.h \
     render.h \
     levelmap.h \
-    level.h
+    cbeditor_level.h
 
 FORMS += \
         cbeditormain.ui

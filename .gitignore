@@ -72,3 +72,5 @@ Thumbs.db
 *.exe
 
 [bB]uild*
+cbeditor/[rR]elease
+cbeditor/[dD]ebug

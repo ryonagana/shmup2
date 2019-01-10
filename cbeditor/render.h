@@ -11,6 +11,9 @@ class RenderScene : public QGraphicsScene
 public:
     explicit RenderScene(QWidget *parent = nullptr);
 
+
+
+
 signals:
 
 public slots:

@@ -6,7 +6,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 
-#include "level.h"
+#include "cbeditor_level.h"
 
 class LevelMap : public QWidget
 {
@@ -16,6 +16,8 @@ public:
     bool loadMap(void);
     char *toChar(QString qs);
     QString getFileName();
+    bool LoadMapFromDisk(QString filepath);
+    bool SaveToDisk(QString filepath);
 private:
 
     QString mapname;
@@ -25,7 +27,9 @@ private:
     QString path;
 
 
-    bool LoadMapFromDisk(QString filepath);
+    void  level_default_values(LEVEL* level);
+
+
 
 signals:
 
