@@ -5,7 +5,10 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_native_dialog.h>
 
-enum TILE_ID {
+
+#define GET_TILE(x)  (x == NULL ? NULL : x )
+
+typedef enum TILE_ID {
     NO_TILE=0,
     TILE_GROUND01_F,
     TILE_GROUND01_TOP_L,
@@ -22,11 +25,13 @@ enum TILE_ID {
     TILE_COUNT
 
 
-};
+}TILE_ID;
 
 
 bool tiles_init(void);
 void tiles_destroy(void);
 ALLEGRO_BITMAP *tilemap_get_bmp(void);
+
+ALLEGRO_BITMAP *tiles_get_by_id(TILE_ID id);
 
 #endif

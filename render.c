@@ -30,7 +30,8 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll){
 
             //background
 
-            al_draw_bitmap_region(tilemap_get_bmp(),0, 0, TILE_SIZE,TILE_SIZE, (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y, 0 );
+            al_draw_bitmap( tiles_get_by_id( (int) level->map_layer[y][x].id ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
+           // al_draw_bitmap_region(tilemap_get_bmp(),0, 0, TILE_SIZE,TILE_SIZE, (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y, 0 );
         }
     }
 
