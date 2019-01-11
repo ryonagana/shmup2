@@ -9,11 +9,16 @@ CBEditorMain::CBEditorMain(QWidget *parent) :
     ui->setupUi(this);
 
 
-    ui->gridGraphics->setScene(&renderGraphics);
 
-    ui->gridGraphics->setBackgroundBrush(Qt::blue);
 
     tilemap.load("tile/spritesheet.png");
+
+    if(!this->img_tilemap.load("tile/spritesheet.png")){
+
+    }
+
+
+
 
 
     setStatus(CBMapState::Started);
@@ -153,13 +158,23 @@ void CBEditorMain::statusClose(void){
     this->ui->acEditShowGrid->setDisabled(true);
 }
 
-void CBEditorMain::paintEvent(QPaintEvent *event){
-
+void CBEditorMain::generateMap(){
     for(int y = 0; y < MAX_GRID_Y; y++){
         for(int x = 0; x < MAX_GRID_X; x++){
-            QPixmap tile =  this->tilemap.copy();
-           // tile.setp
-          //  ui->gridGraphics->scene()->addPixmap()
+
+            //img_tilemap.set
+
         }
     }
+}
+
+
+int CBEditorMain::CBEditorMsgBox(QMessageBox::Icon icon, const QString &title, const QString &msg, const QMessageBox::StandardButton &button){
+    return QMessageBox(icon,title,msg,button).exec();
+
+}
+
+void CBEditorMain::paintEvent(QPaintEvent *event){
+
+
 }

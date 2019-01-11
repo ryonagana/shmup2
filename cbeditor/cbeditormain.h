@@ -31,6 +31,9 @@ private:
     void callConnectMenu(void);
     void initialSetup(void);
     void setStatus(CBMapState state);
+    void generateMap(void);
+
+    int CBEditorMsgBox(QMessageBox::Icon icon, const QString &title, const QString &msg, const QMessageBox::StandardButton &bt);
 
     LevelMap map;
 
@@ -53,6 +56,7 @@ private:
     bool isMapOpened = false;
     QPixmap tilemap;
     QPixmap spritesheet;
+    QImage img_tilemap;
 
     CBMapState state = CBMapState::Started;
 
