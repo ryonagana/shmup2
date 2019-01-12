@@ -5,6 +5,7 @@
 #include "shared.h"
 #include "tiles.h"
 #include "config.h"
+#include "mouse.h"
 
 static ALLEGRO_EVENT_QUEUE *g_queue;
 static ALLEGRO_DISPLAY *g_display;
@@ -140,6 +141,7 @@ static int init_allegro(void) {
 void window_init(void){
     init_allegro();
     keyboard_start();
+    mouse_init();
     init_path();
     mixer_init(2);
 
@@ -160,6 +162,7 @@ void window_close(void){
     mixer_destroy();
     config_destroy();
     tiles_destroy();
+    mouse_destroy();
 
     if (g_display != NULL) al_destroy_display(g_display);
     if(g_queue    != NULL) al_destroy_event_queue(g_queue);

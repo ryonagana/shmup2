@@ -10,6 +10,7 @@ SOURCES += \
         main.c \
     window.c \
     keyboard.c \
+    mouse.c \
     spaceship.c \
     mixer.c \
     shared.c \
@@ -23,6 +24,7 @@ SOURCES += \
 HEADERS += \
     window.h \
     keyboard.h \
+    mouse.h \
     spaceship.h \
     mixer.h \
     shared.h \
@@ -34,10 +36,10 @@ HEADERS += \
     config.h
 
 win32: {
-  DEFINES += ALLEGRO_STATICLINK
- LIBS += -L$$PWD/../../libs/allegro-5.0.10-mingw-4.7.0/lib/ -lallegro-5.0.10-monolith-static-mt-debug  -lFLAC-1.2.1-static-mt-debug -ldumb-0.9.3-static-mt-debug -lvorbisfile-1.3.2-static-mt-debug -lvorbis-1.3.2-static-mt-debug  -lfreetype-2.4.8-static-mt-debug  -logg-1.2.1-static-mt-debug -lzlib-1.2.5-static-mt-debug -lopenal-1.14-static-mt-debug  -lzlib-1.2.5-static-mt-debug    -lm -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi
-INCLUDEPATH += $$PWD/../../libs/allegro-5.0.10-mingw-4.7.0/include
-DEPENDPATH += $$PWD/../../libs/allegro-5.0.10-mingw-4.7.0/include
+    DEFINES += ALLEGRO_STATICLINK
+    LIBS += -L$$PWD/../../libs/allegro-5.0.10-mingw-4.7.0/lib/ -lallegro-5.0.10-monolith-static-mt-debug  -lFLAC-1.2.1-static-mt-debug -ldumb-0.9.3-static-mt-debug -lvorbisfile-1.3.2-static-mt-debug -lvorbis-1.3.2-static-mt-debug  -lfreetype-2.4.8-static-mt-debug  -logg-1.2.1-static-mt-debug -lzlib-1.2.5-static-mt-debug -lopenal-1.14-static-mt-debug  -lzlib-1.2.5-static-mt-debug    -lm -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi
+    INCLUDEPATH += $$PWD/../../libs/allegro-5.0.10-mingw-4.7.0/include
+    DEPENDPATH += $$PWD/../../libs/allegro-5.0.10-mingw-4.7.0/include
 
 }
 
