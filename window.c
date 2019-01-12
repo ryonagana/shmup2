@@ -7,13 +7,13 @@
 #include "config.h"
 #include "mouse.h"
 
-static ALLEGRO_EVENT_QUEUE *g_queue;
-static ALLEGRO_DISPLAY *g_display;
+static ALLEGRO_EVENT_QUEUE *g_queue = NULL;
+static ALLEGRO_DISPLAY *g_display = NULL;
 static ALLEGRO_KEYBOARD_STATE g_kbdstate;
-static ALLEGRO_BITMAP *g_screen;
-static ALLEGRO_TIMER *g_timer;
-static ALLEGRO_TIMER *g_time;
-static ALLEGRO_BITMAP *g_screen;
+static ALLEGRO_BITMAP *g_screen = NULL;
+static ALLEGRO_TIMER *g_timer = NULL;
+static ALLEGRO_TIMER *g_time  = NULL;
+
 
 
 
@@ -139,6 +139,7 @@ static int init_allegro(void) {
 }
 
 void window_init(void){
+    // custom inits
     init_allegro();
     keyboard_start();
     mouse_init();
