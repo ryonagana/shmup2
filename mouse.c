@@ -15,8 +15,8 @@ void mouse_init(void){
 
     mouse_input->lButton = false;
     mouse_input->rButton = false;
-    mouse_input->x = 0.0f;
-    mouse_input->y = 0.0f;
+    mouse_input->x = 0;
+    mouse_input->y = 0;
     mouse_input->z = 0.0;
 
     char *path = get_file_path("tile", "mouse_cursor.png");
@@ -70,6 +70,10 @@ void mouse_update(ALLEGRO_EVENT *e){
     }
 
     if(e->type == ALLEGRO_EVENT_MOUSE_AXES){
+        mouse_input->x = e->mouse.x;
+        mouse_input->y = e->mouse.y;
         mouse_input->z = (double) e->mouse.dz;
     }
+
+
 }

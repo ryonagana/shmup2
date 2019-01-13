@@ -9,8 +9,8 @@
 typedef  struct MOUSE {
     bool lButton;
     bool rButton;
-    float x;
-    float y;
+    int x;
+    int y;
     double z;
 
 }MOUSE;

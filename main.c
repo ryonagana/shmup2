@@ -1,5 +1,5 @@
 #include "main.h"
-
+#include "mouse.h"
 
 static SPACESHIP *player =  NULL;
 static CAMERA p1_camera;
@@ -71,6 +71,8 @@ int main()
 
 
         game_update_keyboard(&event);
+        mouse_update(&event);
+        LOG("\nx:%d y:%d\n", mouse_get()->x, mouse_get()->y);
 
 
         if(al_is_event_queue_empty(get_window_queue())){
