@@ -10,6 +10,7 @@ static ALLEGRO_BITMAP* tiles_sub_bmp[TILE_COUNT + 1];
 
 bool tiles_init(void){
     char *filepath = get_file_path("tile", "spritesheet.png");
+    bool tileset_not_found = true;
 
     if(!filepath){
        CRITICAL("%s not found!", filepath);
@@ -18,6 +19,9 @@ bool tiles_init(void){
 
     tileset = al_load_bitmap(filepath);
 
+    tileset_not_found = (tileset == NULL) ? true : false;
+
+
     LOG("Spritesheet: %s successfully loaded!", filepath);
 
     if(filepath) free(filepath);
@@ -25,10 +29,16 @@ bool tiles_init(void){
 
 
     tiles_sub_bmp[NO_TILE] = al_create_bitmap(32,32);
-
     al_set_target_bitmap(tiles_sub_bmp[NO_TILE]);
     al_clear_to_color(al_map_rgb(255,0,0));
     al_set_target_backbuffer(get_window_display());
+
+    if(tileset_not_found){
+        tiles_sub_bmp[TILE_GROUND01_F]     =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
+        tiles_sub_bmp[TILE_GROUND01_TOP_L] =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
+        tiles_sub_bmp[TILE_GROUND01_TOP_R] =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
+        return true;
+    }
 
     tiles_sub_bmp[TILE_GROUND01_F] = al_create_sub_bitmap(tileset,0,0,32,32);
     tiles_sub_bmp[TILE_GROUND01_TOP_L] = al_create_sub_bitmap(tileset,32,0,32,32);
@@ -47,7 +57,7 @@ ALLEGRO_BITMAP* tilemap_get_bmp(void){
 
 void tiles_destroy(void){
 
-    for(unsigned int i = 0; i < TILE_COUNT + 1; i++){
+    for(unsigned int i = 0; i < TILE_COUNT; i++){
         if(tiles_sub_bmp[i]) al_destroy_bitmap(tiles_sub_bmp[i]);
     }
 

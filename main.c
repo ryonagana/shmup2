@@ -2,7 +2,7 @@
 
 
 static SPACESHIP *player =  NULL;
-static CAMERA p1_scroll;
+static CAMERA p1_camera;
 
 static ALLEGRO_BITMAP *spr_player = NULL; //test
 
@@ -27,7 +27,7 @@ int main()
 
 
 
-    spaceship_camera_init(&p1_scroll, player);
+    spaceship_camera_init(&p1_camera, player);
 
 
 
@@ -52,7 +52,7 @@ int main()
        if(event.type == ALLEGRO_EVENT_TIMER){
            if(event.timer.source == get_window_timer()){
                 spaceship_update(SHIP_P1);
-                spaceship_scrolling_update(player, &p1_scroll, teste.map_width, teste.map_height);
+                spaceship_scrolling_update(player, &p1_camera, teste.map_width, teste.map_height);
 
 
 
@@ -79,10 +79,10 @@ int main()
 
 
               render_background_color(&teste);
-              render_tilemap(&teste, &p1_scroll);
+              render_tilemap(&teste, &p1_camera);
 
 
-             al_draw_bitmap(spr_player, player->x - p1_scroll.x, player->y - p1_scroll.y, 0);
+             al_draw_bitmap(spr_player, player->x - p1_camera.x, player->y - p1_camera.y, 0);
             //al_draw_filled_rectangle(player->x - p1_scroll.x, player->y - p1_scroll.y, 32 + player->x, 32 + player->y,al_map_rgb(255,0,255));
 
             al_flip_display();

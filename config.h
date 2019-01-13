@@ -17,6 +17,7 @@ typedef struct SETTINGS {
     SETTING_FIELD music_on;
     SETTING_FIELD opengl;
     SETTING_FIELD fullscreen;
+    SETTING_FIELD editor_mode;
 
 }SETTINGS;
 

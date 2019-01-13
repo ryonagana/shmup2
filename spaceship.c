@@ -57,7 +57,6 @@ void spaceship_scrolling_update(SPACESHIP *spaceship, CAMERA *scrolling, int lev
         spaceship->y = level_height -  TILE_SIZE ;
     }
 
-    printf("\nsx: %.2f  sy: %.f\n\n", spaceship->x, spaceship->y);
 }
 
 void spaceship_camera_init(CAMERA *camera, SPACESHIP* ship){

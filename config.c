@@ -18,6 +18,7 @@ void config_create_default(ALLEGRO_FILE *fp_cfg){
     settings.sfx_on.i_field = 1;
     settings.music_on.i_field = 1;
     settings.opengl.i_field = 1;
+    settings.editor_mode.i_field = 1;
 
 
 
@@ -29,6 +30,7 @@ void config_create_default(ALLEGRO_FILE *fp_cfg){
     config_set_key(settings_conf, "music_on", "%d", settings.music_on.i_field);
     config_set_key(settings_conf, "opengl", "%d", settings.opengl.i_field);
     config_set_key(settings_conf, "fullscreen", "%d", settings.fullscreen.i_field);
+     config_set_key(settings_conf, "editor_mode", "%d", settings.editor_mode.i_field);
     al_save_config_file_f(fp_cfg, settings_conf);
 }
 
@@ -55,6 +57,7 @@ bool config_init(void){
     settings.music_on.i_field = atoi(config_get_key(settings_conf, "music_on"));
     settings.opengl.i_field = atoi(config_get_key(settings_conf, "opengl"));
     settings.fullscreen.i_field = atoi(config_get_key(settings_conf, "fullscreen"));
+    settings.editor_mode.i_field = atoi(config_get_key(settings_conf,"editor_mode"));
     if(fp) al_fclose(fp);
     if(path) free(path);
     return true;

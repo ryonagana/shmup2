@@ -13,7 +13,7 @@
 
     default:
     case MSG_LOG:
-        fprintf(stdout, "\n\nLOG: FILE:%s(%d)  %s\n", file, line, buf);
+        fprintf(stdout, "\nLOG: %s\n", buf);
         break;
 
     case MSG_WARNING:
