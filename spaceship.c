@@ -2,6 +2,7 @@
 #include "keyboard.h"
 #include "window.h"
 #include "level.h"
+#include "config.h"
 
 static struct SPACESHIP  player_list[MAX_SPACESHIPS]=
 {

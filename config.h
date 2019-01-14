@@ -22,6 +22,7 @@ typedef struct SETTINGS {
 }SETTINGS;
 
 
+
 bool config_init(void);
 void config_destroy(void);
 void config_create_default(ALLEGRO_FILE *fp_cfg);

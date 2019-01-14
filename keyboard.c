@@ -15,6 +15,10 @@ int keyboard_pressed(int key){
     return (int)key_list[key];
 }
 
+int keyboard_released(int key){
+    return (int)!key_list[key];
+}
+
 void keyboard_map(ALLEGRO_EVENT *e){
     if(e->type == ALLEGRO_EVENT_KEY_UP) {
         key_list[e->keyboard.keycode] = 0;

@@ -6,6 +6,7 @@
 #include "tiles.h"
 #include "config.h"
 #include "mouse.h"
+#include "editor.h"
 
 static ALLEGRO_EVENT_QUEUE *g_queue = NULL;
 static ALLEGRO_DISPLAY *g_display = NULL;
@@ -145,6 +146,10 @@ void window_init(void){
     mouse_init();
     init_path();
     mixer_init(2);
+
+    if(config_get()->editor_mode.i_field){
+        editor_init();
+    }
 
 
 

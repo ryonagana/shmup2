@@ -1,5 +1,7 @@
 #include "main.h"
 #include "mouse.h"
+#include "editor.h"
+#include "config.h"
 
 static SPACESHIP *player =  NULL;
 static CAMERA p1_camera;
@@ -25,7 +27,9 @@ int main()
     level_init_default(&teste);
     level_save(get_window_display(), &teste, "teste01.cbm", false);
 
-
+    if(config_get()->editor_mode.i_field){
+        editor_load(&teste, &p1_camera);
+    }
 
     spaceship_camera_init(&p1_camera, player);
 
@@ -51,10 +55,15 @@ int main()
 
        if(event.type == ALLEGRO_EVENT_TIMER){
            if(event.timer.source == get_window_timer()){
-                spaceship_update(SHIP_P1);
-                spaceship_scrolling_update(player, &p1_camera, teste.map_width, teste.map_height);
+               if(!config_get()->editor_mode.b_field){
+                    spaceship_update(SHIP_P1);
+               }
 
+               if(config_get()->editor_mode.i_field){
+                    editor_update(&event);
+               }
 
+               spaceship_scrolling_update(player, &p1_camera, teste.map_width, teste.map_height);
 
            }
 
@@ -72,13 +81,14 @@ int main()
 
         game_update_keyboard(&event);
         mouse_update(&event);
-        LOG("\nx:%d y:%d\n", mouse_get()->x, mouse_get()->y);
+
+        if(config_get()->editor_mode.i_field){
+            editor_update_keyboard(&event);
+        }
+
 
 
         if(al_is_event_queue_empty(get_window_queue())){
-
-
-
 
               render_background_color(&teste);
               render_tilemap(&teste, &p1_camera);
@@ -86,7 +96,9 @@ int main()
 
              al_draw_bitmap(spr_player, player->x - p1_camera.x, player->y - p1_camera.y, 0);
             //al_draw_filled_rectangle(player->x - p1_scroll.x, player->y - p1_scroll.y, 32 + player->x, 32 + player->y,al_map_rgb(255,0,255));
-
+             if(config_get()->editor_mode.i_field){
+                editor_render();
+             }
             al_flip_display();
         }
 
@@ -98,6 +110,7 @@ int main()
 
 static void game_update_keyboard(ALLEGRO_EVENT *e){
     keyboard_map(e);
+
 }
 
 
