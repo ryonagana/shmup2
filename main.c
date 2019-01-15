@@ -28,7 +28,7 @@ int main()
     level_save(get_window_display(), &teste, "teste01.cbm", false);
 
     if(config_get()->editor_mode.i_field){
-        editor_load(&teste, &p1_camera);
+        editor_load(&teste);
     }
 
     spaceship_camera_init(&p1_camera, player);
@@ -57,13 +57,12 @@ int main()
            if(event.timer.source == get_window_timer()){
                if(!config_get()->editor_mode.b_field){
                     spaceship_update(SHIP_P1);
-               }
-
-               if(config_get()->editor_mode.i_field){
+                     spaceship_scrolling_update(player, &p1_camera, teste.map_width, teste.map_height);
+               }else {
                     editor_update(&event);
-               }
+              }
 
-               spaceship_scrolling_update(player, &p1_camera, teste.map_width, teste.map_height);
+
 
            }
 
@@ -90,15 +89,18 @@ int main()
 
         if(al_is_event_queue_empty(get_window_queue())){
 
+
+
+            if(config_get()->editor_mode.i_field){
+                render_background_color(&teste);
+                editor_render();
+
+            }else {
               render_background_color(&teste);
               render_tilemap(&teste, &p1_camera);
+              al_draw_bitmap(spr_player, player->x - p1_camera.x, player->y - p1_camera.y, 0);
+            }
 
-
-             al_draw_bitmap(spr_player, player->x - p1_camera.x, player->y - p1_camera.y, 0);
-            //al_draw_filled_rectangle(player->x - p1_scroll.x, player->y - p1_scroll.y, 32 + player->x, 32 + player->y,al_map_rgb(255,0,255));
-             if(config_get()->editor_mode.i_field){
-                editor_render();
-             }
             al_flip_display();
         }
 

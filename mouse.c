@@ -59,13 +59,23 @@ MOUSE *mouse_get(void){
 }
 
 void mouse_update(ALLEGRO_EVENT *e){
-    if(e->type == ALLEGRO_EVENT_MOUSE_BUTTON_UP){
+    if(e->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN){
         if(e->mouse.button & 1){
             mouse_input->lButton = true;
         }
 
      if(e->mouse.button    & 2){
             mouse_input->rButton = true;
+        }
+    }
+
+    if(e->type == ALLEGRO_EVENT_MOUSE_BUTTON_UP){
+        if(e->mouse.button & 1){
+            mouse_input->lButton = false;
+        }
+
+     if(e->mouse.button    & 2){
+            mouse_input->rButton = false;
         }
     }
 

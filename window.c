@@ -170,6 +170,11 @@ void window_close(void){
     tiles_destroy();
     mouse_destroy();
 
+    if(config_get()->editor_mode.i_field){
+        editor_destroy();
+    }
+
+
     if (g_display != NULL) al_destroy_display(g_display);
     if(g_queue    != NULL) al_destroy_event_queue(g_queue);
     if(g_screen   != NULL) al_destroy_bitmap(g_screen);

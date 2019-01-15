@@ -32,6 +32,7 @@ typedef struct CAMERA {
 }CAMERA;
 
 
+
 void spaceship_move(int num,   float x, float y);
 SPACESHIP* spaceship_get_player(int num);
 void spaceship_update(int player_num);
