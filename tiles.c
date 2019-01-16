@@ -30,7 +30,7 @@ bool tiles_init(void){
 
     tiles_sub_bmp[NO_TILE] = al_create_bitmap(32,32);
     al_set_target_bitmap(tiles_sub_bmp[NO_TILE]);
-    al_clear_to_color(al_map_rgb(255,0,0));
+    al_clear_to_color(al_map_rgb(220,220,220));
     al_set_target_backbuffer(get_window_display());
 
     if(tileset_not_found){

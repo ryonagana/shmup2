@@ -87,3 +87,7 @@ void mouse_update(ALLEGRO_EVENT *e){
 
 
 }
+
+void  mouse_set(int x, int y){
+    al_set_mouse_xy(get_window_display(), x,y);
+}

@@ -10,6 +10,7 @@
 #include "config.h"
 #include "mouse.h"
 #include "shared.h"
+#include "path.h"
 
 typedef struct CAMERA_EDITOR {
     int x,y;

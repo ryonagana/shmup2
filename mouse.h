@@ -19,6 +19,7 @@ void mouse_init(void);
 void mouse_destroy(void);
 
 MOUSE *mouse_get(void);
+void  mouse_set(int x, int y);
 void mouse_update(ALLEGRO_EVENT *e);
 
 #endif
