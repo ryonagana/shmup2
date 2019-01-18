@@ -11,8 +11,8 @@
 #define MAX_GRID_X 200
 #define MAX_GRID_Y 80
 
-#define MAX_ENEMIES_MAP 50
-#define MAX_ITEMS_MAP 25
+#define MAX_ENEMIES_MAP 150
+#define MAX_ITEMS_MAP   100
 
 
 #define TILE_SIZE 32
@@ -57,7 +57,7 @@ void level_init_default(LEVEL* level);
 bool level_load_i(LEVEL *lvl, char * mapname);
 bool level_save_i(LEVEL *lvl, char * mapname);
 
-bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char * mapname, bool dialog);
+bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char * mapname, bool dialog);
 bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog);
 
 

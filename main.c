@@ -24,18 +24,21 @@ int main()
 
 
     LEVEL teste;
-    level_init_default(&teste);
-    level_save(get_window_display(), &teste, "teste01.cbm", false);
+
+    //level_init_default(&teste);
+    //level_save(get_window_display(), &teste, "teste01.cbm", false);
 
     if(config_get()->editor_mode.i_field){
-        editor_load(&teste);
+        teste = *editor_load_path("testefinal.cbm");
+    }else {
+       level_load(get_window_display(), &teste, "testefinal.cbm", false);
     }
 
     spaceship_camera_init(&p1_camera, player);
 
 
 
-    if(!level_load(get_window_display(), &teste, "teste01.cbm", false)){
+    if(!level_load(get_window_display(), &teste, "testefinal.cbm", false)){
         CRITICAL("level not loaded correctly, sorry");
     }
 

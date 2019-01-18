@@ -16,10 +16,8 @@ static void editor_move_camera(float x, float y);
 static void editor_clear_screen(ALLEGRO_BITMAP* bmp, ALLEGRO_COLOR col);
 static void editor_camera_bounds(void);
 static TILE *editor_tile_get(TILE map[MAX_GRID_Y][MAX_GRID_X], int tile_x, int tile_y);
-
-
 static void editor_tile_put(TILE *map, TILE_ID id);
-static void editor_tile_set_property(int x, int y, bool passable, bool block);
+
 
 
 
@@ -66,19 +64,44 @@ void editor_init(void){
 
     editor_default_font = al_create_builtin_font();
 
+    memset(editor->map_path, 0, sizeof (char) * 4096);
 
+    editor->dirty = false;
     if(path)free(path);
 
 
 
 }
-bool editor_load(LEVEL *level){
+
+LEVEL* editor_load_path(const char *filename){
+
+    LEVEL *level = NULL;
+
+    level = (LEVEL*) malloc(sizeof(LEVEL));
+
+    level_load(get_window_display(), level, filename, false);
+    char *full_path = get_file_path("map", filename);
+    strncpy(editor->map_path, full_path, strlen(full_path));
+
+    editor->level = level;
+
+    if(full_path) free(full_path);
+
+
+
+
+    return level;
+
+}
+
+bool editor_load_mem(LEVEL *level){
 
     char *layer_name = NULL;
 
     editor->level  =  level;
     editor->layer  = EDITOR_LAYER_MAP;
 
+    al_set_window_title(get_window_display(), "CB EDITOR - noname.cbm");
 
     editor_layer_to_str(editor->layer);
     if(layer_name) free(layer_name);
@@ -92,12 +115,25 @@ void editor_update_keyboard(ALLEGRO_EVENT *e)
         if(keyboard_pressed(ALLEGRO_KEY_F1) && editor->state != EDITOR_STATE_SAVE){
             editor->state = EDITOR_STATE_SAVE;
             opened_dialog = true;
+
+
         }
     }
 
-    if(keyboard_pressed(ALLEGRO_KEY_LCTRL) && editor->state != EDITOR_STATE_SAVE ){
-        if(keyboard_pressed(ALLEGRO_KEY_S) && editor->state != EDITOR_STATE_SAVE){
+    if(keyboard_pressed(ALLEGRO_KEY_LCTRL) && editor->state != EDITOR_STATE_LOAD && !opened_dialog ){
+        if(keyboard_pressed(ALLEGRO_KEY_F2) && editor->state != EDITOR_STATE_LOAD && !opened_dialog){
             editor->state = EDITOR_STATE_LOAD;
+            opened_dialog = true;
+            char map_loaded_name[2048];
+
+            if(level_load(get_window_display(), editor->level, map_loaded_name, false)){
+                printf("MAP LOADED %s", map_loaded_name);
+
+            }
+            opened_dialog = false;
+
+            editor->state = EDITOR_STATE_EDIT;
+
         }
     }
 
@@ -159,15 +195,16 @@ void editor_update(ALLEGRO_EVENT *e)
 
 
 
-    if(editor->state == EDITOR_STATE_SAVE && opened_dialog){
+    if(editor->state == EDITOR_STATE_SAVE){
         opened_dialog = false;
-
-        editor->state = EDITOR_STATE_INIT;
+        editor->state = EDITOR_STATE_EDIT;
         if(!level_save(get_window_display(), editor->level,"mapa01",true)){
             return;
         }
         return;
     }
+
+
 
     if( (mouse_get()->x / TILE_SIZE) >  CANVAS_GRID_W - 1 ){
         return;
@@ -188,6 +225,7 @@ void editor_update(ALLEGRO_EVENT *e)
     if(mouse_get()->rButton && editor->state != EDITOR_STATE_NO_EDIT){
 
         TILE *t = NULL;
+        editor->dirty = true;
 
         switch(editor->layer){
             case EDITOR_LAYER_BG:
@@ -217,6 +255,7 @@ void editor_update(ALLEGRO_EVENT *e)
 
 
     if(mouse_get()->lButton && editor->state != EDITOR_STATE_NO_EDIT){
+
 
         TILE *t = NULL;
 
@@ -317,6 +356,9 @@ void editor_destroy(void)
 {
     if(editor->camera) free(editor->camera);
     editor->camera = NULL;
+
+    if(editor->level) free(editor->level);
+    editor->level;
 
     if(editor) free(editor);
     editor = NULL;

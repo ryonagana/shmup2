@@ -35,4 +35,8 @@ ALLEGRO_TIMER *get_window_actual_time(void);
 int64_t get_window_time_ms(void);
 void     set_window_time_ms(int64_t time);
 
+#define TICKSPERFRAME 60.0
+#define WINDOW_STOP_TIMER() do { al_stop_timer(get_window_timer()); }while(0);
+#define WINDOW_RESUME_TIMER() do { al_start_timer(get_window_timer());al_set_timer_speed(get_window_timer(), 1.0 / TICKSPERFRAME ); }while(0);
+
 #endif

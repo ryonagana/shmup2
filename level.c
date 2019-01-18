@@ -61,15 +61,23 @@ void level_init_default(LEVEL* level){
 }
 
 bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog){
+
+    if(mapname == NULL){
+        LOG("LOAD MAP CANCELLED, MAP %s NOT FOUND", mapname);
+        return false;
+    }
+
     char *filepath = get_file_path("map", mapname);
+
     ALLEGRO_FILECHOOSER *openfile_diag = NULL;
     if(dialog){
-     openfile_diag = al_create_native_file_dialog(filepath, "Load MAP:", "*.*", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
+
+        openfile_diag = al_create_native_file_dialog(filepath, "Load MAP:", "*.*|*.cbm", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
+
         if(!al_show_native_file_dialog(display, openfile_diag)){
             if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
             return false;
         }
-
         filepath = al_get_native_file_dialog_path(openfile_diag,0);
 
     }
@@ -174,8 +182,9 @@ FINISH:
 }
 
 
-bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname, bool dialog){
+bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char *mapname, bool dialog){
     char * filepath = get_file_path("map", mapname);
+
 
     ALLEGRO_FILECHOOSER *chooser_diag = NULL;
 
@@ -188,7 +197,10 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, const char *mapname, bool d
         }
 
         filepath = al_get_native_file_dialog_path(chooser_diag,0);
+
     }
+
+
 
     char file_lc[4096] =  ""; // need to fit not only the filename but full path, on windows this  can be huge, so we need to use a big buffer to store the path
 

@@ -51,12 +51,15 @@ typedef struct EDITOR{
     CAMERA_EDITOR *camera;
     EDITOR_RECT editor_rect;
     EDITOR_LAYER_STATE layer;
+    bool dirty;
+    char map_path[4096];
 
 
 }EDITOR;
 
 void editor_init(void);
-bool editor_load(LEVEL *level);
+bool editor_load_mem(LEVEL *level);
+LEVEL* editor_load_path(const char *filename);
 void editor_update_keyboard(ALLEGRO_EVENT *e);
 void editor_update(ALLEGRO_EVENT *e);
 void editor_render(void);

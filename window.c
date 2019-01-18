@@ -18,7 +18,8 @@ static ALLEGRO_TIMER *g_time  = NULL;
 
 
 
-#define TICKSPERFRAME 60
+
+
 
 
 static bool is_window_open = false;
