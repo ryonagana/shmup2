@@ -18,9 +18,15 @@ typedef struct CAMERA_EDITOR {
 }CAMERA_EDITOR;
 
 
+#define CANVAS_GRID_W (20)
+#define CANVAS_GRID_H (15)
+#define EDITOR_TOP_SPACER (20)
+#define TILE_TO_SIZE(x) (x * TILE_SIZE);
+
 typedef enum EDITOR_STATE {
     EDITOR_STATE_INIT,
     EDITOR_STATE_EDIT,
+    EDITOR_STATE_BLOCK_EDIT,
     EDITOR_STATE_SAVE,
     EDITOR_STATE_LOAD,
 }EDITOR_STATE;
@@ -29,7 +35,8 @@ typedef enum EDITOR_STATE {
 typedef enum EDITOR_LAYER_STATE {
     EDITOR_LAYER_BG=100,
     EDITOR_LAYER_MAP,
-    EDITOR_LAYER_OBJ
+    EDITOR_LAYER_OBJ,
+    EDITOR_LAYER_ALL
 }EDITOR_LAYER_STATE;
 
 typedef struct EDITOR_RECT {
@@ -43,6 +50,7 @@ typedef struct EDITOR{
     TILE_ID selected_tile;
     CAMERA_EDITOR *camera;
     EDITOR_RECT editor_rect;
+    EDITOR_LAYER_STATE layer;
 
 
 }EDITOR;

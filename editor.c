@@ -8,6 +8,9 @@ static ALLEGRO_BITMAP *editor_cursor = NULL;
 
 static ALLEGRO_BITMAP *canvas_screen = NULL;
 static ALLEGRO_BITMAP *tools_screen  = NULL;
+static ALLEGRO_FONT *editor_default_font = NULL;
+
+static char state_text[65];
 
 static void editor_move_camera(float x, float y);
 static void editor_clear_screen(ALLEGRO_BITMAP* bmp);
@@ -15,6 +18,10 @@ static void editor_camera_bounds(void);
 static TILE *editor_tile_get(TILE *map[MAX_GRID_Y][MAX_GRID_X],  int x, int y);
 static void editor_tile_put(TILE_ID id, int x, int y);
 static void editor_tile_set_property(int x, int y, bool passable, bool block);
+
+
+
+static char* editor_layer_to_str(EDITOR_LAYER_STATE state);
 
 void editor_init(void){
     editor = (EDITOR*) malloc(sizeof (EDITOR));
@@ -35,6 +42,8 @@ void editor_init(void){
     editor->camera->x = 0;
     editor->camera->y = 0;
 
+    editor->layer = EDITOR_LAYER_MAP;
+
     char *path = get_file_path("tile", "editor_cursor.png");
 
     editor_cursor = al_load_bitmap(path);
@@ -47,11 +56,13 @@ void editor_init(void){
     }
 
 
-    canvas_screen = al_create_bitmap( 18 * TILE_SIZE , 18 * TILE_SIZE );
+    canvas_screen = al_create_bitmap( CANVAS_GRID_W * TILE_SIZE , CANVAS_GRID_H * TILE_SIZE );
     tools_screen = al_create_bitmap( 200, al_get_display_width(get_window_display()));
 
     editor_clear_screen(canvas_screen);
     editor_clear_screen(tools_screen);
+
+    editor_default_font = al_create_builtin_font();
 
 
     if(path)free(path);
@@ -60,7 +71,16 @@ void editor_init(void){
 
 }
 bool editor_load(LEVEL *level){
+
+    char *layer_name = NULL;
+
     editor->level  =  level;
+    editor->layer  = EDITOR_LAYER_MAP;
+
+    layer_name = editor_layer_to_str(editor->layer);
+    strcpy(state_text, layer_name);
+    if(layer_name) free(layer_name);
+
     return editor->level == NULL ? false : true;
 }
 
@@ -97,6 +117,39 @@ void editor_update_keyboard(ALLEGRO_EVENT *e)
         editor_move_camera(1,0);
     }
 
+
+
+
+    if(keyboard_pressed(ALLEGRO_KEY_1)){
+        if(editor->state == EDITOR_LAYER_BG) return;
+
+        editor->layer = EDITOR_LAYER_BG;
+    }
+
+    if(keyboard_pressed(ALLEGRO_KEY_2)){
+        if(editor->state == EDITOR_LAYER_MAP) return;
+
+        editor->layer = EDITOR_LAYER_MAP;
+    }
+
+    if(keyboard_pressed(ALLEGRO_KEY_3)){
+        if(editor->state == EDITOR_LAYER_OBJ) return;
+
+        editor->layer = EDITOR_LAYER_OBJ;
+
+    }
+
+    if(keyboard_pressed(ALLEGRO_KEY_4)){
+        if(editor->state == EDITOR_LAYER_ALL) return;
+
+        editor->layer = EDITOR_LAYER_ALL;
+
+    }
+
+      char *layer_name = editor_layer_to_str(editor->layer);
+      strcpy(state_text, layer_name);
+      if(layer_name) free(layer_name);
+
 }
 
 void editor_update(ALLEGRO_EVENT *e)
@@ -114,11 +167,11 @@ void editor_update(ALLEGRO_EVENT *e)
 
     }
 
-    if( (mouse_get()->x / TILE_SIZE) > 17){
+    if( (mouse_get()->x / TILE_SIZE) >  CANVAS_GRID_W - 1 ){
         return;
     }
 
-    if( (mouse_get()->y / TILE_SIZE) > 17){
+    if( (mouse_get()->y / TILE_SIZE) >  CANVAS_GRID_H - 1){
         return;
     }
 
@@ -165,6 +218,7 @@ void editor_render(void)
 
 
 
+
     //al_draw_rectangle(editor->level->map_width * TILE_SIZE, editor->level->map_height * TILE_SIZE, (editor->level->map_width * TILE_SIZE) - editor->camera->x, (editor->level->map_height* TILE_SIZE) - editor->camera->y, al_map_rgb(0,255,0),2.0);
 
     al_set_target_bitmap(canvas_screen);
@@ -172,10 +226,12 @@ void editor_render(void)
     for(int y = 0; y < MAX_GRID_Y; y++){
          for(int x = 0; x < MAX_GRID_X; x++){
 
-             if( x < editor->level->map_width && y < editor->level->map_height){
+            if( x < editor->level->map_width && y < editor->level->map_height){
                 al_draw_bitmap( tiles_get_by_id(editor->level->map_layer[y][x].id ), (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y,0);
-                al_draw_rectangle(x * TILE_SIZE, y * TILE_SIZE, (x * TILE_SIZE) + TILE_SIZE, (y * TILE_SIZE) + TILE_SIZE, al_map_rgb(0,0,153),1.0);
-             }
+            }
+
+            al_draw_rectangle(x * TILE_SIZE, y * TILE_SIZE, (x * TILE_SIZE) + TILE_SIZE, (y * TILE_SIZE) + TILE_SIZE, al_map_rgb(0,0,153),1.0);
+
          }
     }
 
@@ -183,10 +239,14 @@ void editor_render(void)
 
 
    //al_draw_bitmap_region(canvas_screen,editor->camera->x,editor->camera->y, al_get_bitmap_width(canvas_screen), al_get_bitmap_height(canvas_screen),editor->camera->x,editor->camera->y,0);
-   al_draw_bitmap(canvas_screen,0,0,0);
+   al_draw_bitmap(canvas_screen,0,20,0);
 
 
-   al_draw_bitmap(editor_cursor, editor->editor_rect.x1, editor->editor_rect.y1, 0);
+
+   al_draw_filled_rectangle(0,EDITOR_TOP_SPACER, al_get_display_width(get_window_display()), 0, al_map_rgb(0,0,0));
+   al_draw_textf(editor_default_font, al_map_rgb(255,0,0), 0,5, ALLEGRO_ALIGN_LEFT, "Layer: %s", state_text);
+   al_draw_bitmap(editor_cursor, editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER, 0);
+
 
 }
 
@@ -201,6 +261,8 @@ void editor_destroy(void){
     if(editor_cursor) al_destroy_bitmap(editor_cursor);
     if(canvas_screen) al_destroy_bitmap(canvas_screen);
     if(tools_screen) al_destroy_bitmap(tools_screen);
+
+    if(editor_default_font) al_destroy_font(editor_default_font);
 
 
 }
@@ -219,18 +281,21 @@ static void editor_camera_bounds(void){
 
 
 
+    int canvas_width  = al_get_bitmap_width(canvas_screen);
+    int canvas_height = al_get_bitmap_height(canvas_screen);
 
     if(editor->camera->x < 0)  editor->camera->x = 0;
 
-    if(editor->camera->x > MAX_GRID_Y * TILE_SIZE){
-        editor->camera->x =  editor->level->map_width * TILE_SIZE ;
+    if(editor->camera->x > (editor->level->map_width * TILE_SIZE) - canvas_width  ){
+        editor->camera->x =  (editor->level->map_width * TILE_SIZE) - canvas_width ;
     }
 
      if(editor->camera->y < 0)  editor->camera->y = 0;
 
-     if(editor->camera->y > MAX_GRID_Y * TILE_SIZE){
-         editor->camera->y =  editor->level->map_height  * TILE_SIZE ;
+     if(editor->camera->y > (editor->level->map_height * TILE_SIZE) - canvas_height){
+         editor->camera->y =  (editor->level->map_height  * TILE_SIZE) - canvas_height ;
      }
+
 
 
 
@@ -245,4 +310,33 @@ static void editor_clear_screen(ALLEGRO_BITMAP* bmp){
     al_set_target_bitmap(bmp);
     al_clear_to_color(al_map_rgb(0,0,0));
     al_set_target_backbuffer(get_window_display());
+}
+
+
+static char *editor_layer_to_str(EDITOR_LAYER_STATE state){
+    char *state_name = NULL;
+
+    state_name = (char *) malloc(sizeof(char) * 65);
+    memset(state_name,0, sizeof(char) * 65);
+
+    switch(state){
+    case EDITOR_LAYER_BG:
+        strncpy(state_name, "(Background Layer)", 65 - 1);
+        break;
+
+    case EDITOR_LAYER_MAP:
+        strncpy(state_name, "(Map  Layer)",65 - 1);
+        break;
+
+    case EDITOR_LAYER_OBJ:
+        strncpy(state_name, "(Object Layer)",65 - 1);
+        break;
+
+    case EDITOR_LAYER_ALL:
+        strncpy(state_name, "(ALL LAYERS)", 65 - 1);
+        break;
+
+    }
+
+    return state_name;
 }
