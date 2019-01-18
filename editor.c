@@ -261,7 +261,8 @@ void editor_update(ALLEGRO_EVENT *e)
 }
 
 
-void editor_map_to_coord(void){
+void editor_map_to_coord(void)
+{
     float x1 = (mouse_get()->x / TILE_SIZE) * TILE_SIZE;
     float x2 = TILE_SIZE * (mouse_get()->x / TILE_SIZE) + TILE_SIZE;
     float y1 = (mouse_get()->y / TILE_SIZE) * TILE_SIZE;
@@ -312,7 +313,8 @@ void editor_render(void)
 }
 
 
-void editor_destroy(void){
+void editor_destroy(void)
+{
     if(editor->camera) free(editor->camera);
     editor->camera = NULL;
 
@@ -338,7 +340,8 @@ static void editor_move_camera(float x, float y){
 
 }
 
-static void editor_camera_bounds(void){
+static void editor_camera_bounds(void)
+{
 
 
 
@@ -363,19 +366,22 @@ static void editor_camera_bounds(void){
 
 }
 
-static TILE* editor_tile_get(TILE map[MAX_GRID_Y][MAX_GRID_X], int tile_x, int tile_y){
+static TILE* editor_tile_get(TILE map[MAX_GRID_Y][MAX_GRID_X], int tile_x, int tile_y)
+{
     TILE *t = &map[tile_y][tile_x];
     return (t != NULL) ? t : NULL;
 }
 
-static void editor_clear_screen(ALLEGRO_BITMAP* bmp, ALLEGRO_COLOR col){
+static void editor_clear_screen(ALLEGRO_BITMAP* bmp, ALLEGRO_COLOR col)
+{
     al_set_target_bitmap(bmp);
     al_clear_to_color(col);
     al_set_target_backbuffer(get_window_display());
 }
 
 
-static void editor_layer_to_str(EDITOR_LAYER_STATE state){
+static void editor_layer_to_str(EDITOR_LAYER_STATE state)
+{
 
 
     switch(state){
@@ -400,7 +406,8 @@ static void editor_layer_to_str(EDITOR_LAYER_STATE state){
 
 }
 
-static void editor_tile_put(TILE *map, TILE_ID id){
+static void editor_tile_put(TILE *map, TILE_ID id)
+{
     map->id = (unsigned char) id;
     tiles_set_properties(map);
 
