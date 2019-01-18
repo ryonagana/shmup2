@@ -26,6 +26,11 @@ bool tiles_init(void){
 
     if(filepath) free(filepath);
 
+    //reset list of tiles to NULL!
+    for(int i = 0; i < TILE_COUNT + 1; i++){
+        tiles_sub_bmp[i] = NULL;
+    }
+
 
 
     tiles_sub_bmp[NO_TILE] = al_create_bitmap(32,32);
@@ -86,4 +91,26 @@ ALLEGRO_BITMAP *tiles_get_by_id(TILE_ID id){
     }
 
     return tile;
+}
+
+void tiles_set_properties(TILE *tile){
+    switch (tile->id) {
+        case NO_TILE:
+            tile->block = false;
+            tile->passable = true;
+        break;
+        case TILE_GROUND01_F:
+            tile->block = true;
+            tile->passable = false;
+        break;
+
+        case TILE_GROUND01_TOP_L:
+            tile->block = true;
+            tile->passable = false;
+        break;
+        case TILE_GROUND01_TOP_R:
+            tile->block = true;
+            tile->passable = false;
+        break;
+    }
 }

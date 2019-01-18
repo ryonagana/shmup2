@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_native_dialog.h>
-
+#include "level.h"
 
 
 typedef enum TILE_ID {
@@ -34,5 +34,5 @@ bool tiles_init(void);
 void tiles_destroy(void);
 ALLEGRO_BITMAP *tilemap_get_bmp(void);
 ALLEGRO_BITMAP *tiles_get_by_id(TILE_ID id);
-
+void tiles_set_properties(TILE *tile);
 #endif

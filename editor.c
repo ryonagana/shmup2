@@ -1,5 +1,5 @@
 #include "editor.h"
-
+#include "tiles.h"
 
 static EDITOR *editor = NULL;
 static bool opened_dialog = false;
@@ -13,23 +13,25 @@ static ALLEGRO_FONT *editor_default_font = NULL;
 static char state_text[65];
 
 static void editor_move_camera(float x, float y);
-static void editor_clear_screen(ALLEGRO_BITMAP* bmp);
+static void editor_clear_screen(ALLEGRO_BITMAP* bmp, ALLEGRO_COLOR col);
 static void editor_camera_bounds(void);
-static TILE *editor_tile_get(TILE *map[MAX_GRID_Y][MAX_GRID_X],  int x, int y);
-static void editor_tile_put(TILE_ID id, int x, int y);
+static TILE *editor_tile_get(TILE map[MAX_GRID_Y][MAX_GRID_X], int tile_x, int tile_y);
+
+
+static void editor_tile_put(TILE *map, TILE_ID id);
 static void editor_tile_set_property(int x, int y, bool passable, bool block);
 
 
 
-static char* editor_layer_to_str(EDITOR_LAYER_STATE state);
+static void editor_layer_to_str(EDITOR_LAYER_STATE state);
 
 void editor_init(void){
     editor = (EDITOR*) malloc(sizeof (EDITOR));
     if(!editor) CRITICAL("EDITOR NOT LOADED!");
     editor->level = NULL;
     editor->state = EDITOR_STATE_EDIT;
-    editor->selected_tile = NO_TILE;
-    editor->old_selected_tile = NO_TILE;
+    editor->selected_tile = TILE_GROUND01_F;
+    editor->old_selected_tile = TILE_GROUND01_F;
 
     editor->editor_rect.x1 = 0;
     editor->editor_rect.y1 = 0;
@@ -57,10 +59,10 @@ void editor_init(void){
 
 
     canvas_screen = al_create_bitmap( CANVAS_GRID_W * TILE_SIZE , CANVAS_GRID_H * TILE_SIZE );
-    tools_screen = al_create_bitmap( 200, al_get_display_width(get_window_display()));
+    tools_screen = al_create_bitmap(  5 * TILE_SIZE,  CANVAS_GRID_H * TILE_SIZE );
 
-    editor_clear_screen(canvas_screen);
-    editor_clear_screen(tools_screen);
+    editor_clear_screen(canvas_screen, al_map_rgb(0,0,0));
+    editor_clear_screen(tools_screen, al_map_rgb(0,127,0));
 
     editor_default_font = al_create_builtin_font();
 
@@ -77,8 +79,8 @@ bool editor_load(LEVEL *level){
     editor->level  =  level;
     editor->layer  = EDITOR_LAYER_MAP;
 
-    layer_name = editor_layer_to_str(editor->layer);
-    strcpy(state_text, layer_name);
+
+    editor_layer_to_str(editor->layer);
     if(layer_name) free(layer_name);
 
     return editor->level == NULL ? false : true;
@@ -121,34 +123,34 @@ void editor_update_keyboard(ALLEGRO_EVENT *e)
 
 
     if(keyboard_pressed(ALLEGRO_KEY_1)){
-        if(editor->state == EDITOR_LAYER_BG) return;
+        if(editor->layer == EDITOR_LAYER_BG) return;
 
         editor->layer = EDITOR_LAYER_BG;
     }
 
     if(keyboard_pressed(ALLEGRO_KEY_2)){
-        if(editor->state == EDITOR_LAYER_MAP) return;
+        if(editor->layer == EDITOR_LAYER_MAP) return;
 
         editor->layer = EDITOR_LAYER_MAP;
     }
 
     if(keyboard_pressed(ALLEGRO_KEY_3)){
-        if(editor->state == EDITOR_LAYER_OBJ) return;
+        if(editor->layer == EDITOR_LAYER_OBJ) return;
 
         editor->layer = EDITOR_LAYER_OBJ;
 
     }
 
     if(keyboard_pressed(ALLEGRO_KEY_4)){
-        if(editor->state == EDITOR_LAYER_ALL) return;
+        if(editor->layer == EDITOR_LAYER_ALL) return;
 
         editor->layer = EDITOR_LAYER_ALL;
 
     }
 
-      char *layer_name = editor_layer_to_str(editor->layer);
-      strcpy(state_text, layer_name);
-      if(layer_name) free(layer_name);
+
+     editor_layer_to_str(editor->layer);
+
 
 }
 
@@ -164,7 +166,7 @@ void editor_update(ALLEGRO_EVENT *e)
         if(!level_save(get_window_display(), editor->level,"mapa01",true)){
             return;
         }
-
+        return;
     }
 
     if( (mouse_get()->x / TILE_SIZE) >  CANVAS_GRID_W - 1 ){
@@ -183,12 +185,70 @@ void editor_update(ALLEGRO_EVENT *e)
     int tile_y = world_y / TILE_SIZE;
 
 
+    if(mouse_get()->rButton && editor->state != EDITOR_STATE_NO_EDIT){
+
+        TILE *t = NULL;
+
+        switch(editor->layer){
+            case EDITOR_LAYER_BG:
+                t = editor_tile_get(editor->level->bg_layer  , tile_x, tile_y);
+            break;
+
+            case EDITOR_LAYER_MAP:
+                t = editor_tile_get(editor->level->map_layer  , tile_x, tile_y);
+            break;
+            case EDITOR_LAYER_OBJ:
+                t = editor_tile_get(editor->level->obj_layer  , tile_x, tile_y);
+            break;
+
+            case EDITOR_LAYER_ALL:
+                t = NULL;
+                editor->state = EDITOR_STATE_NO_EDIT;
+            break;
+        }
+
+        if(t){
+            editor_tile_put(t, NO_TILE);
+            printf("\nTILE: x: %d y: %d\n", tile_x, tile_y);
+            printf("\nTILE ERASED!\n");
+        }
+
+    }
 
 
+    if(mouse_get()->lButton && editor->state != EDITOR_STATE_NO_EDIT){
 
-    if(mouse_get()->lButton){
-        //TILE *t = editor_tile_get(&editor->level->map_layer[MAX_GRID_Y][MAX_GRID_X], tile_x, tile_y);
-        printf("\nTILE: x: %d y: %d id: %d\n", tile_x, tile_y, 0);
+        TILE *t = NULL;
+
+        switch(editor->layer){
+            case EDITOR_LAYER_BG:
+                t = editor_tile_get(editor->level->bg_layer  , tile_x, tile_y);
+            break;
+
+            case EDITOR_LAYER_MAP:
+                t = editor_tile_get(editor->level->map_layer  , tile_x, tile_y);
+            break;
+            case EDITOR_LAYER_OBJ:
+                t = editor_tile_get(editor->level->obj_layer  , tile_x, tile_y);
+            break;
+
+            case EDITOR_LAYER_ALL:
+                t = NULL;
+                editor->state = EDITOR_STATE_NO_EDIT;
+            break;
+        }
+
+
+        if(t){
+
+            if(t->id == editor->selected_tile) return;
+
+            editor_tile_put(t, editor->selected_tile);
+            printf("\nTILE: x: %d y: %d\n", tile_x, tile_y);
+            printf("\nTILE ID: %d BLOCK: %d PASSABLE: %d\n", t->id, t->block, t->passable);
+        }
+
+
     }
 
 
@@ -240,11 +300,12 @@ void editor_render(void)
 
    //al_draw_bitmap_region(canvas_screen,editor->camera->x,editor->camera->y, al_get_bitmap_width(canvas_screen), al_get_bitmap_height(canvas_screen),editor->camera->x,editor->camera->y,0);
    al_draw_bitmap(canvas_screen,0,20,0);
-
+   al_draw_bitmap(tools_screen, (CANVAS_GRID_W * TILE_SIZE), EDITOR_TOP_SPACER,0);
 
 
    al_draw_filled_rectangle(0,EDITOR_TOP_SPACER, al_get_display_width(get_window_display()), 0, al_map_rgb(0,0,0));
    al_draw_textf(editor_default_font, al_map_rgb(255,0,0), 0,5, ALLEGRO_ALIGN_LEFT, "Layer: %s", state_text);
+
    al_draw_bitmap(editor_cursor, editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER, 0);
 
 
@@ -302,41 +363,45 @@ static void editor_camera_bounds(void){
 
 }
 
-static TILE *editor_tile_get(TILE *map[MAX_GRID_Y][MAX_GRID_X],  int x, int y){
-    return map[y][x];
+static TILE* editor_tile_get(TILE map[MAX_GRID_Y][MAX_GRID_X], int tile_x, int tile_y){
+    TILE *t = &map[tile_y][tile_x];
+    return (t != NULL) ? t : NULL;
 }
 
-static void editor_clear_screen(ALLEGRO_BITMAP* bmp){
+static void editor_clear_screen(ALLEGRO_BITMAP* bmp, ALLEGRO_COLOR col){
     al_set_target_bitmap(bmp);
-    al_clear_to_color(al_map_rgb(0,0,0));
+    al_clear_to_color(col);
     al_set_target_backbuffer(get_window_display());
 }
 
 
-static char *editor_layer_to_str(EDITOR_LAYER_STATE state){
-    char *state_name = NULL;
+static void editor_layer_to_str(EDITOR_LAYER_STATE state){
 
-    state_name = (char *) malloc(sizeof(char) * 65);
-    memset(state_name,0, sizeof(char) * 65);
 
     switch(state){
     case EDITOR_LAYER_BG:
-        strncpy(state_name, "(Background Layer)", 65 - 1);
+        strncpy(state_text, "(Background Layer)", 65 - 1);
         break;
 
     case EDITOR_LAYER_MAP:
-        strncpy(state_name, "(Map  Layer)",65 - 1);
+        strncpy(state_text, "(Map  Layer)",65 - 1);
         break;
 
     case EDITOR_LAYER_OBJ:
-        strncpy(state_name, "(Object Layer)",65 - 1);
+        strncpy(state_text, "(Object Layer)",65 - 1);
         break;
 
     case EDITOR_LAYER_ALL:
-        strncpy(state_name, "(ALL LAYERS)", 65 - 1);
+        strncpy(state_text, "(ALL LAYERS)", 65 - 1);
         break;
 
     }
 
-    return state_name;
+
+}
+
+static void editor_tile_put(TILE *map, TILE_ID id){
+    map->id = (unsigned char) id;
+    tiles_set_properties(map);
+
 }
