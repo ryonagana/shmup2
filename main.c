@@ -29,18 +29,20 @@ int main()
     //level_save(get_window_display(), &teste, "teste01.cbm", false);
 
     if(config_get()->editor_mode.i_field){
-        teste = *editor_load_path("testefinal.cbm");
+        teste = *editor_load_path("mapa_teste.cbm");
     }else {
-       level_load(get_window_display(), &teste, "testefinal.cbm", false);
+        if(!level_load(get_window_display(), &teste, "mapa_teste.cbm", false)){
+            CRITICAL("level not loaded correctly, sorry");
+            window_gracefully_quit("map not loaded");
+            return 0;
+        }
     }
 
     spaceship_camera_init(&p1_camera, player);
 
 
 
-    if(!level_load(get_window_display(), &teste, "testefinal.cbm", false)){
-        CRITICAL("level not loaded correctly, sorry");
-    }
+
 
 
 

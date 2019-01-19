@@ -78,7 +78,7 @@ LEVEL* editor_load_path(const char *filename){
     LEVEL *level = NULL;
 
     level = (LEVEL*) malloc(sizeof(LEVEL));
-
+    level_init_default(level);
     level_load(get_window_display(), level, filename, false);
     char *full_path = get_file_path("map", filename);
     strncpy(editor->map_path, full_path, strlen(full_path));

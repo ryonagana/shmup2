@@ -62,12 +62,7 @@ void level_init_default(LEVEL* level){
 
 bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog){
 
-    if(mapname == NULL){
-        LOG("LOAD MAP CANCELLED, MAP %s NOT FOUND", mapname);
-        return false;
-    }
-
-    char *filepath = get_file_path("map", mapname);
+   char *filepath = get_file_path("map", mapname);
 
     ALLEGRO_FILECHOOSER *openfile_diag = NULL;
     if(dialog){
