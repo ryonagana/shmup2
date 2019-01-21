@@ -9,6 +9,7 @@ static ALLEGRO_BITMAP *editor_cursor = NULL;
 static ALLEGRO_BITMAP *canvas_screen = NULL;
 static ALLEGRO_BITMAP *tools_screen  = NULL;
 static ALLEGRO_FONT *editor_default_font = NULL;
+static ALLEGRO_BITMAP *tile_selected_miniature = NULL;
 
 static char state_text[65];
 
@@ -22,6 +23,7 @@ static void editor_tile_put(TILE *map, TILE_ID id);
 
 
 static void editor_layer_to_str(EDITOR_LAYER_STATE state);
+static void editor_render_coord_text(void);
 
 void editor_init(void){
     editor = (EDITOR*) malloc(sizeof (EDITOR));
@@ -43,6 +45,9 @@ void editor_init(void){
     editor->camera->y = 0;
 
     editor->layer = EDITOR_LAYER_MAP;
+    editor->tile_selected_data.id = 0;
+    editor->tile_selected_data.tilex = 0;
+    editor->tile_selected_data.tiley = 0;
 
     char *path = get_file_path("tile", "editor_cursor.png");
 
@@ -58,6 +63,8 @@ void editor_init(void){
 
     canvas_screen = al_create_bitmap( CANVAS_GRID_W * TILE_SIZE , CANVAS_GRID_H * TILE_SIZE );
     tools_screen = al_create_bitmap(  5 * TILE_SIZE,  CANVAS_GRID_H * TILE_SIZE );
+
+    tile_selected_miniature = tiles_get_by_id(editor->selected_tile);
 
     editor_clear_screen(canvas_screen, al_map_rgb(0,0,0));
     editor_clear_screen(tools_screen, al_map_rgb(0,127,0));
@@ -221,6 +228,9 @@ void editor_update(ALLEGRO_EVENT *e)
     int tile_x = world_x / TILE_SIZE;
     int tile_y = world_y / TILE_SIZE;
 
+    editor->tile_selected_data.tilex = tile_x;
+    editor->tile_selected_data.tiley = tile_y;
+
 
     if(mouse_get()->rButton && editor->state != EDITOR_STATE_NO_EDIT){
 
@@ -348,6 +358,12 @@ void editor_render(void)
 
    al_draw_bitmap(editor_cursor, editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER, 0);
 
+    tile_selected_miniature =  tiles_get_by_id(editor->selected_tile);
+
+    al_draw_scaled_bitmap(tile_selected_miniature,0,0, TILE_SIZE, TILE_SIZE, 22 * TILE_SIZE, 16 * TILE_SIZE, TILE_SIZE * 2,TILE_SIZE * 2,0);
+
+    editor_render_coord_text();
+
 
 }
 
@@ -358,7 +374,7 @@ void editor_destroy(void)
     editor->camera = NULL;
 
     if(editor->level) free(editor->level);
-    editor->level;
+
 
     if(editor) free(editor);
     editor = NULL;
@@ -453,4 +469,10 @@ static void editor_tile_put(TILE *map, TILE_ID id)
     map->id = (unsigned char) id;
     tiles_set_properties(map);
 
+}
+
+void editor_render_coord_text(){
+    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 85 ,0, "TileName: %s", tiles_get_name(editor->selected_tile));
+    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 50 ,0, "Tile X: %d", editor->tile_selected_data.tilex);
+    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 35,0, "Tile Y: %d",editor->tile_selected_data.tiley);
 }

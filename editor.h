@@ -43,6 +43,12 @@ typedef struct EDITOR_RECT {
     float x1,x2,y1,y2;
 }EDITOR_RECT;
 
+typedef struct TILE_DATA {
+    int tilex, tiley;
+    TILE_ID id;
+    TILE    data;
+}TILE_DATA;
+
 typedef struct EDITOR{
     LEVEL *level;
     EDITOR_STATE state;
@@ -52,6 +58,8 @@ typedef struct EDITOR{
     EDITOR_RECT editor_rect;
     EDITOR_LAYER_STATE layer;
     bool dirty;
+    TILE_DATA tile_selected_data;
+
     char map_path[4096];
 
 

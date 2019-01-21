@@ -8,6 +8,15 @@ static ALLEGRO_BITMAP *tileset = NULL;
 static ALLEGRO_BITMAP* tiles_sub_bmp[TILE_COUNT + 1];
 
 
+static char* tile_names[TILE_COUNT + 1] = {
+    "No Tile\0",
+    "Tile Ground 01  Flat\0",
+    "Tile Ground 01  Top R\0",
+    "Tile Ground 01  Yop L\0",
+    NULL,
+};
+
+
 bool tiles_init(void){
     char *filepath = get_file_path("tile", "spritesheet.png");
     bool tileset_not_found = true;
@@ -113,4 +122,9 @@ void tiles_set_properties(TILE *tile){
             tile->passable = false;
         break;
     }
+}
+
+
+char *tiles_get_name(TILE_ID id){
+    return tile_names[(int) id];
 }

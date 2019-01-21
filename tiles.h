@@ -35,4 +35,5 @@ void tiles_destroy(void);
 ALLEGRO_BITMAP *tilemap_get_bmp(void);
 ALLEGRO_BITMAP *tiles_get_by_id(TILE_ID id);
 void tiles_set_properties(TILE *tile);
+char *tiles_get_name(TILE_ID id);
 #endif
