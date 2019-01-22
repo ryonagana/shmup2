@@ -31,6 +31,7 @@ ALLEGRO_DISPLAY* get_window_display(void);
 ALLEGRO_EVENT_QUEUE* get_window_queue(void);
 ALLEGRO_TIMER *get_window_timer(void);
 ALLEGRO_TIMER *get_window_actual_time(void);
+ALLEGRO_BITMAP *get_window_screen(void);
 
 int64_t get_window_time_ms(void);
 void     set_window_time_ms(int64_t time);

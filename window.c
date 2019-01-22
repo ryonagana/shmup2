@@ -7,6 +7,7 @@
 #include "config.h"
 #include "mouse.h"
 #include "editor.h"
+#include "tiles.h"
 
 static ALLEGRO_EVENT_QUEUE *g_queue = NULL;
 static ALLEGRO_DISPLAY *g_display = NULL;
@@ -111,8 +112,6 @@ static int init_allegro(void) {
     w = al_get_display_width(g_display);
     h = al_get_display_height(g_display);
 
-
-
     g_screen  =  al_create_bitmap(w,h);
 
     al_get_keyboard_state(&g_kbdstate);
@@ -148,19 +147,18 @@ void window_init(void){
     init_path();
     mixer_init(2);
 
-    if(config_get()->editor_mode.i_field){
-        editor_init();
-    }
-
-
-
-
     if(!tiles_init()){
         CRITICAL("Error When tried to load spritesheet");
         is_window_open = false;
 
         return;
     }
+
+
+    if(config_get()->editor_mode.i_field){
+        editor_init();
+    }
+
     is_window_open = true;
 }
 
@@ -206,6 +204,10 @@ void window_exit_loop(void){
 
 int64_t get_window_time_ms(void){
     return timer_milliseconds;
+}
+
+ALLEGRO_BITMAP *get_window_screen(void){
+    return g_screen;
 }
 
 void set_window_time_ms(int64_t time){

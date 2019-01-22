@@ -86,16 +86,16 @@ ALLEGRO_BITMAP *tiles_get_by_id(TILE_ID id){
     switch(id){
         default:
         case NO_TILE:
-            tile = GET_TILE(tiles_sub_bmp, NO_TILE);
+            tile = tiles_sub_bmp[NO_TILE];
         break;
         case TILE_GROUND01_F:
-            tile = GET_TILE(tiles_sub_bmp, TILE_GROUND01_F);
+            tile = tiles_sub_bmp[TILE_GROUND01_F];
         break;
         case TILE_GROUND01_TOP_L:
-            tile = GET_TILE(tiles_sub_bmp, TILE_GROUND01_TOP_L);
+            tile = tiles_sub_bmp[TILE_GROUND01_TOP_L];
         break;
         case TILE_GROUND01_TOP_R:
-            tile =  GET_TILE(tiles_sub_bmp, TILE_GROUND01_TOP_L);
+            tile =  GET_TILE(tiles_sub_bmp, TILE_GROUND01_TOP_R);
         break;
     }
 

@@ -29,7 +29,15 @@ int main()
     //level_save(get_window_display(), &teste, "teste01.cbm", false);
 
     if(config_get()->editor_mode.i_field){
+
+        if(!level_file_exists("mapa_teste.cbm")){
+
+            window_gracefully_quit("LEVEL not loaded");
+            return 0;
+        }
+
         teste = *editor_load_path("mapa_teste.cbm");
+
     }else {
         if(!level_load(get_window_display(), &teste, "mapa_teste.cbm", false)){
             CRITICAL("level not loaded correctly, sorry");

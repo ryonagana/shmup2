@@ -64,6 +64,12 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog
 
    char *filepath = get_file_path("map", mapname);
 
+   if(!al_filename_exists(filepath)){
+       WARN("FILENAME %s not loaded!", filepath);
+       return false;
+   }
+
+
     ALLEGRO_FILECHOOSER *openfile_diag = NULL;
     if(dialog){
 
@@ -430,4 +436,12 @@ bool level_save_i(LEVEL *lvl, char * mapname)
 
 TILE *level_get_tile(TILE map[MAX_GRID_Y][MAX_GRID_X], int x, int y){
     return &(map[y][x]);
+}
+
+bool level_file_exists(const char *mapname){
+    char *path = get_file_path("map", mapname);
+
+    if(al_filename_exists(path)) return true;
+
+    return false;
 }
