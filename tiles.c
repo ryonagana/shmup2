@@ -126,5 +126,7 @@ void tiles_set_properties(TILE *tile){
 
 
 char *tiles_get_name(TILE_ID id){
-    return tile_names[(int) id];
+
+    return tile_names[(int)id];
+
 }

@@ -31,8 +31,8 @@ static void editor_render_bg(void);
 static void editor_render_canvas(void);
 static void editor_render_canvas_cursor(void);
 static void editor_render_tools(void);
-
 static void editor_register_tile(TILE_ID id, int tx, int ty);
+static void editor_select_tile(TILE_ID tid);
 
 void editor_init(void){
     editor = (EDITOR*) malloc(sizeof (EDITOR));
@@ -59,7 +59,10 @@ void editor_init(void){
     editor->camera->y = 0;
 
     editor->layer = EDITOR_LAYER_MAP;
-    editor->tile_selected_data.id = 0;
+    editor->tile_selected_data.data.id = NO_TILE;
+    editor->tile_selected_data.data.block = false;
+    editor->tile_selected_data.data.passable = true;
+    editor->old_selected_tile = editor->selected_tile;
     editor->tile_selected_data.tilex = 0;
     editor->tile_selected_data.tiley = 0;
 
@@ -138,6 +141,8 @@ bool editor_load_mem(LEVEL *level){
 
 void editor_update_keyboard(ALLEGRO_EVENT *e)
 {
+    UNUSED_PARAM(e);
+
     if(keyboard_pressed(ALLEGRO_KEY_LCTRL) && editor->state != EDITOR_STATE_SAVE ){
         if(keyboard_pressed(ALLEGRO_KEY_F1) && editor->state != EDITOR_STATE_SAVE){
             editor->state = EDITOR_STATE_SAVE;
@@ -207,6 +212,8 @@ void editor_update_keyboard(ALLEGRO_EVENT *e)
 void editor_update(ALLEGRO_EVENT *e)
 {
 
+    UNUSED_PARAM(e);
+
     if(editor->state == EDITOR_STATE_SAVE){
         opened_dialog = false;
         editor->state = EDITOR_STATE_EDIT;
@@ -217,7 +224,9 @@ void editor_update(ALLEGRO_EVENT *e)
     }
 
     if( (mouse_get()->x / TILE_SIZE) >  CANVAS_GRID_W - 1 ){
-        return;
+        editor->state = EDITOR_STATE_PICK_TILE;
+    }else {
+        editor->state = EDITOR_STATE_EDIT;
     }
 
     if( (mouse_get()->y / TILE_SIZE) >  CANVAS_GRID_H - 1){
@@ -252,13 +261,30 @@ void editor_update(ALLEGRO_EVENT *e)
 
         t = editor_select_layer(editor->layer, tile_x, tile_y);
 
-        if(t){
+        if(t  && editor->state == EDITOR_STATE_EDIT){
 
             if(t->id == editor->selected_tile) return;
 
             editor_tile_put(t, editor->selected_tile);
             printf("\nTILE: x: %d y: %d\n", tile_x, tile_y);
             printf("\nTILE ID: %d BLOCK: %d PASSABLE: %d\n", t->id, t->block, t->passable);
+        }else if(editor->state == EDITOR_STATE_PICK_TILE){
+
+            TILE_DATA tiledata;
+            int tilex, tiley;
+
+            tilex =  tile_x % CANVAS_GRID_W;
+            tiley =  tile_y % CANVAS_GRID_H;
+
+            tiledata.data = editor_tiles[tiley][tilex];
+
+            if(tiledata.data.id == NO_TILE) return;
+
+            editor_select_tile(tiledata.data.id);
+
+
+            printf("\nTOOL: TILE_X: %d  TILE_Y: %d TILE ID: %d BLOCK: %d PASSABLE: %d\n", tilex, tiley, tiledata.data.id, tiledata.data.block, tiledata.data.passable);
+
         }
 
 
@@ -286,11 +312,11 @@ void editor_render(void)
 {
     editor_render_canvas();
     editor_render_bg();
-    editor_render_canvas_cursor();
     tile_selected_miniature =  tiles_get_by_id(editor->selected_tile);
     al_draw_scaled_bitmap(tile_selected_miniature,0,0, TILE_SIZE, TILE_SIZE, 22 * TILE_SIZE, 16 * TILE_SIZE, TILE_SIZE * 2,TILE_SIZE * 2,0);
     editor_render_coord_text();
     editor_render_tools();
+     editor_render_canvas_cursor();
 }
 
 
@@ -368,6 +394,10 @@ static void editor_layer_to_str(EDITOR_LAYER_STATE state)
         strncpy(state_text, "(Object Layer)",65 - 1);
         break;
 
+     case EDITOR_LAYER_TOOL:
+        strncpy(state_text, "(Pick a Tile!)",65 - 1);
+        break;
+
     case EDITOR_LAYER_ALL:
         strncpy(state_text, "(ALL LAYERS)", 65 - 1);
         break;
@@ -401,6 +431,9 @@ TILE *editor_select_layer(EDITOR_LAYER_STATE state, int tilex, int tiley){
         break;
         case EDITOR_LAYER_OBJ:
             t = editor_tile_get(editor->level->obj_layer  , tilex, tiley);
+        break;
+
+        case EDITOR_LAYER_TOOL:
         break;
 
         case EDITOR_LAYER_ALL:
@@ -463,3 +496,10 @@ void editor_render_tools(void){
     }
 
 }
+
+static void editor_select_tile(TILE_ID tid){
+    editor->old_selected_tile = editor->selected_tile;
+    editor->selected_tile =  tid;
+}
+
+

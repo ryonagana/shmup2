@@ -19,8 +19,6 @@ typedef enum TILE_ID {
     TILE_DOOR01_1_OPEN,
     TILE_DOOR01_2_OPEN,
     TILE_KEY_RED,
-
-
     TILE_COUNT
 
 

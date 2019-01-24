@@ -30,6 +30,7 @@ typedef enum EDITOR_STATE {
     EDITOR_STATE_NO_EDIT,
     EDITOR_STATE_SAVE,
     EDITOR_STATE_LOAD,
+    EDITOR_STATE_PICK_TILE
 }EDITOR_STATE;
 
 
@@ -37,6 +38,7 @@ typedef enum EDITOR_LAYER_STATE {
     EDITOR_LAYER_BG=100,
     EDITOR_LAYER_MAP,
     EDITOR_LAYER_OBJ,
+    EDITOR_LAYER_TOOL,
     EDITOR_LAYER_ALL
 }EDITOR_LAYER_STATE;
 
@@ -46,7 +48,6 @@ typedef struct EDITOR_RECT {
 
 typedef struct TILE_DATA {
     int tilex, tiley;
-    TILE_ID id;
     TILE    data;
 }TILE_DATA;
 

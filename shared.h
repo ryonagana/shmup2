@@ -17,6 +17,8 @@
 #define SWAP(a,b) (int tmp=a;a=b;b=tmp)
 
 
+#define  UNUSED_PARAM(x) ((void)x)
+
 enum MSG_DEBUG_TYPES {
     MSG_LOG = 0,
     MSG_WARNING,
