@@ -8,8 +8,9 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
+
 #define MAX_GRID_X 200
-#define MAX_GRID_Y 80
+#define MAX_GRID_Y 100
 
 #define MAX_ENEMIES_MAP 150
 #define MAX_ITEMS_MAP   100

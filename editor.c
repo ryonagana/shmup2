@@ -247,7 +247,7 @@ void editor_update(ALLEGRO_EVENT *e)
 
         t = editor_select_layer(editor->layer, tile_x, tile_y);
 
-        if(t){
+        if(t && t->id != NO_TILE){
             editor_tile_put(t, NO_TILE);
             printf("\nTILE: x: %d y: %d\n", tile_x, tile_y);
             printf("\nTILE ERASED!\n");
@@ -273,8 +273,8 @@ void editor_update(ALLEGRO_EVENT *e)
             TILE_DATA tiledata;
             int tilex, tiley;
 
-            tilex =  tile_x % CANVAS_GRID_W;
-            tiley =  tile_y % CANVAS_GRID_H;
+            tilex =  (mouse_get()->x / TILE_SIZE) % CANVAS_GRID_W;
+            tiley =  (mouse_get()->y / TILE_SIZE) % CANVAS_GRID_H;
 
             tiledata.data = editor_tiles[tiley][tilex];
 
@@ -470,8 +470,9 @@ void editor_render_canvas(void){
 
 
 void editor_render_canvas_cursor(void){
-    al_draw_bitmap(editor_cursor, editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER, 0);
 
+    al_draw_bitmap(tiles_get_by_id(editor->selected_tile) ,editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER,0);
+    al_draw_bitmap(editor_cursor, editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER, 0);
 }
 
 void editor_render_bg(void){

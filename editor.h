@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include "window.h"
 #include <allegro5/allegro.h>
+#include <allegro5/allegro_color.h>
 #include "keyboard.h"
 #include "level.h"
 #include "window.h"

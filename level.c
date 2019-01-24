@@ -74,7 +74,7 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog
     if(dialog){
 
         openfile_diag = al_create_native_file_dialog(filepath, "Load MAP:", "*.*|*.cbm", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
-
+        al_rest(1.0);
         if(!al_show_native_file_dialog(display, openfile_diag)){
             if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
             return false;

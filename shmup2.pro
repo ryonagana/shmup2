@@ -19,7 +19,8 @@ SOURCES += \
     render.c \
     tiles.c \
     config.c \
-    editor.c
+    editor.c \
+    thread.c
 
 
 HEADERS += \
@@ -35,7 +36,8 @@ HEADERS += \
     main.h \
     tiles.h \
     config.h \
-    editor.h
+    editor.h \
+   thread.h
 
 win32: {
     DEFINES += ALLEGRO_STATICLINK
