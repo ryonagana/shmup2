@@ -105,7 +105,7 @@ int main()
 
 
             if(config_get()->editor_mode.i_field){
-                render_background_color(&teste);
+
                 editor_render();
 
             }else {

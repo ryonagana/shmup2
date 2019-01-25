@@ -1,5 +1,6 @@
 #include "editor.h"
 #include "tiles.h"
+#include "render.h"
 
 static EDITOR *editor = NULL;
 static bool opened_dialog = false;
@@ -310,13 +311,14 @@ void editor_map_to_coord(void)
 
 void editor_render(void)
 {
+    render_background_color(editor->level);
     editor_render_canvas();
     editor_render_bg();
     tile_selected_miniature =  tiles_get_by_id(editor->selected_tile);
     al_draw_scaled_bitmap(tile_selected_miniature,0,0, TILE_SIZE, TILE_SIZE, 22 * TILE_SIZE, 16 * TILE_SIZE, TILE_SIZE * 2,TILE_SIZE * 2,0);
     editor_render_coord_text();
     editor_render_tools();
-     editor_render_canvas_cursor();
+    editor_render_canvas_cursor();
 }
 
 
@@ -452,18 +454,25 @@ static void editor_register_tile(TILE_ID id, int tx, int ty)
 
 void editor_render_canvas(void){
     al_set_target_bitmap(canvas_screen);
+    render_background_color(editor->level);
 
     for(int y = 0; y < MAX_GRID_Y; y++){
          for(int x = 0; x < MAX_GRID_X; x++){
 
-            if( x < editor->level->map_width && y < editor->level->map_height){
-                al_draw_bitmap( tiles_get_by_id(editor->level->map_layer[y][x].id ), (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y,0);
+            if( x <= editor->level->map_width && y <= editor->level->map_height){
+                TILE_ID tile = (unsigned char)editor->level->map_layer[y][x].id;
+
+                if(tile != NO_TILE){
+                    al_draw_bitmap( tiles_get_by_id(tile), (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y,0);
+                }
             }
 
-            al_draw_rectangle(x * TILE_SIZE, y * TILE_SIZE, (x * TILE_SIZE) + TILE_SIZE, (y * TILE_SIZE) + TILE_SIZE, al_map_rgb(0,0,153),1.0);
+            al_draw_rectangle((x * TILE_SIZE) - editor->camera->x , (y * TILE_SIZE) - editor->camera->y, (x * TILE_SIZE) + TILE_SIZE - editor->camera->x, (y * TILE_SIZE) + TILE_SIZE - editor->camera->y, al_map_rgb(0,0,153),1.0);
 
          }
     }
+
+
 
     al_set_target_backbuffer(get_window_display());
 }
