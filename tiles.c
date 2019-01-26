@@ -49,14 +49,19 @@ bool tiles_init(void){
 
     if(tileset_not_found){
         tiles_sub_bmp[TILE_GROUND01_F]     =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
+        tiles_sub_bmp[TILE_GROUND02_TOP]     =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
         tiles_sub_bmp[TILE_GROUND01_TOP_L] =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
         tiles_sub_bmp[TILE_GROUND01_TOP_R] =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
         return true;
     }
 
+
     tiles_sub_bmp[TILE_GROUND01_F] = al_create_sub_bitmap(tileset,0,0,32,32);
-    tiles_sub_bmp[TILE_GROUND01_TOP_L] = al_create_sub_bitmap(tileset,32,0,32,32);
-    tiles_sub_bmp[TILE_GROUND01_TOP_R] = al_create_sub_bitmap(tileset,0,32,32,32);
+    tiles_sub_bmp[TILE_GROUND02_F] = al_create_sub_bitmap(tileset,0,32,32,32);
+
+    tiles_sub_bmp[TILE_GROUND01_TOP_L] = al_create_sub_bitmap(tileset,0,64,32,32);
+    tiles_sub_bmp[TILE_GROUND01_TOP_R] = al_create_sub_bitmap(tileset,0,96,32,32);
+
 
     return true;
 
@@ -96,6 +101,10 @@ ALLEGRO_BITMAP *tiles_get_by_id(TILE_ID id){
         break;
         case TILE_GROUND01_TOP_R:
             tile =  GET_TILE(tiles_sub_bmp, TILE_GROUND01_TOP_R);
+        break;
+
+        case TILE_GROUND02_TOP:
+        tile = tiles_sub_bmp[TILE_GROUND02_TOP];
         break;
     }
 

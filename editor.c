@@ -100,6 +100,7 @@ void editor_init(void){
     editor_register_tile(TILE_GROUND01_F,0,0);
     editor_register_tile(TILE_GROUND01_TOP_L,1,0);
     editor_register_tile(TILE_GROUND01_TOP_R,2,0);
+    editor_register_tile(TILE_GROUND02_F,0,1);
 
 
 }
@@ -319,6 +320,7 @@ void editor_render(void)
     editor_render_coord_text();
     editor_render_tools();
     editor_render_canvas_cursor();
+
 }
 
 
