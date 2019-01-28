@@ -20,7 +20,7 @@ static THREAD_INFO thread_info;
 static char map_path[4096];
 
 
-static ALLEGRO_FILE *fp_file =  NULL;
+
 
 typedef enum EDITOR_DIALOG_TYPE {
     EDITOR_SAVE_DIALOG,
@@ -28,16 +28,18 @@ typedef enum EDITOR_DIALOG_TYPE {
 }EDITOR_DIALOG_TYPE;
 
 typedef struct EDITOR_THREAD_DATA {
-    bool end;
     EDITOR *editor; /* TODO (fix this struct alignment problem) */
-    uint32_t type;
+    int type;
+    int end;
+    char pad[8];
 }EDITOR_THREAD_DATA;
 
 
 static EDITOR_THREAD_DATA editor_thread_data = {
-    false,
     NULL,
-    EDITOR_SAVE_DIALOG
+    EDITOR_SAVE_DIALOG,
+    0,
+    {0,0,0}
 };
 
 
@@ -146,7 +148,7 @@ void editor_init(void){
     thread_create(&thread_info);
 
     al_lock_mutex(thread_info.mutex);
-    editor_thread_data.end = false;
+    editor_thread_data.end = 0;
     editor_thread_data.editor = editor;
     al_unlock_mutex(thread_info.mutex);
 
@@ -273,7 +275,7 @@ void editor_update(ALLEGRO_EVENT *e)
         editor->state = EDITOR_STATE_SAVE;
 
         al_lock_mutex(thread_info.mutex);
-        editor_thread_data.end = true;
+        editor_thread_data.end = 1;
         editor_thread_data.type = EDITOR_SAVE_DIALOG;
         al_unlock_mutex(thread_info.mutex);
 
@@ -282,7 +284,7 @@ void editor_update(ALLEGRO_EVENT *e)
 
     if(editor->state == EDITOR_STATE_LOAD){
         al_lock_mutex(thread_info.mutex);
-        editor_thread_data.end = true;
+        editor_thread_data.end = 1;
         editor_thread_data.type = EDITOR_LOAD_DIALOG;
         al_unlock_mutex(thread_info.mutex);
     }
@@ -613,7 +615,7 @@ static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
         }
 
         al_lock_mutex(thread_info.mutex);
-        d->end = false;
+        d->end = 0;
         al_unlock_mutex(thread_info.mutex);
 
         /* this thread is meant to run fast because a thread will keep running in background
@@ -629,7 +631,7 @@ static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
 
 static void editor_load_tile_file(const char* tile_file){
     char *path = NULL;
-
+    static ALLEGRO_FILE *fp_file =  NULL;
     if(!fp_file){
         path = get_file_path(NULL,tile_file);
 
@@ -658,7 +660,7 @@ static void editor_load_tile_file(const char* tile_file){
 
    }
 
-   al_fclose(fp_file);
+
 
 }
 
