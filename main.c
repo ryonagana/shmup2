@@ -95,7 +95,7 @@ int main()
         mouse_update(&event);
 
         if(config_get()->editor_mode.i_field){
-            editor_update_keyboard(&event);
+            editor_update_input(&event);
         }
 
 

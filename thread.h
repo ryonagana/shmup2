@@ -4,12 +4,12 @@
 #include <allegro5/allegro.h>
 
 /* TODO */
-typedef struct THREAD_DATA {
+typedef struct THREAD_INFO {
     ALLEGRO_MUTEX *mutex;
     ALLEGRO_COND *cond;
-}THREAD_DATA;
+}THREAD_INFO;
 
 
-void thread_create(THREAD_DATA *data);
-void thread_destroy(THREAD_DATA *data);
+void thread_create(THREAD_INFO *data);
+void thread_destroy(THREAD_INFO *data);
 #endif

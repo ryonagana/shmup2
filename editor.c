@@ -1,6 +1,7 @@
 #include "editor.h"
 #include "tiles.h"
 #include "render.h"
+#include "thread.h"
 
 static EDITOR *editor = NULL;
 static bool opened_dialog = false;
@@ -10,6 +11,31 @@ static ALLEGRO_BITMAP *canvas_screen = NULL;
 static ALLEGRO_BITMAP *tools_screen  = NULL;
 static ALLEGRO_FONT *editor_default_font = NULL;
 static ALLEGRO_BITMAP *tile_selected_miniature = NULL;
+
+
+static ALLEGRO_THREAD *dialog_thread = NULL;
+static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data);
+static THREAD_INFO thread_info;
+
+
+typedef enum EDITOR_DIALOG_TYPE {
+    EDITOR_SAVE_DIALOG,
+    EDITOR_LOAD_DIALOG
+}EDITOR_DIALOG_TYPE;
+
+typedef struct EDITOR_THREAD_DATA {
+    bool end;
+    EDITOR *editor;
+    int type;
+}EDITOR_THREAD_DATA;
+
+
+static EDITOR_THREAD_DATA editor_thread_data = {
+    false,
+    NULL,
+    EDITOR_SAVE_DIALOG
+};
+
 
 #define GRID_TOOLS_H (30)
 #define GRID_TOOLS_W (5)
@@ -36,8 +62,12 @@ static void editor_register_tile(TILE_ID id, int tx, int ty);
 static void editor_select_tile(TILE_ID tid);
 
 void editor_init(void){
+    /* INITIALIZE THE EDITOR STRUCT */
+
     editor = (EDITOR*) malloc(sizeof (EDITOR));
+
     if(!editor) CRITICAL("EDITOR NOT LOADED!");
+
     editor->level = NULL;
     editor->state = EDITOR_STATE_EDIT;
     editor->selected_tile = TILE_GROUND01_F;
@@ -53,12 +83,14 @@ void editor_init(void){
     editor->tools_rect.x2 = 0;
     editor->tools_rect.y2 = 0;
 
+    /* init the camera (in 2d is scrolling) */
     editor->camera = (CAMERA_EDITOR*) malloc(sizeof(CAMERA_EDITOR));
     editor->camera->height = window_get_height();
     editor->camera->width = window_get_width();
     editor->camera->x = 0;
     editor->camera->y = 0;
 
+    /* initi the initial state of the editor */
     editor->layer = EDITOR_LAYER_MAP;
     editor->tile_selected_data.data.id = NO_TILE;
     editor->tile_selected_data.data.block = false;
@@ -77,6 +109,8 @@ void editor_init(void){
         al_draw_rectangle(0,0,32,32,al_map_rgb(255,0,0),1.0);
         al_set_target_backbuffer(get_window_display());
     }
+
+    /* create the renderable parts */
     canvas_screen = al_create_bitmap( CANVAS_GRID_W * TILE_SIZE , CANVAS_GRID_H * TILE_SIZE );
     tools_screen = al_create_bitmap(  5 * TILE_SIZE,  CANVAS_GRID_H * TILE_SIZE );
 
@@ -90,6 +124,7 @@ void editor_init(void){
 
     if(path)free(path);
 
+    /* INITIALIZE the map with all objects as 0 (NO_TILE)  */
     for(int y = 0; y < GRID_TOOLS_H; y++){
         for(int x = 0; x < GRID_TOOLS_W; x++){
               editor_tiles[y][x].id = NO_TILE;
@@ -97,6 +132,23 @@ void editor_init(void){
 
         }
     }
+
+
+    /* THREAD INITIALIZATION */
+
+    thread_create(&thread_info);
+
+    al_lock_mutex(thread_info.mutex);
+    editor_thread_data.end = false;
+    editor_thread_data.editor = editor;
+    al_unlock_mutex(thread_info.mutex);
+
+    dialog_thread = al_create_thread(editor_dialog_thread, &editor_thread_data);
+    al_start_thread(dialog_thread);
+
+   /* THREAD INITIALIZATION END */
+
+
     editor_register_tile(TILE_GROUND01_F,0,0);
     editor_register_tile(TILE_GROUND01_TOP_L,1,0);
     editor_register_tile(TILE_GROUND01_TOP_R,2,0);
@@ -141,7 +193,7 @@ bool editor_load_mem(LEVEL *level){
     return editor->level == NULL ? false : true;
 }
 
-void editor_update_keyboard(ALLEGRO_EVENT *e)
+void editor_update_input(ALLEGRO_EVENT *e)
 {
     UNUSED_PARAM(e);
 
@@ -153,6 +205,7 @@ void editor_update_keyboard(ALLEGRO_EVENT *e)
 
         }
     }
+
     if(keyboard_pressed(ALLEGRO_KEY_LCTRL) && editor->state != EDITOR_STATE_LOAD && !opened_dialog ){
         if(keyboard_pressed(ALLEGRO_KEY_F2) && editor->state != EDITOR_STATE_LOAD && !opened_dialog){
             editor->state = EDITOR_STATE_LOAD;
@@ -219,9 +272,19 @@ void editor_update(ALLEGRO_EVENT *e)
     if(editor->state == EDITOR_STATE_SAVE){
         opened_dialog = false;
         editor->state = EDITOR_STATE_EDIT;
+
+        al_lock_mutex(thread_info.mutex);
+        editor_thread_data.end = true;
+        al_unlock_mutex(thread_info.mutex);
+
+
+
+
+        /*
         if(!level_save(get_window_display(), editor->level,"mapa01",true)){
             return;
         }
+        */
         return;
     }
 
@@ -339,6 +402,21 @@ void editor_destroy(void)
     if(tools_screen) al_destroy_bitmap(tools_screen);
 
     if(editor_default_font) al_destroy_font(editor_default_font);
+
+    if(thread_info.mutex) {
+        al_destroy_mutex(thread_info.mutex);
+        thread_info.mutex = NULL;
+    }
+
+    if(thread_info.cond) {
+        al_destroy_cond(thread_info.cond);
+        thread_info.cond = NULL;
+    }
+
+    if(dialog_thread){
+        al_destroy_thread(dialog_thread);
+    }
+
 }
 
 
@@ -512,6 +590,27 @@ void editor_render_tools(void){
 static void editor_select_tile(TILE_ID tid){
     editor->old_selected_tile = editor->selected_tile;
     editor->selected_tile =  tid;
+}
+
+static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
+    EDITOR_THREAD_DATA *d = (EDITOR_THREAD_DATA*) data;
+
+
+    while(!al_get_thread_should_stop(thread)){
+
+        if(d->end){
+            level_save(get_window_display(), d->editor->level, "map_teste.cbm", true);
+        }
+
+        al_lock_mutex(thread_info.mutex);
+        d->end = false;
+        al_unlock_mutex(thread_info.mutex);
+        al_rest(1.0);
+    }
+
+
+    return NULL;
+
 }
 
 

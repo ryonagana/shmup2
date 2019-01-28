@@ -73,7 +73,7 @@ typedef struct EDITOR{
 void editor_init(void);
 bool editor_load_mem(LEVEL *level);
 LEVEL* editor_load_path(const char *filename);
-void editor_update_keyboard(ALLEGRO_EVENT *e);
+void editor_update_input(ALLEGRO_EVENT *e);
 TILE* editor_select_layer(EDITOR_LAYER_STATE state, int tilex, int tiley);
 void editor_update(ALLEGRO_EVENT *e);
 void editor_render(void);
