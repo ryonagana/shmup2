@@ -19,6 +19,9 @@ static THREAD_INFO thread_info;
 
 static char map_path[4096];
 
+
+static ALLEGRO_FILE *fp_file =  NULL;
+
 typedef enum EDITOR_DIALOG_TYPE {
     EDITOR_SAVE_DIALOG,
     EDITOR_LOAD_DIALOG
@@ -61,6 +64,9 @@ static void editor_render_canvas_cursor(void);
 static void editor_render_tools(void);
 static void editor_register_tile(TILE_ID id, int tx, int ty);
 static void editor_select_tile(TILE_ID tid);
+
+
+static void editor_load_tile_file(const char* tile_file);
 
 void editor_init(void){
     /* INITIALIZE THE EDITOR STRUCT */
@@ -149,6 +155,8 @@ void editor_init(void){
 
    /* THREAD INITIALIZATION END */
 
+
+    editor_load_tile_file("editor.txt");
 
     editor_register_tile(TILE_GROUND01_F,0,0);
     editor_register_tile(TILE_GROUND01_TOP_L,1,0);
@@ -616,6 +624,41 @@ static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
 
 
     return NULL;
+
+}
+
+static void editor_load_tile_file(const char* tile_file){
+    char *path = NULL;
+
+    if(!fp_file){
+        path = get_file_path(NULL,tile_file);
+
+        if(!al_filename_exists(path)){
+            WARN("TILE EDITOR  -- %s -- NOT FOUND", path);
+            return;
+        }
+
+        fp_file = al_fopen(path, "rb");
+
+    }
+
+
+   char linebuf[127];
+   char *text = NULL;
+
+
+   while(al_fgets(fp_file, linebuf, sizeof(char) * 127)){
+        printf("TILE FILE: %s ", linebuf);
+
+        text = strtok(linebuf,"    ");
+
+        do  {
+            printf("%s\n", text);
+        }while(text = strtok(NULL, "    "));
+
+   }
+
+   al_fclose(fp_file);
 
 }
 
