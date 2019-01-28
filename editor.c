@@ -17,6 +17,7 @@ static ALLEGRO_THREAD *dialog_thread = NULL;
 static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data);
 static THREAD_INFO thread_info;
 
+static char map_path[4096];
 
 typedef enum EDITOR_DIALOG_TYPE {
     EDITOR_SAVE_DIALOG,
@@ -26,7 +27,7 @@ typedef enum EDITOR_DIALOG_TYPE {
 typedef struct EDITOR_THREAD_DATA {
     bool end;
     EDITOR *editor; /* TODO (fix this struct alignment problem) */
-    int type;
+    uint32_t type;
 }EDITOR_THREAD_DATA;
 
 
@@ -118,7 +119,7 @@ void editor_init(void){
     editor_clear_screen(canvas_screen, al_map_rgb(0,0,0));
     editor_clear_screen(tools_screen, al_map_rgb(0,127,0));
     editor_default_font = al_create_builtin_font();
-    memset(editor->map_path, 0, sizeof (char) * 4096);
+    memset(map_path, 0, sizeof (char) * 4096);
 
     editor->dirty = false;
 
@@ -169,7 +170,7 @@ LEVEL* editor_load_path(const char *filename){
     }
 
     char *full_path = get_file_path("map", filename);
-    strncpy(editor->map_path, full_path, strlen(full_path));
+    strncpy(map_path, full_path, strlen(full_path));
 
     editor->level = level;
 

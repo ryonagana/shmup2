@@ -65,8 +65,6 @@ typedef struct EDITOR{
     TILE_DATA tile_selected_data;
 
 
-    char map_path[4096];
-
 
 }EDITOR;
 
