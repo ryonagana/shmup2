@@ -160,11 +160,12 @@ void editor_init(void){
 
     editor_load_tile_file("editor.txt");
 
+    /*
     editor_register_tile(TILE_GROUND01_F,0,0);
     editor_register_tile(TILE_GROUND01_TOP_L,1,0);
     editor_register_tile(TILE_GROUND01_TOP_R,2,0);
     editor_register_tile(TILE_GROUND02_F,0,1);
-
+    */
 
 }
 
@@ -648,19 +649,31 @@ static void editor_load_tile_file(const char* tile_file){
    char linebuf[127];
    char *text = NULL;
 
+   al_fgets(fp_file, linebuf, sizeof(char) * 127);
+   memset(linebuf,0, sizeof(char) * 127);
 
-   while(al_fgets(fp_file, linebuf, sizeof(char) * 127)){
-        printf("TILE FILE: %s ", linebuf);
+   while( (al_fgets(fp_file, linebuf, sizeof(char) * 127)) != 0 && !al_feof(fp_file) ){
+       int id,row,col;
 
-        text = strtok(linebuf,"    ");
+       text = strtok(linebuf,";");
+       if(*text == '\n') break;
 
-        do  {
-            printf("%s\n", text);
-        }while(text = strtok(NULL, "    "));
+       id = atoi(text);
+       text = NULL;
+       text = strtok(NULL, ";");
+       row = atoi(text);
+       text = NULL;
+       text = strtok(NULL, ";");
+       col = atoi(text);
+
+       memset(linebuf,0, sizeof(char) * 127);
+       editor_register_tile( (TILE_ID) id, row, col);
 
    }
 
-
+   LOG("Editor Tiles Loaded With Success!");
+   LOG("Editor.txt: [%s]", path);
+   al_fclose(fp_file);
 
 }
 
