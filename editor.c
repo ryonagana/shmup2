@@ -25,7 +25,7 @@ typedef enum EDITOR_DIALOG_TYPE {
 
 typedef struct EDITOR_THREAD_DATA {
     bool end;
-    EDITOR *editor;
+    EDITOR *editor; /* TODO (fix this struct alignment problem) */
     int type;
 }EDITOR_THREAD_DATA;
 
@@ -206,21 +206,11 @@ void editor_update_input(ALLEGRO_EVENT *e)
         }
     }
 
-    if(keyboard_pressed(ALLEGRO_KEY_LCTRL) && editor->state != EDITOR_STATE_LOAD && !opened_dialog ){
-        if(keyboard_pressed(ALLEGRO_KEY_F2) && editor->state != EDITOR_STATE_LOAD && !opened_dialog){
+    if(keyboard_pressed(ALLEGRO_KEY_LCTRL) && editor->state != EDITOR_STATE_LOAD){
+        if(keyboard_pressed(ALLEGRO_KEY_F2) && editor->state != EDITOR_STATE_LOAD){
             editor->state = EDITOR_STATE_LOAD;
-            opened_dialog = true;
-            char map_loaded_name[2048];
-
-            if(level_load(get_window_display(), editor->level, map_loaded_name, false)){
-                printf("MAP LOADED %s", map_loaded_name);
-
-            }
-            opened_dialog = false;
-
-            editor->state = EDITOR_STATE_EDIT;
-
-        }
+             opened_dialog = true;
+       }
     }
     if(keyboard_pressed(ALLEGRO_KEY_W)){
         editor_move_camera(0,-1);
@@ -271,21 +261,21 @@ void editor_update(ALLEGRO_EVENT *e)
 
     if(editor->state == EDITOR_STATE_SAVE){
         opened_dialog = false;
-        editor->state = EDITOR_STATE_EDIT;
+        editor->state = EDITOR_STATE_SAVE;
 
         al_lock_mutex(thread_info.mutex);
         editor_thread_data.end = true;
+        editor_thread_data.type = EDITOR_SAVE_DIALOG;
         al_unlock_mutex(thread_info.mutex);
 
+    }
 
 
-
-        /*
-        if(!level_save(get_window_display(), editor->level,"mapa01",true)){
-            return;
-        }
-        */
-        return;
+    if(editor->state == EDITOR_STATE_LOAD){
+        al_lock_mutex(thread_info.mutex);
+        editor_thread_data.end = true;
+        editor_thread_data.type = EDITOR_LOAD_DIALOG;
+        al_unlock_mutex(thread_info.mutex);
     }
 
     if( (mouse_get()->x / TILE_SIZE) >  CANVAS_GRID_W - 1 ){
@@ -599,12 +589,27 @@ static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
     while(!al_get_thread_should_stop(thread)){
 
         if(d->end){
-            level_save(get_window_display(), d->editor->level, "map_teste.cbm", true);
+
+            switch(d->type){
+                case EDITOR_SAVE_DIALOG:
+                    level_save(get_window_display(), d->editor->level, NULL, true);
+                break;
+
+                case EDITOR_LOAD_DIALOG:
+                    level_load(get_window_display(), d->editor->level, NULL, true);
+                break;
+
+            }
+
         }
 
         al_lock_mutex(thread_info.mutex);
         d->end = false;
         al_unlock_mutex(thread_info.mutex);
+
+        /* this thread is meant to run fast because a thread will keep running in background
+        waiting for the keys shortcuts. so 1 second  is enough to to call them
+        */
         al_rest(1.0);
     }
 
