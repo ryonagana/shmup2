@@ -199,6 +199,11 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char *mapname, bool dialog)
 
         filepath = al_get_native_file_dialog_path(chooser_diag,0);
 
+        if(!filepath){
+            if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
+            return false;
+        }
+
     }
 
 
@@ -266,7 +271,7 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char *mapname, bool dialog)
         if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
     }
 
-    if(filepath) free(filepath);
+    //if(filepath) free(filepath);
     return true;
 }
 
