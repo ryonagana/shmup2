@@ -582,8 +582,10 @@ void editor_render_tools(void){
             if(editor_tiles[y][x].id == NO_TILE) continue;
 
             al_draw_bitmap( tiles_get_by_id( editor_tiles[y][x].id), TILE_TO_SIZE(x)  + TILE_TO_SIZE( CANVAS_GRID_W) , TILE_TO_SIZE(y) + EDITOR_TOP_SPACER,0);
-            al_draw_rectangle( (x * TILE_SIZE)  + TILE_TO_SIZE( CANVAS_GRID_W ), (y * TILE_SIZE) + EDITOR_TOP_SPACER, ((x * TILE_SIZE) + TILE_SIZE) +  TILE_TO_SIZE( CANVAS_GRID_W ), ((y * TILE_SIZE) + TILE_SIZE) + EDITOR_TOP_SPACER, al_map_rgb(255,195,0),1.0);
 
+            /*
+            al_draw_rectangle( (x * TILE_SIZE)  + TILE_TO_SIZE( CANVAS_GRID_W ), (y * TILE_SIZE) + EDITOR_TOP_SPACER, ((x * TILE_SIZE) + TILE_SIZE) +  TILE_TO_SIZE( CANVAS_GRID_W ), ((y * TILE_SIZE) + TILE_SIZE) + EDITOR_TOP_SPACER, al_map_rgb(255,195,0),1.0);
+            */
         }
     }
 
@@ -633,6 +635,8 @@ static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
 static void editor_load_tile_file(const char* tile_file){
     char *path = NULL;
     static ALLEGRO_FILE *fp_file =  NULL;
+
+
     if(!fp_file){
         path = get_file_path(NULL,tile_file);
 
@@ -649,8 +653,9 @@ static void editor_load_tile_file(const char* tile_file){
    char linebuf[127];
    char *text = NULL;
 
-   al_fgets(fp_file, linebuf, sizeof(char) * 127);
    memset(linebuf,0, sizeof(char) * 127);
+   al_fgets(fp_file, linebuf, sizeof(char) * 127);
+
 
    while( (al_fgets(fp_file, linebuf, sizeof(char) * 127)) != 0 && !al_feof(fp_file) ){
        int id,row,col;

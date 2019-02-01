@@ -8,6 +8,8 @@ static ALLEGRO_BITMAP *tileset = NULL;
 static ALLEGRO_BITMAP* tiles_sub_bmp[TILE_COUNT + 1];
 
 
+static void tiles_load_from_file(const char *filename);
+
 static char* tile_names[TILE_COUNT + 1] = {
     "No Tile\0",
     "Tile Ground 01  Flat\0",
@@ -43,24 +45,26 @@ bool tiles_init(void){
 
 
     tiles_sub_bmp[NO_TILE] = al_create_bitmap(32,32);
+
     al_set_target_bitmap(tiles_sub_bmp[NO_TILE]);
-    al_clear_to_color(al_map_rgb(220,220,220));
+    al_clear_to_color(al_map_rgb(220,0,0));
     al_set_target_backbuffer(get_window_display());
 
-    if(tileset_not_found){
-        tiles_sub_bmp[TILE_GROUND01_F]     =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
-        tiles_sub_bmp[TILE_GROUND02_TOP]     =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
-        tiles_sub_bmp[TILE_GROUND01_TOP_L] =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
-        tiles_sub_bmp[TILE_GROUND01_TOP_R] =  al_clone_bitmap(tiles_sub_bmp[NO_TILE]);
-        return true;
+    if(!tileset){
+        for(unsigned int i = 0; i < TILE_COUNT; i++){
+            tiles_sub_bmp[i] = al_clone_bitmap( tiles_sub_bmp[NO_TILE]);
+        }
     }
 
+    tiles_load_from_file("tiles.txt");
 
+    /*
     tiles_sub_bmp[TILE_GROUND01_F] = al_create_sub_bitmap(tileset,0,0,32,32);
-    tiles_sub_bmp[TILE_GROUND02_F] = al_create_sub_bitmap(tileset,0,32,32,32);
-
-    tiles_sub_bmp[TILE_GROUND01_TOP_L] = al_create_sub_bitmap(tileset,0,64,32,32);
-    tiles_sub_bmp[TILE_GROUND01_TOP_R] = al_create_sub_bitmap(tileset,0,96,32,32);
+    tiles_sub_bmp[TILE_GROUND01_TOP_L] = al_create_sub_bitmap(tileset,32,0,32,32);
+    tiles_sub_bmp[TILE_GROUND01_TOP_R] = al_create_sub_bitmap(tileset,64,0,32,32);
+    tiles_sub_bmp[TILE_GROUND02_F] = al_create_sub_bitmap(tileset,96,0,32,32);
+    tiles_sub_bmp[TILE_GROUND02_TOP] = al_create_sub_bitmap(tileset,128,0,32,32);
+    */
 
 
     return true;
@@ -137,5 +141,67 @@ void tiles_set_properties(TILE *tile){
 char *tiles_get_name(TILE_ID id){
 
     return tile_names[(int)id];
+
+}
+
+static void tiles_load_from_file(const char *filename){
+    ALLEGRO_FILE *fp = NULL;
+    char *fullpath = NULL;
+
+    fullpath = get_file_path(NULL, filename);
+    LOG("LOAD TILE LIST: %s", fullpath);
+    if(!al_filename_exists(fullpath)){
+        al_show_native_message_box(get_window_display(), "Error:", "An Error Occured!", "Missing tiles.txt sorry", NULL , 0);
+        window_exit_loop();
+        window_gracefully_quit("tiles do not exists");
+        return;
+    }
+
+    fp = al_fopen(fullpath, "rb");
+
+    if(!fp){
+        al_show_native_message_box(get_window_display(), "Error:", "An Error Occured!", "Missing tiles.txt sorry", NULL , 0);
+        window_gracefully_quit("filename cant find tiles.txt");
+        return;
+    }
+
+    char linefeed[127];
+    char *line = NULL;
+
+     al_fgets(fp, linefeed, sizeof(char) * 127);
+
+     while(al_fgets(fp,linefeed, sizeof(char) * 127) != 0){
+        int id, offsetx, offsety, width, height;
+
+        line = strtok(linefeed,";");
+        if(*line == '\n') break;
+
+        id = atoi(line);
+        line = NULL;
+
+        line = strtok(NULL, ";");
+        offsetx = atoi(line);
+        line = NULL;
+
+        line = strtok(NULL, ";");
+        offsety = atoi(line);
+        line = NULL;
+
+        line = strtok(NULL, ";");
+        width  = atoi(line);
+        line = NULL;
+
+        line = strtok(NULL, ";");
+        height = atoi(line);
+        line = NULL;
+
+        memset(linefeed,0, sizeof(char) * 127);
+        printf("\nID: %d X: %d Y: %d\n\n", id, offsetx, offsety);
+        TILE_ID tid = (TILE_ID) id;
+        tiles_sub_bmp[tid] = al_create_sub_bitmap(tileset,offsetx,offsety,width,height);
+
+     }
+
+    al_fclose(fp);
 
 }
