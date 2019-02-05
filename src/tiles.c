@@ -1,7 +1,9 @@
 #include "tiles.h"
+#include "tiles.h"
 #include "path.h"
 #include "shared.h"
 #include "window.h"
+
 static ALLEGRO_BITMAP *tileset = NULL;
 
 
@@ -88,7 +90,7 @@ void tiles_destroy(void){
 }
 
 
-ALLEGRO_BITMAP *tiles_get_by_id(TILE_ID id){
+ALLEGRO_BITMAP *tiles_get_by_id(unsigned char id){
 
     ALLEGRO_BITMAP *tile = NULL;
 
@@ -107,9 +109,15 @@ ALLEGRO_BITMAP *tiles_get_by_id(TILE_ID id){
             tile =  GET_TILE(tiles_sub_bmp, TILE_GROUND01_TOP_R);
         break;
 
-        case TILE_GROUND02_TOP:
-        tile = tiles_sub_bmp[TILE_GROUND02_TOP];
+        case TILE_GROUND02_ROCK_TOP:
+        tile = tiles_sub_bmp[TILE_GROUND02_ROCK_TOP];
         break;
+
+    case TILE_PLAYER_POS:
+        tile = tiles_sub_bmp[NO_TILE];
+        break;
+
+
     }
 
     return tile;
@@ -138,7 +146,7 @@ void tiles_set_properties(TILE *tile){
 }
 
 
-char *tiles_get_name(TILE_ID id){
+char *tiles_get_name(unsigned char id){
 
     return tile_names[(int)id];
 
@@ -196,9 +204,8 @@ static void tiles_load_from_file(const char *filename){
         line = NULL;
 
         memset(linefeed,0, sizeof(char) * 127);
-        printf("\nID: %d X: %d Y: %d\n\n", id, offsetx, offsety);
-        TILE_ID tid = (TILE_ID) id;
-        tiles_sub_bmp[tid] = al_create_sub_bitmap(tileset,offsetx,offsety,width,height);
+        printf("\nID: %d X: %d Y: %d WIDTH: %d HEIGHT: %d\n\n", id, offsetx, offsety, width, height);
+        tiles_sub_bmp[id] = al_create_sub_bitmap(tileset,offsetx,offsety,width,height);
 
      }
 

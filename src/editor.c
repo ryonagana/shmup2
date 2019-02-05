@@ -19,6 +19,8 @@ static THREAD_INFO thread_info;
 
 static char map_path[4096];
 
+static int player_count  = 0;
+
 
 
 
@@ -582,10 +584,8 @@ void editor_render_tools(void){
             if(editor_tiles[y][x].id == NO_TILE) continue;
 
             al_draw_bitmap( tiles_get_by_id( editor_tiles[y][x].id), TILE_TO_SIZE(x)  + TILE_TO_SIZE( CANVAS_GRID_W) , TILE_TO_SIZE(y) + EDITOR_TOP_SPACER,0);
-
-            /*
             al_draw_rectangle( (x * TILE_SIZE)  + TILE_TO_SIZE( CANVAS_GRID_W ), (y * TILE_SIZE) + EDITOR_TOP_SPACER, ((x * TILE_SIZE) + TILE_SIZE) +  TILE_TO_SIZE( CANVAS_GRID_W ), ((y * TILE_SIZE) + TILE_SIZE) + EDITOR_TOP_SPACER, al_map_rgb(255,195,0),1.0);
-            */
+
         }
     }
 
@@ -593,7 +593,7 @@ void editor_render_tools(void){
 
 static void editor_select_tile(TILE_ID tid){
     editor->old_selected_tile = editor->selected_tile;
-    editor->selected_tile =  tid;
+    editor->selected_tile = (unsigned char) tid;
 }
 
 static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){

@@ -56,8 +56,8 @@ typedef struct TILE_DATA {
 typedef struct EDITOR{
     LEVEL *level;
     EDITOR_STATE state;
-    TILE_ID old_selected_tile;
-    TILE_ID selected_tile;
+    unsigned char old_selected_tile;
+    unsigned char selected_tile;
     CAMERA_EDITOR *camera;
     EDITOR_RECT editor_rect;
     EDITOR_RECT tools_rect;
