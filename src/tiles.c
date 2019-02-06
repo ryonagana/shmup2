@@ -5,9 +5,10 @@
 #include "window.h"
 
 static ALLEGRO_BITMAP *tileset = NULL;
-
+static ALLEGRO_BITMAP *special_tileset = NULL;
 
 static ALLEGRO_BITMAP* tiles_sub_bmp[TILE_COUNT + 1];
+static ALLEGRO_BITMAP* tiles_special_sub_bmp[SPECIAL_TILE_COUNT];
 
 
 static void tiles_load_from_file(const char *filename);
@@ -31,6 +32,14 @@ bool tiles_init(void){
     }
 
     tileset = al_load_bitmap(filepath);
+    filepath = NULL;
+    filepath = get_file_path("tile", "special_tileset.png");
+
+    special_tileset = al_load_bitmap(filepath);
+
+    if(!special_tileset){
+        CRITICAL(" Special tileset not found!");
+    }
 
     tileset_not_found = (tileset == NULL) ? true : false;
 
@@ -43,6 +52,11 @@ bool tiles_init(void){
     for(int i = 0; i < TILE_COUNT + 1; i++){
         tiles_sub_bmp[i] = NULL;
     }
+
+    for(int i = 0; i < SPECIAL_TILE_COUNT; i++){
+        tiles_special_sub_bmp[i] = NULL;
+    }
+
 
 
 
@@ -58,16 +72,18 @@ bool tiles_init(void){
         }
     }
 
-    tiles_load_from_file("tiles.txt");
 
-    /*
+
+    //tiles_load_from_file("tiles.txt");
+
+
     tiles_sub_bmp[TILE_GROUND01_F] = al_create_sub_bitmap(tileset,0,0,32,32);
-    tiles_sub_bmp[TILE_GROUND01_TOP_L] = al_create_sub_bitmap(tileset,32,0,32,32);
-    tiles_sub_bmp[TILE_GROUND01_TOP_R] = al_create_sub_bitmap(tileset,64,0,32,32);
-    tiles_sub_bmp[TILE_GROUND02_F] = al_create_sub_bitmap(tileset,96,0,32,32);
-    tiles_sub_bmp[TILE_GROUND02_TOP] = al_create_sub_bitmap(tileset,128,0,32,32);
-    */
+    tiles_sub_bmp[TILE_GROUND01_TOP_L] = al_create_sub_bitmap(tileset,96,0,32,32);
+    tiles_sub_bmp[TILE_GROUND01_TOP_R] = al_create_sub_bitmap(tileset,128,0,32,32);
+    tiles_sub_bmp[TILE_GROUND02_ROCK_F] = al_create_sub_bitmap(tileset,32,0,32,32);
+    tiles_sub_bmp[TILE_GROUND02_ROCK_TOP] = al_create_sub_bitmap(tileset,64,0,32,32);
 
+    tiles_special_sub_bmp[SPECIAL_TILE_PLAYER_POS] = al_create_sub_bitmap(special_tileset,0,0,32,32);
 
     return true;
 
@@ -91,36 +107,11 @@ void tiles_destroy(void){
 
 
 ALLEGRO_BITMAP *tiles_get_by_id(unsigned char id){
+    return tiles_sub_bmp[id] != NULL ? tiles_sub_bmp[id] : tiles_sub_bmp[NO_TILE];
+}
 
-    ALLEGRO_BITMAP *tile = NULL;
-
-    switch(id){
-        default:
-        case NO_TILE:
-            tile = tiles_sub_bmp[NO_TILE];
-        break;
-        case TILE_GROUND01_F:
-            tile = tiles_sub_bmp[TILE_GROUND01_F];
-        break;
-        case TILE_GROUND01_TOP_L:
-            tile = tiles_sub_bmp[TILE_GROUND01_TOP_L];
-        break;
-        case TILE_GROUND01_TOP_R:
-            tile =  GET_TILE(tiles_sub_bmp, TILE_GROUND01_TOP_R);
-        break;
-
-        case TILE_GROUND02_ROCK_TOP:
-        tile = tiles_sub_bmp[TILE_GROUND02_ROCK_TOP];
-        break;
-
-    case TILE_PLAYER_POS:
-        tile = tiles_sub_bmp[NO_TILE];
-        break;
-
-
-    }
-
-    return tile;
+ALLEGRO_BITMAP *special_tiles_get_by_id(unsigned char id){
+    return tiles_special_sub_bmp[id] != NULL ? tiles_special_sub_bmp[id] : tiles_sub_bmp[NO_TILE];
 }
 
 void tiles_set_properties(TILE *tile){

@@ -8,7 +8,9 @@
 #include "level.h"
 
 typedef enum SPECIAL_TILES_ID {
-    TILE_PLAYER_POS = 230,
+    SPECIAL_TILE_PLAYER_POS,
+    SPECIAL_TILE_COUNT
+
 }TILE_SPECIAL_PLAYER;
 
 typedef enum TILE_ID {
@@ -31,6 +33,7 @@ bool tiles_init(void);
 void tiles_destroy(void);
 ALLEGRO_BITMAP *tilemap_get_bmp(void);
 ALLEGRO_BITMAP *tiles_get_by_id(unsigned char id);
+ALLEGRO_BITMAP *special_tiles_get_by_id(unsigned char id);
 void tiles_set_properties(TILE *tile);
 char *tiles_get_name(unsigned char id);
 #endif

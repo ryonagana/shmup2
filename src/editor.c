@@ -9,6 +9,7 @@ static ALLEGRO_BITMAP *editor_cursor = NULL;
 
 static ALLEGRO_BITMAP *canvas_screen = NULL;
 static ALLEGRO_BITMAP *tools_screen  = NULL;
+static ALLEGRO_BITMAP *info_screen = NULL;
 static ALLEGRO_FONT *editor_default_font = NULL;
 static ALLEGRO_BITMAP *tile_selected_miniature = NULL;
 
@@ -20,7 +21,7 @@ static THREAD_INFO thread_info;
 static char map_path[4096];
 
 static int player_count  = 0;
-
+static bool is_special_tile = false;
 
 
 
@@ -67,7 +68,7 @@ static void editor_render_canvas(void);
 static void editor_render_canvas_cursor(void);
 static void editor_render_tools(void);
 static void editor_register_tile(TILE_ID id, int tx, int ty);
-static void editor_select_tile(TILE_ID tid);
+static void editor_select_tile(unsigned char tid);
 
 
 static void editor_load_tile_file(const char* tile_file);
@@ -124,6 +125,7 @@ void editor_init(void){
     /* create the renderable parts */
     canvas_screen = al_create_bitmap( CANVAS_GRID_W * TILE_SIZE , CANVAS_GRID_H * TILE_SIZE );
     tools_screen = al_create_bitmap(  5 * TILE_SIZE,  CANVAS_GRID_H * TILE_SIZE );
+    info_screen = al_create_bitmap( (CANVAS_GRID_W + GRID_TOOLS_W ) * TILE_SIZE, 5 * TILE_SIZE);
 
     tile_selected_miniature = tiles_get_by_id(editor->selected_tile);
     editor_clear_screen(canvas_screen, al_map_rgb(0,0,0));
@@ -160,14 +162,15 @@ void editor_init(void){
    /* THREAD INITIALIZATION END */
 
 
-    editor_load_tile_file("editor.txt");
+    //editor_load_tile_file("editor.txt");
 
-    /*
+
     editor_register_tile(TILE_GROUND01_F,0,0);
     editor_register_tile(TILE_GROUND01_TOP_L,1,0);
     editor_register_tile(TILE_GROUND01_TOP_R,2,0);
-    editor_register_tile(TILE_GROUND02_F,0,1);
-    */
+    editor_register_tile(TILE_GROUND02_ROCK_F ,3,1);
+    editor_register_tile(TILE_GROUND02_ROCK_TOP ,0,1);
+
 
 }
 
@@ -226,6 +229,14 @@ void editor_update_input(ALLEGRO_EVENT *e)
              opened_dialog = true;
        }
     }
+
+    if(keyboard_pressed(ALLEGRO_KEY_P)){
+
+        editor_select_tile(SPECIAL_TILE_PLAYER_POS);
+        is_special_tile = true;
+        editor->layer = EDITOR_LAYER_MAP;
+    }
+
     if(keyboard_pressed(ALLEGRO_KEY_W)){
         editor_move_camera(0,-1);
     }
@@ -334,9 +345,13 @@ void editor_update(ALLEGRO_EVENT *e)
 
             if(t->id == editor->selected_tile) return;
 
+
             editor_tile_put(t, editor->selected_tile);
+
             printf("\nTILE: x: %d y: %d\n", tile_x, tile_y);
             printf("\nTILE ID: %d BLOCK: %d PASSABLE: %d\n", t->id, t->block, t->passable);
+
+
         }else if(editor->state == EDITOR_STATE_PICK_TILE){
 
             TILE_DATA tiledata;
@@ -383,10 +398,12 @@ void editor_render(void)
     editor_render_canvas();
     editor_render_bg();
     tile_selected_miniature =  tiles_get_by_id(editor->selected_tile);
-    al_draw_scaled_bitmap(tile_selected_miniature,0,0, TILE_SIZE, TILE_SIZE, 22 * TILE_SIZE, 16 * TILE_SIZE, TILE_SIZE * 2,TILE_SIZE * 2,0);
+
     editor_render_coord_text();
     editor_render_tools();
     editor_render_canvas_cursor();
+
+    al_draw_scaled_bitmap(tile_selected_miniature,0,0, TILE_SIZE, TILE_SIZE, 22 * TILE_SIZE, 16 * TILE_SIZE, TILE_SIZE * 2,TILE_SIZE * 2,0);
 
 }
 
@@ -499,6 +516,11 @@ static void editor_tile_put(TILE *map, TILE_ID id)
 }
 
 void editor_render_coord_text(){
+    al_set_target_bitmap(info_screen);
+    al_clear_to_color(al_map_rgb(2,22,56));
+    al_set_target_backbuffer(get_window_display());
+
+    al_draw_bitmap(info_screen,0, (CANVAS_GRID_H * TILE_SIZE) + EDITOR_TOP_SPACER, 0);
     al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 85 ,0, "TileName: %s", tiles_get_name(editor->selected_tile));
     al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 50 ,0, "Tile X: %d", editor->tile_selected_data.tilex);
     al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 35,0, "Tile Y: %d",editor->tile_selected_data.tiley);
@@ -537,6 +559,7 @@ static void editor_register_tile(TILE_ID id, int tx, int ty)
 }
 
 void editor_render_canvas(void){
+
     al_set_target_bitmap(canvas_screen);
     render_background_color(editor->level);
 
@@ -547,8 +570,8 @@ void editor_render_canvas(void){
                 TILE_ID tile = (unsigned char)editor->level->map_layer[y][x].id;
 
                 if(tile != NO_TILE){
-                    al_draw_bitmap( tiles_get_by_id(tile), (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y,0);
-                }
+                   al_draw_bitmap( tiles_get_by_id( (unsigned char) tile), (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y,0);
+               }
             }
 
             al_draw_rectangle((x * TILE_SIZE) - editor->camera->x , (y * TILE_SIZE) - editor->camera->y, (x * TILE_SIZE) + TILE_SIZE - editor->camera->x, (y * TILE_SIZE) + TILE_SIZE - editor->camera->y, al_map_rgb(0,0,153),1.0);
@@ -582,18 +605,17 @@ void editor_render_tools(void){
         for(unsigned  int x = 0; x < GRID_TOOLS_W ; x++){
 
             if(editor_tiles[y][x].id == NO_TILE) continue;
-
-            al_draw_bitmap( tiles_get_by_id( editor_tiles[y][x].id), TILE_TO_SIZE(x)  + TILE_TO_SIZE( CANVAS_GRID_W) , TILE_TO_SIZE(y) + EDITOR_TOP_SPACER,0);
-            al_draw_rectangle( (x * TILE_SIZE)  + TILE_TO_SIZE( CANVAS_GRID_W ), (y * TILE_SIZE) + EDITOR_TOP_SPACER, ((x * TILE_SIZE) + TILE_SIZE) +  TILE_TO_SIZE( CANVAS_GRID_W ), ((y * TILE_SIZE) + TILE_SIZE) + EDITOR_TOP_SPACER, al_map_rgb(255,195,0),1.0);
+                al_draw_bitmap( tiles_get_by_id( editor_tiles[y][x].id), TILE_TO_SIZE(x)  + TILE_TO_SIZE( CANVAS_GRID_W) , TILE_TO_SIZE(y) + EDITOR_TOP_SPACER,0);
+                al_draw_rectangle( (x * TILE_SIZE)  + TILE_TO_SIZE( CANVAS_GRID_W ), (y * TILE_SIZE) + EDITOR_TOP_SPACER, ((x * TILE_SIZE) + TILE_SIZE) +  TILE_TO_SIZE( CANVAS_GRID_W ), ((y * TILE_SIZE) + TILE_SIZE) + EDITOR_TOP_SPACER, al_map_rgb(255,195,0),1.0);
 
         }
     }
 
 }
 
-static void editor_select_tile(TILE_ID tid){
+static void editor_select_tile(unsigned char tid){
     editor->old_selected_tile = editor->selected_tile;
-    editor->selected_tile = (unsigned char) tid;
+    editor->selected_tile = tid;
 }
 
 static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
