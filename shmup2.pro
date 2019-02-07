@@ -21,7 +21,10 @@ SOURCES += \
     src/config.c \
     src/editor.c \
     src/thread.c \
-    src/text.c
+    src/text.c \
+    src/particle.c \
+    src/vector2.c
+    src/emitter.c
 
 
 HEADERS += \
@@ -39,7 +42,10 @@ HEADERS += \
     include/config.h \
     include/editor.h \
     include/thread.h \
-    include/text.h
+    include/text.h \
+    include/particle.h \
+    include/vector2.h \
+    include/emitter.h
 
 win32: {
 

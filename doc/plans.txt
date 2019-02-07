@@ -1,0 +1,29 @@
+
+
+A SHOOT EM UP GAME + EXPLORATION (NO NAME) 
+
+GAMES FOR IDEAS:
+
+- The Last Eichhof
+- in search of the Dr. Riptide  (LEVELS)
+- GRADIUS 
+- DARIUS
+
+Features:
+
+-    Dynamic Map, with animations  like live organisms, a space in background
+     Sun, planets, meteor shower, planet rings, asteroid belt
+
+-    Each level might be a planet or a region of a planet
+
+-    minimum 5 weapons
+
+-    bosses & minibosses (twice size of the player)    
+
+-    some defense items like powershield and MSR-41 (Magna Shield Ressonance 41)
+
+-    some grass in certain planets 
+
+-    environment: grassy planet,  ice planet, fire planet, poisonous planet, black (dark) planet
+
+ Playable Alpha until april
