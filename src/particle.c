@@ -36,3 +36,8 @@ void particle_draw(PARTICLE *particle, ALLEGRO_BITMAP *bmp)
 {
    al_draw_tinted_scaled_bitmap(bmp, particle->color, 0,0, al_get_bitmap_width(bmp), al_get_bitmap_height(bmp), particle->position.x, particle->position.y,al_get_bitmap_width(bmp), al_get_bitmap_height(bmp), 0);
 }
+
+void particle_destroy(PARTICLE *particle){
+    if(particle) free(particle);
+    particle = NULL;
+}

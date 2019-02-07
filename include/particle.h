@@ -22,5 +22,6 @@ typedef struct PARTICLE {
 void particle_create(PARTICLE *particle, VECTOR2 pos, VECTOR2 origin, float scale, float speed, float angle, int duration, ALLEGRO_COLOR color);
 void particle_update(PARTICLE *particle);
 void particle_draw(PARTICLE *particle, ALLEGRO_BITMAP *bmp);
+void particle_destroy(PARTICLE *particle);
 
 #endif
