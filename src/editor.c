@@ -2,6 +2,7 @@
 #include "tiles.h"
 #include "render.h"
 #include "thread.h"
+#include "emitter.h"
 
 static EDITOR *editor = NULL;
 static bool opened_dialog = false;
@@ -53,6 +54,9 @@ static EDITOR_THREAD_DATA editor_thread_data = {
 
 static TILE editor_tiles[GRID_TOOLS_H][GRID_TOOLS_W];
 static TILE editor_objects[GRID_TOOLS_H][GRID_TOOLS_W];
+
+static PARTICLE_EMITTER *emitter = NULL;
+
 
 static char state_text[65];
 
@@ -172,6 +176,13 @@ void editor_init(void){
     editor_register_tile(TILE_GROUND02_ROCK_TOP ,0,1);
 
 
+    VECTOR2 pos, origin;
+
+    vector_Init(&pos,0,0);
+    vector_Init(&origin,0,0);
+
+    emitter = emitter_create(pos, origin, .1,0.1, 3000, 270, 4, al_map_rgb(255,0,0));
+
 }
 
 LEVEL* editor_load_path(const char *filename){
@@ -284,6 +295,8 @@ void editor_update(ALLEGRO_EVENT *e)
 
     UNUSED_PARAM(e);
 
+    emitter_update(emitter);
+
     if(editor->state == EDITOR_STATE_SAVE){
         opened_dialog = false;
         editor->state = EDITOR_STATE_SAVE;
@@ -377,6 +390,8 @@ void editor_update(ALLEGRO_EVENT *e)
     editor_map_to_coord();
     editor_camera_bounds();
 
+
+
 }
 
 
@@ -404,7 +419,7 @@ void editor_render(void)
     editor_render_canvas_cursor();
 
     al_draw_scaled_bitmap(tile_selected_miniature,0,0, TILE_SIZE, TILE_SIZE, 22 * TILE_SIZE, 16 * TILE_SIZE, TILE_SIZE * 2,TILE_SIZE * 2,0);
-
+    emitter_draw(emitter, NULL);
 }
 
 

@@ -23,7 +23,7 @@ SOURCES += \
     src/thread.c \
     src/text.c \
     src/particle.c \
-    src/vector2.c
+    src/vector2.c \
     src/emitter.c
 
 

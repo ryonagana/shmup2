@@ -12,6 +12,7 @@ static void game_update_keyboard(ALLEGRO_EVENT *e);
 
 int main()
 {
+    srand(time(NULL));
     window_init();
 
     player = spaceship_get_player(SHIP_P1);

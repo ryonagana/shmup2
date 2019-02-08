@@ -2,6 +2,7 @@
 #define MAIN_HEADER
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "render.h"
 #include "window.h"
 #include "keyboard.h"
