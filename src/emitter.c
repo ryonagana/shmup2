@@ -32,16 +32,14 @@ PARTICLE_EMITTER* emitter_create(VECTOR2 pos, VECTOR2 origin,  float scale, floa
 
 }
 
-void emitter_clear(PARTICLE_EMITTER *emitter){
-    for(unsigned int i = 0;  i < emitter->size; i++){
-        particle_destroy(&emitter->particles[i]);
-    }
-}
 
 void emitter_destroy(PARTICLE_EMITTER *emitter){
 
-    emitter_clear(emitter);
+    if(emitter->particles) free(emitter->particles);
     if(emitter) free(emitter);
+
+    emitter->particles =  NULL;
+    emitter = NULL;
 }
 
 void emitter_update(PARTICLE_EMITTER *emitter){

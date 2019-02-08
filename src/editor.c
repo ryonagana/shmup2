@@ -181,7 +181,7 @@ void editor_init(void){
     vector_Init(&pos,0,0);
     vector_Init(&origin,0,0);
 
-    emitter = emitter_create(pos, origin, .1,0.1, 3000, 270, 4, al_map_rgb(255,0,0));
+    emitter = emitter_create(pos, origin, .1,0.1, 3000, 4000, 4, al_map_rgb(255,0,0));
 
 }
 
@@ -451,6 +451,10 @@ void editor_destroy(void)
 
     if(dialog_thread){
         al_destroy_thread(dialog_thread);
+    }
+
+    if(emitter){
+        emitter_destroy(emitter);
     }
 
 }
