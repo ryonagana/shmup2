@@ -181,7 +181,7 @@ void editor_init(void){
     vector_Init(&pos,0,0);
     vector_Init(&origin,0,0);
 
-    emitter = emitter_create(pos, origin, .1,0.1, 3000, 4000, 4, al_map_rgb(255,0,0));
+    emitter = emitter_create(pos, origin, .1,0.1, 3000, 600, 10, al_map_rgb(255,0,0));
 
 }
 
@@ -295,7 +295,7 @@ void editor_update(ALLEGRO_EVENT *e)
 
     UNUSED_PARAM(e);
 
-    emitter_update(emitter);
+    emitter_update(emitter, 45);
 
     if(editor->state == EDITOR_STATE_SAVE){
         opened_dialog = false;

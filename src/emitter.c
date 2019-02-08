@@ -42,15 +42,15 @@ void emitter_destroy(PARTICLE_EMITTER *emitter){
     emitter = NULL;
 }
 
-void emitter_update(PARTICLE_EMITTER *emitter){
+void emitter_update(PARTICLE_EMITTER *emitter, float angle){
 
     for(unsigned int i = 0; i < emitter->size; i++){
         particle_update(&emitter->particles[i]);
 
         if(!emitter->particles[i].is_alive){
-            float angle = rand() % 360 + 1;
+            float n_angle = (float) (rand() % (int) angle  + 1);
             int speed = rand() % emitter->max_speed + 1;
-            particle_set(&emitter->particles[i], emitter->position, emitter->origin, emitter->scale, emitter->shrink_rate, speed, angle, emitter->duration, emitter->color);
+            particle_set(&emitter->particles[i], emitter->position, emitter->origin, emitter->scale, emitter->shrink_rate, speed, n_angle, emitter->duration, emitter->color);
             emitter->particles[i].is_alive = true;
             continue;
         }

@@ -27,7 +27,7 @@ void emitter_destroy(PARTICLE_EMITTER *emitter);
 
 
 
-void emitter_update(PARTICLE_EMITTER *emitter);
+void emitter_update(PARTICLE_EMITTER *emitter, float angle);
 void emitter_draw(PARTICLE_EMITTER *emitter, ALLEGRO_BITMAP *tex);
 
 #endif
