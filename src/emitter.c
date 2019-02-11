@@ -1,5 +1,5 @@
 #include "emitter.h"
-
+#include "shared.h"
 
 PARTICLE_EMITTER* emitter_create(VECTOR2 pos, VECTOR2 origin,  float scale, float shrink_rate,  int duration, size_t amount, int max_speed, ALLEGRO_COLOR color)
 {
@@ -26,6 +26,7 @@ PARTICLE_EMITTER* emitter_create(VECTOR2 pos, VECTOR2 origin,  float scale, floa
        float angle = rand() % 360 + 1;
        int speed = rand() % max_speed + 1;
        particle_create(&emitter->particles[i], pos, origin, scale, shrink_rate, speed, angle, duration, color);
+       emitter->particles[i].is_alive = false;
     }
 
     return emitter;
@@ -35,25 +36,28 @@ PARTICLE_EMITTER* emitter_create(VECTOR2 pos, VECTOR2 origin,  float scale, floa
 
 void emitter_destroy(PARTICLE_EMITTER *emitter){
 
-    if(emitter->particles) free(emitter->particles);
+    free(emitter->particles);
     if(emitter) free(emitter);
 
     emitter->particles =  NULL;
     emitter = NULL;
 }
 
-void emitter_update(PARTICLE_EMITTER *emitter, float angle){
+void emitter_update(PARTICLE_EMITTER *emitter, float dir_x, float dir_y, int duration, float speed, float angle){
 
     for(unsigned int i = 0; i < emitter->size; i++){
+
         particle_update(&emitter->particles[i]);
 
         if(!emitter->particles[i].is_alive){
-            float n_angle = (float) (rand() % (int) angle  + 1);
-            int speed = rand() % emitter->max_speed + 1;
-            particle_set(&emitter->particles[i], emitter->position, emitter->origin, emitter->scale, emitter->shrink_rate, speed, n_angle, emitter->duration, emitter->color);
+
+            int n_speed = RAND_INT(1, speed);
+            particle_set(&emitter->particles[i], emitter->position, emitter->origin, dir_x, dir_y,  emitter->scale, emitter->shrink_rate, n_speed, angle, duration, emitter->color);
             emitter->particles[i].is_alive = true;
-            continue;
         }
+
+
+
     }
 }
 

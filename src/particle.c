@@ -1,6 +1,7 @@
 #include "particle.h"
 #include <math.h>
 #include <allegro5/allegro_primitives.h>
+#include "window.h"
 
 void particle_create(PARTICLE *particle, VECTOR2 pos, VECTOR2 origin, float scale, float shrink_rate, float speed,  float angle, int duration, ALLEGRO_COLOR color)
 {
@@ -18,11 +19,12 @@ void particle_create(PARTICLE *particle, VECTOR2 pos, VECTOR2 origin, float scal
     particle->direction.x = cos(angle);
     particle->direction.y = sin(angle);
     particle->scale = scale;
+    particle->is_alive = true;
 
 
 }
 
-void particle_set(PARTICLE *particle, VECTOR2 pos, VECTOR2 origin, float scale, float shrink_rate, float speed, float angle, int duration, ALLEGRO_COLOR color)
+void particle_set(PARTICLE *particle, VECTOR2 pos, VECTOR2 origin, float dir_x, float dir_y, float scale, float shrink_rate, float speed, float angle, int duration, ALLEGRO_COLOR color)
 {
     vector_Copy(&particle->position, &pos);
     vector_Copy(&particle->origin, &origin);
@@ -45,6 +47,22 @@ void particle_update(PARTICLE *particle)
     particle->position.y += particle->direction.y * particle->speed;
 
     particle->duration -= 1;
+
+    if(particle->position.x >= window_get_width() ){
+        particle->is_alive = false;
+    }
+
+    if(particle->position.y >= window_get_height() ){
+        particle->is_alive = false;
+    }
+
+    if(particle->position.x < 0 ){
+        particle->is_alive = false;
+    }
+
+    if(particle->position.y < 0 ){
+        particle->is_alive = false;
+    }
 
     if(particle->duration <= 0 || particle->scale <= 0){
         particle->is_alive = false;
