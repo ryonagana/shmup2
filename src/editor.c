@@ -295,7 +295,9 @@ void editor_update(ALLEGRO_EVENT *e)
 
     UNUSED_PARAM(e);
 
-    emitter_update(emitter, RAND_INT(1,100) / 100 , RAND_INT(1,100) / 100,  RAND_NUMBER() * 400, RAND_NUMBER() * 400 , RAND_NUMBER() * 360 );
+    emitter_update(emitter, e->timer.count,RAND_INT(1,100) / 100 , RAND_INT(1,100) / 100,  RAND_NUMBER() * 400, RAND_NUMBER() * 400 , RAND_NUMBER() * 5 );
+
+    //printf("TIME: %lld\n", get_window_time_ms());
 
     if(editor->state == EDITOR_STATE_SAVE){
         opened_dialog = false;

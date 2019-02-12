@@ -43,15 +43,16 @@ void emitter_destroy(PARTICLE_EMITTER *emitter){
     emitter = NULL;
 }
 
-void emitter_update(PARTICLE_EMITTER *emitter, float dir_x, float dir_y, int duration, float speed, float angle){
+void emitter_update(PARTICLE_EMITTER *emitter, int64_t time, float dir_x, float dir_y, int duration, float speed, float angle){
 
     for(unsigned int i = 0; i < emitter->size; i++){
 
         particle_update(&emitter->particles[i]);
 
         if(!emitter->particles[i].is_alive){
+
             PARTICLE *dead = emitter_find_dead_particle(emitter->particles, (int)emitter->size);
-            int n_speed = RAND_INT(1, speed);
+            int n_speed = RAND_INT(1, speed) + RAND_INT(1, time);
             particle_set(dead, emitter->position, emitter->origin, dir_x, dir_y,  emitter->scale, emitter->shrink_rate, n_speed, angle, duration, emitter->color);
             dead->is_alive = true;
         }
