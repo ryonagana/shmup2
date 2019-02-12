@@ -30,4 +30,6 @@ void emitter_destroy(PARTICLE_EMITTER *emitter);
 void emitter_update(PARTICLE_EMITTER *emitter, float dir_x, float dir_y, int duration, float speed, float angle);
 void emitter_draw(PARTICLE_EMITTER *emitter, ALLEGRO_BITMAP *tex);
 
+PARTICLE* emitter_find_dead_particle(PARTICLE *particles, int max);
+
 #endif

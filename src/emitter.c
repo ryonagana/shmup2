@@ -50,10 +50,10 @@ void emitter_update(PARTICLE_EMITTER *emitter, float dir_x, float dir_y, int dur
         particle_update(&emitter->particles[i]);
 
         if(!emitter->particles[i].is_alive){
-
+            PARTICLE *dead = emitter_find_dead_particle(emitter->particles, (int)emitter->size);
             int n_speed = RAND_INT(1, speed);
-            particle_set(&emitter->particles[i], emitter->position, emitter->origin, dir_x, dir_y,  emitter->scale, emitter->shrink_rate, n_speed, angle, duration, emitter->color);
-            emitter->particles[i].is_alive = true;
+            particle_set(dead, emitter->position, emitter->origin, dir_x, dir_y,  emitter->scale, emitter->shrink_rate, n_speed, angle, duration, emitter->color);
+            dead->is_alive = true;
         }
 
 
@@ -64,6 +64,17 @@ void emitter_update(PARTICLE_EMITTER *emitter, float dir_x, float dir_y, int dur
 void emitter_draw(PARTICLE_EMITTER *emitter, ALLEGRO_BITMAP *tex){
 
     for(unsigned int i = 0; i < emitter->size; i++){
-        particle_draw(&emitter->particles[i], tex);
+        if(emitter->particles[i].is_alive){
+            particle_draw(&emitter->particles[i], tex);
+        }
     }
+}
+
+PARTICLE *emitter_find_dead_particle(PARTICLE *particles, int max){
+    int i = 0;
+    while(particles[i].is_alive && i < max) i++;
+
+    if(i == max) return NULL;
+
+    return &particles[i];
 }

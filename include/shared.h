@@ -16,7 +16,12 @@
 #define  ABS(x) ( (x) < 0 ? (-x) : (x))
 #define SWAP(a,b) (int tmp=a;a=b;b=tmp)
 
-#define RAND_INT(min,max) ((int)(min + max * rand()) / RAND_MAX)
+/*
+ * http://c-faq.com/lib/randrange.html
+ */
+
+#define RAND_NUMBER() ((int) rand() / (double) RAND_MAX + 1)
+#define RAND_INT(min,max) (min + rand() / (RAND_MAX / ( max - min + 1) ) + 1)
 
 #define  UNUSED_PARAM(x) ((void)x)
 

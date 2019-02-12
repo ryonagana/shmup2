@@ -181,7 +181,7 @@ void editor_init(void){
     vector_Init(&pos,100,100);
     vector_Init(&origin,100,45);
 
-    emitter = emitter_create(pos, origin, .1,0.1, 3000, 600, 10, al_map_rgb(255,0,0));
+    emitter = emitter_create(pos, origin, .1,0.1, 3000, 90, 10, al_map_rgb(255,0,0));
 
 }
 
@@ -295,7 +295,7 @@ void editor_update(ALLEGRO_EVENT *e)
 
     UNUSED_PARAM(e);
 
-    emitter_update(emitter, RAND_INT(1,100) / 100 , RAND_INT(1,100) / 100, RAND_INT(1,35), RAND_INT(1, 1000) , RAND_INT(1,5));
+    emitter_update(emitter, RAND_INT(1,100) / 100 , RAND_INT(1,100) / 100,  RAND_NUMBER() * 400, RAND_NUMBER() * 400 , RAND_NUMBER() * 360 );
 
     if(editor->state == EDITOR_STATE_SAVE){
         opened_dialog = false;
