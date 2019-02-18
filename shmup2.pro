@@ -4,7 +4,7 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 #QMAKE_CC=gcc #change to mingw-w64-gcc ?
-#QMAKE_CFLAGS=-std=c11
+QMAKE_CFLAGS=-std=c11
 
 SOURCES += \
     src/main.c \
@@ -15,6 +15,7 @@ SOURCES += \
     src/mixer.c \
     src/shared.c \
     src/level.c \
+    src/menu.c \
     src/path.c \
     src/render.c \
     src/tiles.c \
@@ -35,6 +36,7 @@ HEADERS += \
     include/mixer.h \
     include/shared.h \
     include/level.h \
+    include/menu.h \
     include/path.h \
     include/render.h \
     include/main.h \

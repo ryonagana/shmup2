@@ -23,7 +23,8 @@ const char* get_root_dir(void){
 }
 
 char* get_file_path(const char *folder, const char *filename){
-
+    char *copy_path = NULL;
+    const char* path = NULL;
     ALLEGRO_PATH *root = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
 
     if(folder != NULL ){
@@ -31,8 +32,8 @@ char* get_file_path(const char *folder, const char *filename){
     }
 
     al_set_path_filename(root, filename);
-    const char* path = al_path_cstr(root, ALLEGRO_NATIVE_PATH_SEP);
-    char *copy_path = (char *) malloc(sizeof (char) * strlen(path) + 1);
+    path = al_path_cstr(root, ALLEGRO_NATIVE_PATH_SEP);
+    copy_path = (char *) malloc(sizeof (char) * strlen(path) + 1);
     memset(copy_path,0, sizeof (char) * strlen(path) + 1);
 
     strncpy(copy_path, path, strlen(path));

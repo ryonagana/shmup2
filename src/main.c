@@ -2,19 +2,23 @@
 #include "mouse.h"
 #include "editor.h"
 #include "config.h"
+#include "menu.h"
 
 static SPACESHIP *player =  NULL;
 static CAMERA p1_camera;
 
 static ALLEGRO_BITMAP *spr_player = NULL; //test
 
+static MENU main_menu;
+static bool state_main_menu = true;
+
 static void game_update_keyboard(ALLEGRO_EVENT *e);
 
-int main(int  argc, char* argv[])
+int main(int  argc, char **argv)
 {
     srand(time(NULL));
     window_init();
-
+    menu_init();
     player = spaceship_get_player(SHIP_P1);
     spaceship_set_default_flags(player);
 
@@ -25,6 +29,11 @@ int main(int  argc, char* argv[])
 
 
     LEVEL teste;
+
+    menu_create(&main_menu, 5);
+    menu_add_entry(&main_menu, 1, "NEW GAME (ALPHA)", MENU_TYPE_SIMPLE);
+    menu_add_entry(&main_menu, 2, "EDITOR", MENU_TYPE_SIMPLE);
+    menu_add_entry(&main_menu, 3,  "QUIT", MENU_TYPE_SIMPLE);
 
     //level_init_default(&teste);
     //level_save(get_window_display(), &teste, "teste01.cbm", false);
@@ -40,11 +49,19 @@ int main(int  argc, char* argv[])
         teste = *editor_load_path("mapa_teste.cbm");
 
     }else {
+
+
+        if(!level_file_exists("mapa_teste.cbm")){
+                    window_gracefully_quit("LEVEL not loaded");
+                    return 0;
+        }
+
         if(!level_load(get_window_display(), &teste, "mapa_teste.cbm", false)){
             CRITICAL("level not loaded correctly, sorry");
             window_gracefully_quit("map not loaded");
             return 0;
         }
+
     }
 
     spaceship_camera_init(&p1_camera, player);
@@ -70,8 +87,12 @@ int main(int  argc, char* argv[])
        if(event.type == ALLEGRO_EVENT_TIMER){
            if(event.timer.source == get_window_timer()){
                if(!config_get()->editor_mode.b_field){
-                    spaceship_update(SHIP_P1);
-                     spaceship_scrolling_update(player, &p1_camera, teste.map_width, teste.map_height);
+                   if(state_main_menu){
+                       menu_update(&main_menu);
+                   }else {
+                        spaceship_update(SHIP_P1);
+                        spaceship_scrolling_update(player, &p1_camera, teste.map_width, teste.map_height);
+                   }
                }else {
                     editor_update(&event);
               }
@@ -110,9 +131,15 @@ int main(int  argc, char* argv[])
                 editor_render();
 
             }else {
-              render_background_color(&teste);
-              render_tilemap(&teste, &p1_camera);
-              al_draw_bitmap(spr_player, player->x - p1_camera.x, player->y - p1_camera.y, 0);
+
+                if(state_main_menu){
+                    al_clear_to_color(al_map_rgb(0,0,0));
+                    menu_draw(&main_menu);
+                }else {
+                    render_background_color(&teste);
+                    render_tilemap(&teste, &p1_camera);
+                    al_draw_bitmap(spr_player, player->x - p1_camera.x, player->y - p1_camera.y, 0);
+                }
             }
 
             al_flip_display();

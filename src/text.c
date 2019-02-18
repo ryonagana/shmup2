@@ -2,7 +2,9 @@
 
 void text_init(GAME_TEXT *text, const char *font_path, int size){
 
-    text->font = al_load_ttf_font(font_path, size, 0);
+    if(font_path == NULL) text->font = al_create_builtin_font();
+    else text->font = al_load_ttf_font(font_path, size, 0);
+
     text->font_width = 0;
     text->font_size = size;
 
