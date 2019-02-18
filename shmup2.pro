@@ -3,8 +3,8 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CC=gcc #change to mingw-w64-gcc ?
-QMAKE_CFLAGS=-std=c11
+#QMAKE_CC=gcc #change to mingw-w64-gcc ?
+#QMAKE_CFLAGS=-std=c11
 
 SOURCES += \
     src/main.c \
@@ -70,4 +70,13 @@ unix: {
     DEPENDPATH  += /usr/include
 }
 
+macx: {
+
+    INCLUDEPATH += include/
+    DEPENDPATH  += include/
+
+    LIBS += -L/usr/local/lib -lallegro -lallegro_main -lallegro_image -lallegro_font -lallegro_ttf -lallegro_dialog -lallegro_audio -lallegro_acodec -lallegro_primitives
+    INCLUDEPATH += /usr/local/include
+    DEPENDPATH  += /usr/local/include
+}
 

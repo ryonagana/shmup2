@@ -10,7 +10,7 @@ static ALLEGRO_BITMAP *spr_player = NULL; //test
 
 static void game_update_keyboard(ALLEGRO_EVENT *e);
 
-int main()
+int main(int  argc, char* argv[])
 {
     srand(time(NULL));
     window_init();
