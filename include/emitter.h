@@ -26,7 +26,6 @@ PARTICLE_EMITTER* emitter_create(VECTOR2 pos, VECTOR2 origin,  float scale, floa
 void emitter_destroy(PARTICLE_EMITTER *emitter);
 
 
-
 void emitter_update(PARTICLE_EMITTER *emitter, int64_t time,  float dir_x, float dir_y, int duration, float speed, float angle);
 void emitter_draw(PARTICLE_EMITTER *emitter, ALLEGRO_BITMAP *tex);
 
