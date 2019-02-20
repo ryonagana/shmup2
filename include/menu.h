@@ -1,9 +1,9 @@
 #ifndef MENU_HEADER
 #define MENU_HEADER
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <allegro5/allegro.h>
 
 typedef enum  {

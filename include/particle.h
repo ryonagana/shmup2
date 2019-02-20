@@ -1,6 +1,6 @@
 #ifndef PARTICLE_HEADER
 #define PARTICLE_HEADER
-#include <stdio.h>
+#include <cstdio>
 #include <allegro5/allegro.h>
 #include "vector2.h"
 

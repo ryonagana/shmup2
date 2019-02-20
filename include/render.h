@@ -1,8 +1,8 @@
 #ifndef RENDER_HEADER
 #define RENDER_HEADER
 
-#include <stdio.h>
-#include <stdint.h>
+#include <cstdio>
+#include <cstdint>
 #include <allegro5/allegro_primitives.h>
 #include "spaceship.h"
 #include "level.h"

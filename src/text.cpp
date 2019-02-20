@@ -2,7 +2,7 @@
 
 void text_init(GAME_TEXT *text, const char *font_path, int size){
 
-    if(font_path == NULL) text->font = al_create_builtin_font();
+    if(font_path == nullptr) text->font = al_create_builtin_font();
     else text->font = al_load_ttf_font(font_path, size, 0);
 
     text->font_width = 0;
@@ -15,7 +15,7 @@ void text_draw(GAME_TEXT *text, ALLEGRO_COLOR color, float x, float y,  const ch
     if(!text) return;
 
     char buffer[2048];
-    ALLEGRO_USTR *str = NULL;
+    ALLEGRO_USTR *str = nullptr;
 
     va_list lst;
     va_start(lst, fmt);
@@ -34,5 +34,5 @@ void text_destroy(GAME_TEXT *text){
     if(text) al_destroy_font(text->font);
 
     free(text);
-    text = NULL;
+    text = nullptr;
 }

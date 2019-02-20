@@ -5,6 +5,7 @@
 #include "menu.h"
 
 
+
 typedef enum {
     MENU_OPT_QUIT = 0,
     MENU_OPT_NEW_GAME,
@@ -13,10 +14,10 @@ typedef enum {
 
 }MENU_OPT_TYPE;
 
-static SPACESHIP *player =  NULL;
+static SPACESHIP *player =  nullptr;
 static CAMERA p1_camera;
 
-static ALLEGRO_BITMAP *spr_player = NULL; //test
+static ALLEGRO_BITMAP *spr_player = nullptr; //test
 
 static MENU main_menu;
 static bool state_main_menu = true;
@@ -25,7 +26,7 @@ static void game_update_keyboard(ALLEGRO_EVENT *e);
 
 int main(int  argc, char **argv)
 {
-    srand(time(NULL));
+    srand(time(nullptr));
     window_init();
     menu_init();
     player = spaceship_get_player(SHIP_P1);
@@ -40,10 +41,10 @@ int main(int  argc, char **argv)
     LEVEL teste;
 
     menu_create(&main_menu, 5);
-    menu_add_entry(&main_menu, MENU_OPT_NEW_GAME, "NEW GAME (ALPHA)", MENU_TYPE_SIMPLE, NULL);
-    menu_add_entry(&main_menu, MENU_OPT_EDITOR, "EDITOR", MENU_TYPE_SIMPLE, NULL);
-       menu_add_entry(&main_menu, MENU_OPT_EDITOR, "SEQUISSUANAU", MENU_TYPE_SIMPLE, NULL);
-    menu_add_entry(&main_menu, MENU_OPT_QUIT,  "QUIT", MENU_TYPE_SIMPLE, NULL);
+    menu_add_entry(&main_menu, MENU_OPT_NEW_GAME, "NEW GAME (ALPHA)", MENU_TYPE_SIMPLE, nullptr);
+    menu_add_entry(&main_menu, MENU_OPT_EDITOR, "EDITOR", MENU_TYPE_SIMPLE, nullptr);
+       menu_add_entry(&main_menu, MENU_OPT_EDITOR, "SEQUISSUANAU", MENU_TYPE_SIMPLE, nullptr);
+    menu_add_entry(&main_menu, MENU_OPT_QUIT,  "QUIT", MENU_TYPE_SIMPLE, nullptr);
 
     //level_init_default(&teste);
     //level_save(get_window_display(), &teste, "teste01.cbm", false);

@@ -3,29 +3,29 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CC=gcc
-QMAKE_CFLAGS += -std=c11
+QMAKE_CC=g++
+QMAKE_CFLAGS += -std=c++14 -Wall -Wextra -WPermissive -pedantic
 
 SOURCES += \
-    src/main.c \
-    src/window.c \
-    src/keyboard.c \
-    src/mouse.c \
-    src/spaceship.c \
-    src/mixer.c \
-    src/shared.c \
-    src/level.c \
-    src/menu.c \
-    src/path.c \
-    src/render.c \
-    src/tiles.c \
-    src/config.c \
-    src/editor.c \
-    src/thread.c \
-    src/text.c \
-    src/particle.c \
-    src/vector2.c \
-    src/emitter.c
+    src/main.cpp \
+    src/window.cpp \
+    src/keyboard.cpp \
+    src/mouse.cpp \
+    src/spaceship.cpp \
+    src/mixer.cpp \
+    src/shared.cpp \
+    src/level.cpp \
+    src/menu.cpp \
+    src/path.cpp \
+    src/render.cpp \
+    src/tiles.cpp \
+    src/config.cpp \
+    src/editor.cpp \
+    src/thread.cpp \
+    src/text.cpp \
+    src/particle.cpp \
+    src/vector2.cpp \
+    src/emitter.cpp
 
 
 HEADERS += \

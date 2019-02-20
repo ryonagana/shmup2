@@ -1,9 +1,9 @@
 #ifndef MOUSE_HEADER
 #define MOUSE_HEADER
 
-#include <stdio.h>
-#include <stdbool.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdbool>
+#include <cstdlib>
 #include <allegro5/allegro.h>
 
 typedef  struct MOUSE {

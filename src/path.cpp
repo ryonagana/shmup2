@@ -1,7 +1,7 @@
 #include "path.h"
 
 
-static ALLEGRO_PATH *root_path = NULL;
+static ALLEGRO_PATH *root_path = nullptr;
 
 void init_path(void){
     root_path = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
@@ -12,7 +12,7 @@ void destroy_path(void){
 }
 
 ALLEGRO_PATH* get_root_path(void){
-    return root_path != NULL ? root_path : NULL;
+    return root_path != nullptr ? root_path : nullptr;
 }
 
 
@@ -23,11 +23,11 @@ const char* get_root_dir(void){
 }
 
 char* get_file_path(const char *folder, const char *filename){
-    char *copy_path = NULL;
-    const char* path = NULL;
+    char *copy_path = nullptr;
+    const char* path = nullptr;
     ALLEGRO_PATH *root = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
 
-    if(folder != NULL ){
+    if(folder != nullptr ){
         al_append_path_component(root, folder);
     }
 

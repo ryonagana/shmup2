@@ -1,6 +1,6 @@
 #ifndef KEYBOARD_HEADER
 #define KEYBOARD_HEADER
-#include <stdio.h>
+#include <cstdio>
 #include <allegro5/allegro.h>
 
 void keyboard_start(void);

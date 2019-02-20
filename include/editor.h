@@ -1,7 +1,7 @@
 #ifndef EDITOR_HEADER
 #define EDITOR_HEADER
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include "window.h"
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_color.h>
@@ -13,6 +13,7 @@
 #include "mouse.h"
 #include "shared.h"
 #include "path.h"
+
 
 typedef struct CAMERA_EDITOR {
     int x,y;

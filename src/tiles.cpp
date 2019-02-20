@@ -4,8 +4,8 @@
 #include "shared.h"
 #include "window.h"
 
-static ALLEGRO_BITMAP *tileset = NULL;
-static ALLEGRO_BITMAP *special_tileset = NULL;
+static ALLEGRO_BITMAP *tileset = nullptr;
+static ALLEGRO_BITMAP *special_tileset = nullptr;
 
 static ALLEGRO_BITMAP* tiles_sub_bmp[TILE_COUNT + 1];
 static ALLEGRO_BITMAP* tiles_special_sub_bmp[SPECIAL_TILE_COUNT];
@@ -18,7 +18,7 @@ static char* tile_names[TILE_COUNT + 1] = {
     "Tile Ground 01  Flat\0",
     "Tile Ground 01  Top R\0",
     "Tile Ground 01  Yop L\0",
-    NULL,
+    nullptr,
 };
 
 
@@ -32,7 +32,7 @@ bool tiles_init(void){
     }
 
     tileset = al_load_bitmap(filepath);
-    filepath = NULL;
+    filepath = nullptr;
     filepath = get_file_path("tile", "special_tileset.png");
 
     special_tileset = al_load_bitmap(filepath);
@@ -41,20 +41,20 @@ bool tiles_init(void){
         CRITICAL(" Special tileset not found!");
     }
 
-    tileset_not_found = (tileset == NULL) ? true : false;
+    tileset_not_found = (tileset == nullptr) ? true : false;
 
 
     LOG("Spritesheet: %s successfully loaded!", filepath);
 
     if(filepath) free(filepath);
 
-    //reset list of tiles to NULL!
+    //reset list of tiles to nullptr!
     for(int i = 0; i < TILE_COUNT + 1; i++){
-        tiles_sub_bmp[i] = NULL;
+        tiles_sub_bmp[i] = nullptr;
     }
 
     for(int i = 0; i < SPECIAL_TILE_COUNT; i++){
-        tiles_special_sub_bmp[i] = NULL;
+        tiles_special_sub_bmp[i] = nullptr;
     }
 
 
@@ -92,7 +92,7 @@ bool tiles_init(void){
 
 
 ALLEGRO_BITMAP* tilemap_get_bmp(void){
-    if(tileset == NULL) return NULL;
+    if(tileset == nullptr) return nullptr;
     return tileset;
 }
 
@@ -107,11 +107,11 @@ void tiles_destroy(void){
 
 
 ALLEGRO_BITMAP *tiles_get_by_id(unsigned char id){
-    return tiles_sub_bmp[id] != NULL ? tiles_sub_bmp[id] : tiles_sub_bmp[NO_TILE];
+    return tiles_sub_bmp[id] != nullptr ? tiles_sub_bmp[id] : tiles_sub_bmp[NO_TILE];
 }
 
 ALLEGRO_BITMAP *special_tiles_get_by_id(unsigned char id){
-    return tiles_special_sub_bmp[id] != NULL ? tiles_special_sub_bmp[id] : tiles_sub_bmp[NO_TILE];
+    return tiles_special_sub_bmp[id] != nullptr ? tiles_special_sub_bmp[id] : tiles_sub_bmp[NO_TILE];
 }
 
 void tiles_set_properties(TILE *tile){
@@ -144,13 +144,13 @@ char *tiles_get_name(unsigned char id){
 }
 
 static void tiles_load_from_file(const char *filename){
-    ALLEGRO_FILE *fp = NULL;
-    char *fullpath = NULL;
+    ALLEGRO_FILE *fp = nullptr;
+    char *fullpath = nullptr;
 
-    fullpath = get_file_path(NULL, filename);
+    fullpath = get_file_path(nullptr, filename);
     LOG("LOAD TILE LIST: %s", fullpath);
     if(!al_filename_exists(fullpath)){
-        al_show_native_message_box(get_window_display(), "Error:", "An Error Occured!", "Missing tiles.txt sorry", NULL , 0);
+        al_show_native_message_box(get_window_display(), "Error:", "An Error Occured!", "Missing tiles.txt sorry", nullptr , 0);
         window_exit_loop();
         window_gracefully_quit("tiles do not exists");
         return;
@@ -159,13 +159,13 @@ static void tiles_load_from_file(const char *filename){
     fp = al_fopen(fullpath, "rb");
 
     if(!fp){
-        al_show_native_message_box(get_window_display(), "Error:", "An Error Occured!", "Missing tiles.txt sorry", NULL , 0);
+        al_show_native_message_box(get_window_display(), "Error:", "An Error Occured!", "Missing tiles.txt sorry", nullptr , 0);
         window_gracefully_quit("filename cant find tiles.txt");
         return;
     }
 
     char linefeed[127];
-    char *line = NULL;
+    char *line = nullptr;
 
      al_fgets(fp, linefeed, sizeof(char) * 127);
 
@@ -176,23 +176,23 @@ static void tiles_load_from_file(const char *filename){
         if(*line == '\n') break;
 
         id = atoi(line);
-        line = NULL;
+        line = nullptr;
 
-        line = strtok(NULL, ";");
+        line = strtok(nullptr, ";");
         offsetx = atoi(line);
-        line = NULL;
+        line = nullptr;
 
-        line = strtok(NULL, ";");
+        line = strtok(nullptr, ";");
         offsety = atoi(line);
-        line = NULL;
+        line = nullptr;
 
-        line = strtok(NULL, ";");
+        line = strtok(nullptr, ";");
         width  = atoi(line);
-        line = NULL;
+        line = nullptr;
 
-        line = strtok(NULL, ";");
+        line = strtok(nullptr, ";");
         height = atoi(line);
-        line = NULL;
+        line = nullptr;
 
         memset(linefeed,0, sizeof(char) * 127);
         printf("\nID: %d X: %d Y: %d WIDTH: %d HEIGHT: %d\n\n", id, offsetx, offsety, width, height);

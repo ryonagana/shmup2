@@ -64,7 +64,7 @@ void level_init_default(LEVEL* level){
 
 bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog){
 
-   const char *filepath = NULL;
+   const char *filepath = nullptr;
 
    if(mapname){
         filepath = get_file_path("map", mapname);
@@ -76,7 +76,7 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog
    }
 
 
-    ALLEGRO_FILECHOOSER *openfile_diag = NULL;
+    ALLEGRO_FILECHOOSER *openfile_diag = nullptr;
     if(dialog){
 
         openfile_diag = al_create_native_file_dialog(filepath, "Load MAP:", "*.cbm", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
@@ -173,7 +173,7 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog
      }
 
       al_fclose(fp);
-      if(filepath) free(filepath);
+      if(filepath) delete filepath;
       return true;
 
 FINISH:
@@ -190,14 +190,14 @@ FINISH:
 
 
 bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char *mapname, bool dialog){
-    char * filepath = NULL;
+    const char * filepath = nullptr;
 
     if(mapname){
         filepath = get_file_path("map", mapname);
     }
 
 
-    ALLEGRO_FILECHOOSER *chooser_diag = NULL;
+    ALLEGRO_FILECHOOSER *chooser_diag = nullptr;
 
     if(dialog){
         chooser_diag = al_create_native_file_dialog(filepath, "Save File..", "*.*", ALLEGRO_FILECHOOSER_SAVE);
@@ -223,11 +223,11 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char *mapname, bool dialog)
     strncpy(file_lc, filepath, strlen(filepath) + 1);
 
 
-    ALLEGRO_FILE *fp = NULL;
+    ALLEGRO_FILE *fp = nullptr;
 
     fp = al_fopen(file_lc,"wb");
 
-    if(fp == NULL){
+    if(fp == nullptr){
         fprintf(stderr, "level_save(): FILE: %s LINE: %d - cant load %s ", __FILE__, __LINE__, file_lc);
         if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
         return false;
@@ -390,11 +390,11 @@ bool level_save_i(LEVEL *lvl, char * mapname)
     strncpy(file_lc, mapname, strlen(mapname) + 1);
 
 
-    ALLEGRO_FILE *fp = NULL;
+    ALLEGRO_FILE *fp = nullptr;
 
     fp = al_fopen(file_lc,"wb");
 
-    if(fp == NULL){
+    if(fp == nullptr){
         return false;
     }
 

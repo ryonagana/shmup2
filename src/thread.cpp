@@ -9,9 +9,9 @@ void thread_create(THREAD_INFO *data){
 
 void thread_destroy(THREAD_INFO *data){
     if(data->cond) al_destroy_cond(data->cond);
-    data->cond = NULL;
+    data->cond = nullptr;
 
     if(data->mutex)al_destroy_mutex(data->mutex);
-    data->mutex = NULL;
+    data->mutex = nullptr;
 
 }

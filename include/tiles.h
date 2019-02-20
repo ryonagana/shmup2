@@ -2,7 +2,7 @@
 
 #define TILES_HEADER
 
-#include <stdio.h>
+#include <cstdio>
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_native_dialog.h>
 #include "level.h"

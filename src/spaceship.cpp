@@ -69,7 +69,7 @@ void spaceship_camera_init(CAMERA *camera, SPACESHIP* ship){
 
 void spaceship_move(int num,   float x, float y)
 {
-    struct SPACESHIP* player = NULL;
+    struct SPACESHIP* player = nullptr;
     player = spaceship_get_player(num);
 
     player->x += x * player->speed;
@@ -80,8 +80,8 @@ void spaceship_move(int num,   float x, float y)
 
 
 SPACESHIP *spaceship_get_player(int num){
-    if(num > MAX_SPACESHIPS) return NULL;
-    return &player_list[num] != NULL ? &player_list[num] : NULL;
+    if(num > MAX_SPACESHIPS) return nullptr;
+    return &player_list[num] != nullptr ? &player_list[num] : nullptr;
 }
 
 

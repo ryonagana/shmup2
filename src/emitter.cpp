@@ -1,10 +1,11 @@
 #include "emitter.h"
 #include "shared.h"
 
+
 PARTICLE_EMITTER* emitter_create(VECTOR2 pos, VECTOR2 origin,  float scale, float shrink_rate,  int duration, size_t amount, int max_speed, ALLEGRO_COLOR color)
 {
      /* TODO */
-    PARTICLE_EMITTER *emitter = NULL;
+    PARTICLE_EMITTER *emitter = nullptr;
 
 
     emitter = (PARTICLE_EMITTER*) malloc(sizeof(PARTICLE_EMITTER));
@@ -39,8 +40,8 @@ void emitter_destroy(PARTICLE_EMITTER *emitter){
     free(emitter->particles);
     if(emitter) free(emitter);
 
-    emitter->particles =  NULL;
-    emitter = NULL;
+    emitter->particles =  nullptr;
+    emitter = nullptr;
 }
 
 void emitter_update(PARTICLE_EMITTER *emitter, int64_t time, float dir_x, float dir_y, int duration, float speed, float angle){
@@ -75,7 +76,7 @@ PARTICLE *emitter_find_dead_particle(PARTICLE *particles, int max){
     int i = 0;
     while(particles[i].is_alive && i < max) i++;
 
-    if(i == max) return NULL;
+    if(i == max) return nullptr;
 
     return &particles[i];
 }

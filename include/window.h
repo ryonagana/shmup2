@@ -1,10 +1,10 @@
 #ifndef WINDOW_HEADER
 #define WINDOW_HEADER
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cstdbool>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>

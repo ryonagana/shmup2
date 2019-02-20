@@ -3,8 +3,8 @@
 
 #include "vector2.h"
 
-#include <stdio.h>
-#include <stdint.h>
+#include <cstdio>
+#include <cstdint>
 
 typedef struct VECTOR2 {
     float x;

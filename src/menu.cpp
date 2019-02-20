@@ -12,18 +12,18 @@ static MENU_ENTRY* menu_find_empty_slot(MENU *menu, int *index);
 static GAME_TEXT menu_text;
 
 void menu_init(void){
-    text_init(&menu_text, NULL, 45);
+    text_init(&menu_text, nullptr, 45);
 
 }
 
 void menu_create(MENU *menu, int size){
-    if(menu == NULL){
-        menu = (MENU*) malloc(sizeof(MENU));
+    if(menu == nullptr){
+        menu =  new MENU;
     }
 
     menu->entries_count = 0;
     menu->menu_count = size;
-    menu->entries = (MENU_ENTRY*) malloc(sizeof(MENU_ENTRY) * size + 1);
+    menu->entries = new MENU_ENTRY[size + 1];  //(MENU_ENTRY*) malloc(sizeof(MENU_ENTRY) * size + 1);
     menu->bg_x = window_get_width() / 2 - 50;
     menu->bg_y = (window_get_height() / 2);
     for(int i = 0; i < size;i++){
@@ -41,8 +41,8 @@ void menu_destroy(MENU *menu){
     if(menu){
         free(menu->entries);
         free(menu);
-        menu->entries = 0x0;
-        menu = 0x0;
+        menu->entries = nullptr;
+        menu = nullptr;
     }
 }
 
@@ -65,8 +65,8 @@ static MENU_ENTRY* menu_find_empty_slot(MENU *menu, int *index){
 
     while(i < menu->entries_count) i++;
 
-    if(i == menu->menu_count) return  NULL;
-
+    if(i == menu->menu_count) return  nullptr;
+    *index = i;
     return &menu->entries[i];
 }
 
@@ -116,8 +116,9 @@ void menu_draw(MENU* menu){
 
     for(int i = 0; i < menu->menu_count;i++){
         al_draw_filled_rectangle(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15, al_map_rgb(255,0,0));
-        al_draw_textf(menu_text.font, al_map_rgb(255,0,0), (window_get_width() / 2 + 50) + 2 , (i * 25) + (window_get_height() / 2), "%s", "%s", menu->entries[i].menu);
-        al_draw_textf(menu_text.font, al_map_rgb(255,255,255), window_get_width() / 2 + 50 , (i * 25) + (window_get_height() / 2), "%s", "%s", menu->entries[i].menu);
+
+        al_draw_textf(menu_text.font, al_map_rgb(255,0,0), (window_get_width() / 2 + 50) + 2 , (i * 25) + (window_get_height() / 2), 0,"%s", menu->entries[i].menu);
+        al_draw_textf(menu_text.font, al_map_rgb(255,255,255), window_get_width() / 2 + 50 , (i * 25) + (window_get_height() / 2),0 , "%s",  menu->entries[i].menu);
 
         //text_draw(&menu_text, al_map_rgb(255,255,255), 150, i * 25, "%s", menu->entries[i].id);
     }

@@ -1,8 +1,8 @@
 #ifndef MAIN_HEADER
 #define MAIN_HEADER
 
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #include "render.h"
 #include "window.h"
 #include "keyboard.h"

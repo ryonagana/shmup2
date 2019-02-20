@@ -1,10 +1,10 @@
 #ifndef LEVEL_HEADER
 #define LEVEL_HEADER
 
-#include <stdio.h>
-#include <ctype.h>
-#include <stdint.h>
-#include <stdbool.h>
+#include <cstdio>
+#include <cctype>
+#include <cstdint>
+#include <cstdbool>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>

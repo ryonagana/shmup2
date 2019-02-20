@@ -1,6 +1,6 @@
 #ifndef EMITTER_HEADER
 #define EMITTER_HEADER
-#include <stdio.h>
+#include <cstdio>
 #include "particle.h"
 #include <allegro5/allegro.h>
 #include "vector2.h"
@@ -31,5 +31,7 @@ void emitter_update(PARTICLE_EMITTER *emitter, int64_t time,  float dir_x, float
 void emitter_draw(PARTICLE_EMITTER *emitter, ALLEGRO_BITMAP *tex);
 
 PARTICLE* emitter_find_dead_particle(PARTICLE *particles, int max);
+
+
 
 #endif
