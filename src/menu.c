@@ -12,7 +12,7 @@ static MENU_ENTRY* menu_find_empty_slot(MENU *menu, int *index);
 static GAME_TEXT menu_text;
 
 void menu_init(void){
-    text_init(&menu_text, NULL, 21);
+    text_init(&menu_text, NULL, 45);
 
 }
 
@@ -46,13 +46,16 @@ void menu_destroy(MENU *menu){
     }
 }
 
-void menu_add_entry(MENU *menu, int id,  const char *entry_name, MENU_TYPE type){
+void menu_add_entry(MENU *menu, int id,  const char *entry_name, MENU_TYPE type, menuSelectCallback callback){
     int index = 0;
     MENU_ENTRY *entry = menu_find_empty_slot(menu, &index);
 
     strncpy(entry->menu, entry_name,56);
     entry->id = id;
+    entry->menu_callback = callback;
+    entry->type = type;
     menu->entries_count++;
+
     return;
 
 }
@@ -85,10 +88,6 @@ void menu_update(MENU* menu){
         }
 
 
-        //float x = mouse_get()->x / window_get_width() / 2 + 50;
-        //float y = mouse_get()->y / (i * 25) + (window_get_height() / 2);
-
-
 
     }
 
@@ -99,9 +98,6 @@ void menu_update(MENU* menu){
 
 void menu_input_update(ALLEGRO_EVENT *e){
 
-    if(e->type == ALLEGRO_EVENT_MOUSE_AXES){
-
-    }
 
     if( keyboard_pressed(ALLEGRO_KEY_UP)){
 
@@ -120,6 +116,7 @@ void menu_draw(MENU* menu){
 
     for(int i = 0; i < menu->menu_count;i++){
         al_draw_filled_rectangle(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15, al_map_rgb(255,0,0));
+        al_draw_textf(menu_text.font, al_map_rgb(255,0,0), (window_get_width() / 2 + 50) + 2 , (i * 25) + (window_get_height() / 2), "%s", "%s", menu->entries[i].menu);
         al_draw_textf(menu_text.font, al_map_rgb(255,255,255), window_get_width() / 2 + 50 , (i * 25) + (window_get_height() / 2), "%s", "%s", menu->entries[i].menu);
 
         //text_draw(&menu_text, al_map_rgb(255,255,255), 150, i * 25, "%s", menu->entries[i].id);

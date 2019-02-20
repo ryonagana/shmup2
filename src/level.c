@@ -12,6 +12,8 @@
 
 
 
+
+
 void level_init_default(LEVEL* level){
 
     strncpy(level->magic, MAP_ID, 6);
@@ -62,7 +64,7 @@ void level_init_default(LEVEL* level){
 
 bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog){
 
-   char *filepath = NULL;
+   const char *filepath = NULL;
 
    if(mapname){
         filepath = get_file_path("map", mapname);

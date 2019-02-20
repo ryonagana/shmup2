@@ -4,6 +4,15 @@
 #include "config.h"
 #include "menu.h"
 
+
+typedef enum {
+    MENU_OPT_QUIT = 0,
+    MENU_OPT_NEW_GAME,
+    MENU_OPT_EDITOR,
+
+
+}MENU_OPT_TYPE;
+
 static SPACESHIP *player =  NULL;
 static CAMERA p1_camera;
 
@@ -31,9 +40,10 @@ int main(int  argc, char **argv)
     LEVEL teste;
 
     menu_create(&main_menu, 5);
-    menu_add_entry(&main_menu, 1, "NEW GAME (ALPHA)", MENU_TYPE_SIMPLE);
-    menu_add_entry(&main_menu, 2, "EDITOR", MENU_TYPE_SIMPLE);
-    menu_add_entry(&main_menu, 3,  "QUIT", MENU_TYPE_SIMPLE);
+    menu_add_entry(&main_menu, MENU_OPT_NEW_GAME, "NEW GAME (ALPHA)", MENU_TYPE_SIMPLE, NULL);
+    menu_add_entry(&main_menu, MENU_OPT_EDITOR, "EDITOR", MENU_TYPE_SIMPLE, NULL);
+       menu_add_entry(&main_menu, MENU_OPT_EDITOR, "SEQUISSUANAU", MENU_TYPE_SIMPLE, NULL);
+    menu_add_entry(&main_menu, MENU_OPT_QUIT,  "QUIT", MENU_TYPE_SIMPLE, NULL);
 
     //level_init_default(&teste);
     //level_save(get_window_display(), &teste, "teste01.cbm", false);
