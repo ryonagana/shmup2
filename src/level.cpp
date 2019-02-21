@@ -62,7 +62,7 @@ void level_init_default(LEVEL* level){
 
 }
 
-bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog){
+bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool dialog){
 
    const char *filepath = nullptr;
 

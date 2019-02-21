@@ -1,5 +1,5 @@
-#ifndef SHARED_HEADER
-#define SHARED_HEADER
+#pragma once
+
 #include <cstdio>
 #include <iostream>
 #include <cstdarg>
@@ -12,6 +12,17 @@
 #define RAD2DEG 57.29577951
 
 
+#ifdef INLINE_FUNCTION
+#undef INLINE_FUNCTION
+#endif
+
+#if defined(WIN32) || defined(_WIN32) || defined(_MINGW32_)
+    #define INLINE_FUNCTION __inline
+#elif defined(__GNUC__) || defined(__APPLE__) || defined(__unix__)
+    #define INLINE_FUNCTION inline
+#else
+    #define INLINE_FUNCTION
+#endif
 
 #define  MIN(x,y) ((x) < (y) ? (x) : (y))
 #define  MAX(x,y) ((x) > (y) ? (x) : (y))
@@ -35,6 +46,10 @@ enum MSG_DEBUG_TYPES {
 
  void msg_write(int type, char* file, int line, char *fmt, ...);
 
+
+
+
+
 #define STR(X) #X
 
 //#define LOG(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, msg, ##__VA_ARGS__)
@@ -45,4 +60,4 @@ enum MSG_DEBUG_TYPES {
 #define WARN(msg, ...)
 #define CRITICAL(msg, ...)
 
-#endif
+

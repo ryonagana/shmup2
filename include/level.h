@@ -58,7 +58,7 @@ bool level_load_i(LEVEL *lvl, char * mapname);
 bool level_save_i(LEVEL *lvl, char * mapname);
 
 bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char * mapname, bool dialog);
-bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog);
+bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool dialog);
 
 bool level_file_exists(const char *mapname);
 TILE *level_get_tile(TILE map[MAX_GRID_Y][MAX_GRID_X], int x, int y);

@@ -19,6 +19,16 @@ typedef struct SETTINGS {
     SETTING_FIELD fullscreen;
     SETTING_FIELD editor_mode;
 
+    SETTINGS(){
+        sfx_volume.f_field = 1.0;
+        music_volume.f_field = 1.0;
+        sfx_on.b_field = true;
+        music_on.b_field = true;
+        opengl.b_field = true;
+        fullscreen.b_field = true;
+        editor_mode.b_field = true;
+    }
+
 }SETTINGS;
 
 

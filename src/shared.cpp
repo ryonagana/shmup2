@@ -2,7 +2,6 @@
 
 
 
-
  void msg_write(int type, char* file, int line, char *fmt, ...){
     va_list lst;
     va_start(lst, fmt);

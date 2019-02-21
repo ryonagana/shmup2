@@ -705,7 +705,7 @@ static void editor_load_tile_file(const char* tile_file){
    al_fgets(fp_file, linebuf, sizeof(char) * 127);
 
 
-   while( (al_fgets(fp_file, linebuf, sizeof(char) * 127)) != 0 && !al_feof(fp_file) ){
+   while( (al_fgets(fp_file, linebuf, sizeof(char) * 127)) != nullptr && !al_feof(fp_file) ){
        int id,row,col;
 
        text = strtok(linebuf,";");
@@ -720,7 +720,7 @@ static void editor_load_tile_file(const char* tile_file){
        col = atoi(text);
 
        memset(linebuf,0, sizeof(char) * 127);
-       editor_register_tile( (TILE_ID) id, row, col);
+       editor_register_tile( static_cast<TILE_ID>(id), row, col);
 
    }
 
