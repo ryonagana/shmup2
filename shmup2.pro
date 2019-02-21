@@ -3,8 +3,7 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CC=g++
-QMAKE_CFLAGS += -std=c++14 -Wall -Wextra -WPermissive -pedantic
+QMAKE_CXX = g++
 
 SOURCES += \
     src/main.cpp \
@@ -49,10 +48,20 @@ HEADERS += \
     include/vector2.h \
     include/emitter.h
 
+
+QMAKE_CXXFLAGS_DEBUG += -std=c++14 -Wall -Wextra -fpermissive -pedantic -O0
+QMAKE_CXXFLAGS_RELEASE += -s -std=c++14 -Wall -Wextra -fpermissive -pedantic -Os
+
+debug : {
+        DEFINES += DEBUG_SHMUP
+}
+
 win32: {
 
     INCLUDEPATH += include/
     DEPENDPATH  += include/
+
+
 
     DEFINES += ALLEGRO_STATICLINK
     LIBS += -L$$PWD/../../libs/Allegro524_mingw/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc

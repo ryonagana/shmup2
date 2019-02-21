@@ -9,6 +9,15 @@
 
 #define MAX_SPACESHIPS (2) //leading zero
 
+
+typedef struct {
+    uint32_t controlled: 1;
+    uint32_t god_mode: 1;
+    uint32_t alive: 1;
+    uint32_t cheat: 1;
+}SPACESHIP_FLAG;
+
+
 typedef struct SPACESHIP{
     float x;
     float y;
@@ -16,12 +25,7 @@ typedef struct SPACESHIP{
 
     union {
         uint32_t all_flags;
-        struct {
-            uint32_t controlled: 1;
-            uint32_t god_mode: 1;
-            uint32_t alive: 1;
-            uint32_t cheat: 1;
-        };
+        SPACESHIP_FLAG flags;
     };
     int direction;
 } SPACESHIP;

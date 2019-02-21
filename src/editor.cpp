@@ -22,7 +22,6 @@ static THREAD_INFO thread_info;
 
 static char map_path[4096];
 
-static int player_count  = 0;
 static bool is_special_tile = false;
 
 
@@ -83,8 +82,9 @@ void editor_init(void){
 
     editor = new EDITOR;
 
-    if(!editor) CRITICAL("EDITOR NOT LOADED!");
-
+    if(!editor) {
+        CRITICAL("EDITOR NOT LOADED!");
+    }
     editor->level = nullptr;
     editor->state = EDITOR_STATE_EDIT;
     editor->selected_tile = TILE_GROUND01_F;

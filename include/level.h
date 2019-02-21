@@ -1,6 +1,7 @@
 #ifndef LEVEL_HEADER
 #define LEVEL_HEADER
 
+#include <iostream>
 #include <cstdio>
 #include <cctype>
 #include <cstdint>
@@ -33,7 +34,7 @@ typedef struct MAPCOORD {
 
 
 typedef struct LEVEL {
-    char magic[6]; // CBL
+    char magic[6]; // CBMAP
     int  ver;
     char mapname[20];
     MAPCOORD player_pos;
@@ -47,8 +48,6 @@ typedef struct LEVEL {
     TILE map_layer[MAX_GRID_Y][MAX_GRID_X];
     TILE obj_layer[MAX_GRID_Y][MAX_GRID_X];
 
-    //TODO ENEMIES
-    //TODO ITEMS
 }LEVEL;
 
 

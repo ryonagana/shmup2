@@ -1,6 +1,6 @@
 #include "level.h"
 #include "path.h"
-#include <string.h>
+#include <cstring>
 #include "shared.h"
 
 /*

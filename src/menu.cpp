@@ -7,7 +7,7 @@
 
 
 static MENU_ENTRY* menu_find_empty_slot(MENU *menu, int *index);
-
+static bool menu_option_clicked(MENU_ENTRY *entry);
 
 static GAME_TEXT menu_text;
 
@@ -70,8 +70,14 @@ static MENU_ENTRY* menu_find_empty_slot(MENU *menu, int *index){
     return &menu->entries[i];
 }
 
+/* actually it doesnt remove just reset data */
+
 void menu_remove_entry(MENU *menu, int index){
-    memset(&menu->entries[index],0, sizeof(MENU_ENTRY));
+     MENU_ENTRY *entry = &menu->entries[index];
+
+     strncpy(entry->menu,"", 56);
+     entry->menu_callback = nullptr;
+     entry->type = MENU_TYPE_NONE;
 }
 
 void menu_update(MENU* menu){
@@ -84,6 +90,11 @@ void menu_update(MENU* menu){
             if( mouse_get()->x >  window_get_width() / 2 + 50 ){
                     menu->bg_x =  window_get_width() / 2 - 50 ;
                     menu->bg_y =  (i * 25) + (window_get_height() / 2);
+
+                    menu_option_clicked(&menu->entries[i]);
+
+
+
             }
         }
 
@@ -122,4 +133,17 @@ void menu_draw(MENU* menu){
 
         //text_draw(&menu_text, al_map_rgb(255,255,255), 150, i * 25, "%s", menu->entries[i].id);
     }
+}
+
+static bool menu_option_clicked(MENU_ENTRY *entry){
+    if(mouse_get()->lButton){
+        if( entry->menu_callback != nullptr){
+            if(entry->menu_callback()){
+                printf("Callback menu cahamado com sucesso! ID: %d \n", entry->id);
+                return true;
+            }
+        }
+        return false;
+    }
+    return false;
 }

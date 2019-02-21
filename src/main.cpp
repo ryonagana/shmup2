@@ -4,8 +4,6 @@
 #include "config.h"
 #include "menu.h"
 
-
-
 typedef enum {
     MENU_OPT_QUIT = 0,
     MENU_OPT_NEW_GAME,
@@ -24,6 +22,13 @@ static bool state_main_menu = true;
 
 static void game_update_keyboard(ALLEGRO_EVENT *e);
 
+
+bool  main_menu_new_game_option(){
+
+    printf("CLICK! MENU!");
+    return false;
+}
+
 int main(int  argc, char **argv)
 {
     srand(time(nullptr));
@@ -41,9 +46,9 @@ int main(int  argc, char **argv)
     LEVEL teste;
 
     menu_create(&main_menu, 5);
-    menu_add_entry(&main_menu, MENU_OPT_NEW_GAME, "NEW GAME (ALPHA)", MENU_TYPE_SIMPLE, nullptr);
+    menu_add_entry(&main_menu, MENU_OPT_NEW_GAME, "NEW GAME (ALPHA)", MENU_TYPE_SIMPLE, &main_menu_new_game_option);
     menu_add_entry(&main_menu, MENU_OPT_EDITOR, "EDITOR", MENU_TYPE_SIMPLE, nullptr);
-       menu_add_entry(&main_menu, MENU_OPT_EDITOR, "SEQUISSUANAU", MENU_TYPE_SIMPLE, nullptr);
+    menu_add_entry(&main_menu, MENU_OPT_EDITOR, "SEQUISSUANAU", MENU_TYPE_SIMPLE, nullptr);
     menu_add_entry(&main_menu, MENU_OPT_QUIT,  "QUIT", MENU_TYPE_SIMPLE, nullptr);
 
     //level_init_default(&teste);
@@ -76,15 +81,6 @@ int main(int  argc, char **argv)
     }
 
     spaceship_camera_init(&p1_camera, player);
-
-
-
-
-
-
-
-    //level_save(get_window_display(), )
-
 
     while(window_open()){
         ALLEGRO_EVENT event;

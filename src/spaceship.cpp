@@ -132,8 +132,8 @@ void spaceship_update(int player_num){
 
 void spaceship_set_default_flags(SPACESHIP *sp){
 
-    sp->alive |= 1;
-    sp->controlled |= 1;
-    sp->cheat |= 0;
+    sp->flags.alive |= 1;
+    sp->flags.controlled |= 1;
+    sp->flags.controlled |= 0;
 
 }

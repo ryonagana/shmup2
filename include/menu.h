@@ -21,7 +21,18 @@ typedef struct MENU_ENTRY {
     char menu[56];
     int id;
     MENU_TYPE type;
+    float x1,x2,y1,y2;
     menuSelectCallback menu_callback;
+
+    MENU_ENTRY(){
+        menu[0] = {};
+        type = MENU_TYPE_NONE;
+        menu_callback = nullptr;
+        x1 = 0;
+        y1 = 0;
+        x2 = 0;
+        y2 = 0;
+    }
 
 }MENU_ENTRY;
 
@@ -33,6 +44,11 @@ typedef struct MENU {
      int menu_selected;
      float bg_x;
      float bg_y;
+
+     ~MENU(){
+         if(entries) delete[] entries;
+     }
+
 
 }MENU;
 
