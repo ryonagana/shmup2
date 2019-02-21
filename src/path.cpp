@@ -33,7 +33,8 @@ char* get_file_path(const char *folder, const char *filename){
 
     al_set_path_filename(root, filename);
     path = al_path_cstr(root, ALLEGRO_NATIVE_PATH_SEP);
-    copy_path = (char *) malloc(sizeof (char) * strlen(path) + 1);
+
+    copy_path = new char[ strlen(path) + 1 ]; //(char *) malloc(sizeof (char) * strlen(path) + 1);
     memset(copy_path,0, sizeof (char) * strlen(path) + 1);
 
     strncpy(copy_path, path, strlen(path));

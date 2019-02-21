@@ -4,6 +4,8 @@
 #include "shared.h"
 #include "window.h"
 
+#include <vector>
+
 static ALLEGRO_BITMAP *tileset = nullptr;
 static ALLEGRO_BITMAP *special_tileset = nullptr;
 
@@ -11,8 +13,28 @@ static ALLEGRO_BITMAP* tiles_sub_bmp[TILE_COUNT + 1];
 static ALLEGRO_BITMAP* tiles_special_sub_bmp[SPECIAL_TILE_COUNT];
 
 
+typedef struct TILEINFO {
+    std::string name;
+    TILE_ID id;
+    TILEINFO(){
+        name = "";
+        id = NO_TILE;
+    }
+    TILEINFO(const std::string &tname , TILE_ID tid = NO_TILE){
+        name = tname;
+        id = tid;
+    }
+
+}TILEINFO;
+
+
 static void tiles_load_from_file(const char *filename);
 
+
+
+static std::vector<TILEINFO*> tile_names;
+
+/*
 static char* tile_names[TILE_COUNT + 1] = {
     "No Tile\0",
     "Tile Ground 01  Flat\0",
@@ -20,11 +42,18 @@ static char* tile_names[TILE_COUNT + 1] = {
     "Tile Ground 01  Yop L\0",
     nullptr,
 };
-
+*/
 
 bool tiles_init(void){
     char *filepath = get_file_path("tile", "spritesheet.png");
     bool tileset_not_found = true;
+
+
+
+    tile_names.push_back( new TILEINFO("No Tile", NO_TILE));
+    tile_names.push_back( new TILEINFO("Tile Ground 01  Flat", TILE_GROUND01_F));
+    tile_names.push_back( new TILEINFO("Tile Ground 01  TOP R", TILE_GROUND01_TOP_R));
+    tile_names.push_back( new TILEINFO("Tile Ground 01  TOP L", TILE_GROUND01_TOP_L));
 
     if(!filepath){
        CRITICAL("%s not found!", filepath);
@@ -137,9 +166,10 @@ void tiles_set_properties(TILE *tile){
 }
 
 
-char *tiles_get_name(unsigned char id){
+const char *tiles_get_name(unsigned char id){
 
-    return tile_names[(int)id];
+    unsigned int t_id = static_cast<unsigned int>(id);
+    return tile_names[t_id]->name.c_str();
 
 }
 

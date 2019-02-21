@@ -10,7 +10,7 @@ static ALLEGRO_MOUSE_CURSOR *a5_editor_mouse = nullptr;
 
 void mouse_init(void){
     if(mouse_input == nullptr){
-        mouse_input = (MOUSE*) malloc(sizeof(MOUSE));
+        mouse_input = new MOUSE;//(MOUSE*) malloc(sizeof(MOUSE));
     }
 
     mouse_input->lButton = false;

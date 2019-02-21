@@ -1,13 +1,16 @@
 #include "shared.h"
-#include <stdarg.h>
 
 
 
- void msg_write(int type, char* file, int line, const char *fmt, ...){
+
+ void msg_write(int type, char* file, int line, char *fmt, ...){
     va_list lst;
     va_start(lst, fmt);
-    char buf[1024] = "";
-    vsnprintf(buf, 1023,fmt,lst);
+    char buf[1024] = {};
+    char tmp[1024] = {};
+    strncpy(tmp, fmt, 1024);
+
+    vsnprintf(buf, 1023,buf,lst);
 
     switch (type) {
 

@@ -1,6 +1,7 @@
 #ifndef MENU_HEADER
 #define MENU_HEADER
 
+#include <iostream>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>

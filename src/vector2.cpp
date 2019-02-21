@@ -20,7 +20,7 @@ void vector_Init(VECTOR2 *v, float x, float y){
 const VECTOR2* vector_Init2(float x, float y){
 
     VECTOR2 *v = nullptr;
-    v = (VECTOR2*) malloc(sizeof(VECTOR2));
+    v = new VECTOR2; //(VECTOR2*) malloc(sizeof(VECTOR2));
 
     v->x = x;
     v->y = y;

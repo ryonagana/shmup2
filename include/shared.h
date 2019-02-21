@@ -1,7 +1,9 @@
 #ifndef SHARED_HEADER
 #define SHARED_HEADER
 #include <cstdio>
-
+#include <iostream>
+#include <cstdarg>
+#include <cstring>
 
 #define PI 3.1415926535
 #define PI_2 (PI * PI)
@@ -31,10 +33,16 @@ enum MSG_DEBUG_TYPES {
     MSG_CRITICAL
 };
 
- void msg_write(int type, char* file, int line, const char *fmt, ...);
+ void msg_write(int type, char* file, int line, char *fmt, ...);
 
-#define LOG(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, #msg, ##__VA_ARGS__)
-#define WARN(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, #msg, ##__VA_ARGS__)
-#define CRITICAL(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__,#msg,  ##__VA_ARGS__)
+#define STR(X) #X
+
+//#define LOG(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, msg, ##__VA_ARGS__)
+//#define WARN(msg, ...) msg_write(MSG_WARNING, __FILE__, __LINE__, msg, ##__VA_ARGS__)
+//#define CRITICAL(msg, ...) msg_write(MSG_CRITICAL, __FILE__, __LINE__,##msg,  ##__VA_ARGS__)
+
+#define LOG(msg, ...)
+#define WARN(msg, ...)
+#define CRITICAL(msg, ...)
 
 #endif

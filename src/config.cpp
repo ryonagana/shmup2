@@ -64,13 +64,13 @@ bool config_init(void){
 
 }
 
-void config_set_key(ALLEGRO_CONFIG *cfg, const char *key, const char *fmt, ...){
+void config_set_key(ALLEGRO_CONFIG *cfg, const char *key, char *fmt, ...){
     char key_str[56];
     va_list lst;
 
     va_start(lst, fmt);
     vsnprintf(key_str, strlen(fmt), fmt, lst);
-    sprintf(key_str, "%s", key_str);
+    //sprintf(key_str, "%s", key_str);
     al_set_config_value(cfg, "config", key, key_str);
     va_end(lst);
 }

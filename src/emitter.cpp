@@ -1,3 +1,4 @@
+#include <iostream>
 #include "emitter.h"
 #include "shared.h"
 
@@ -8,9 +9,9 @@ PARTICLE_EMITTER* emitter_create(VECTOR2 pos, VECTOR2 origin,  float scale, floa
     PARTICLE_EMITTER *emitter = nullptr;
 
 
-    emitter = (PARTICLE_EMITTER*) malloc(sizeof(PARTICLE_EMITTER));
-    emitter->particles = (PARTICLE*)  malloc(sizeof(PARTICLE) * amount + 1);
-    memset(emitter->particles,0, sizeof(PARTICLE) * amount + 1);
+    emitter = new PARTICLE_EMITTER;
+    emitter->particles = new (std::nothrow) PARTICLE[amount + 1]; // (PARTICLE*)  malloc(sizeof(PARTICLE) * amount + 1);
+    //memset(emitter->particles,0, sizeof(PARTICLE) * amount + 1);
     emitter->size = amount;
 
 

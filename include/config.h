@@ -27,6 +27,6 @@ bool config_init(void);
 void config_destroy(void);
 void config_create_default(ALLEGRO_FILE *fp_cfg);
 const char *config_get_key(ALLEGRO_CONFIG *cfg, const char *key);
-void config_set_key(ALLEGRO_CONFIG *cfg, const char *key, const char *fmt, ...);
+void config_set_key(ALLEGRO_CONFIG *cfg, const char *key, char *fmt, ...);
 SETTINGS* config_get(void);
 #endif

@@ -1,6 +1,7 @@
 #ifndef WINDOW_HEADER
 #define WINDOW_HEADER
 
+#include <iostream>
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
@@ -21,7 +22,7 @@ void window_init(void);
 void window_close(void);
 bool window_open(void);
 void window_exit_loop(void);
-void window_gracefully_quit(const char *msg);
+void window_gracefully_quit(const std::string &msg);
 bool window_request_gracefully_closing(void);
 
 int window_get_width(void);

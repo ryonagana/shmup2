@@ -23,7 +23,7 @@ void menu_create(MENU *menu, int size){
 
     menu->entries_count = 0;
     menu->menu_count = size;
-    menu->entries = new MENU_ENTRY[size + 1];  //(MENU_ENTRY*) malloc(sizeof(MENU_ENTRY) * size + 1);
+    menu->entries = new (std::nothrow) MENU_ENTRY[size + 1];  //(MENU_ENTRY*) malloc(sizeof(MENU_ENTRY) * size + 1);
     menu->bg_x = window_get_width() / 2 - 50;
     menu->bg_y = (window_get_height() / 2);
     for(int i = 0; i < size;i++){

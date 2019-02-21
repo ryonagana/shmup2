@@ -214,14 +214,14 @@ void set_window_time_ms(int64_t time){
     timer_milliseconds = time;
 }
 
-void window_gracefully_quit(const char *msg){
+void window_gracefully_quit(const std::string &msg){
     if(!issue_gracefully_close) issue_gracefully_close = true;
     if(is_window_open) window_exit_loop();  // finish the main loop isnt finished
-    if(msg == nullptr){
+    if(!msg.c_str()){
         LOG("---- GRACEFULLY QUITED: No Message ----\n\n");
     }
 
-    LOG("---- GRACEFULLY QUITED: %s ----\n\n", msg);
+    LOG("---- GRACEFULLY QUITED: %s ----\n\n", msg.c_str());
     window_close();
 }
 

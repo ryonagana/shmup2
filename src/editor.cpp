@@ -81,7 +81,7 @@ static void editor_load_tile_file(const char* tile_file);
 void editor_init(void){
     /* INITIALIZE THE EDITOR STRUCT */
 
-    editor = (EDITOR*) malloc(sizeof (EDITOR));
+    editor = new EDITOR;
 
     if(!editor) CRITICAL("EDITOR NOT LOADED!");
 
@@ -101,7 +101,7 @@ void editor_init(void){
     editor->tools_rect.y2 = 0;
 
     /* init the camera (in 2d is scrolling) */
-    editor->camera = (CAMERA_EDITOR*) malloc(sizeof(CAMERA_EDITOR));
+    editor->camera = new CAMERA_EDITOR;
     editor->camera->height = window_get_height();
     editor->camera->width = window_get_width();
     editor->camera->x = 0;
@@ -190,7 +190,7 @@ LEVEL* editor_load_path(const char *filename){
 
     LEVEL *level = nullptr;
 
-    level = (LEVEL*) malloc(sizeof(LEVEL));
+    level = new LEVEL;
     level_init_default(level);
 
     char path[1024];
