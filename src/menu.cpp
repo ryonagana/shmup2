@@ -111,12 +111,6 @@ void menu_update(MENU* menu){
     if(mouse_get()->lButton){
            menu_option_clicked(menu, menu->menu_selected);
     }
-    /*
-    if(!menu_option_clicked(&menu->entries[menu->menu_selected])){
-        LOG("MENU FAILED");
-    }
-    */
-
 
 }
 

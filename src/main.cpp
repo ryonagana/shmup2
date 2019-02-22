@@ -19,6 +19,7 @@ static ALLEGRO_BITMAP *spr_player = nullptr; //test
 
 static MENU main_menu;
 static bool state_main_menu = true;
+static bool state_editor = false;
 
 static void game_update_keyboard(ALLEGRO_EVENT *e);
 
@@ -26,6 +27,15 @@ static void game_update_keyboard(ALLEGRO_EVENT *e);
 bool  main_menu_new_game_option(){
 
     printf("CLICK! MENU!");
+
+    return false;
+}
+
+
+bool  main_menu_editor_option(){
+
+    printf("CLICK! EDITOR");
+
     return false;
 }
 
@@ -47,8 +57,7 @@ int main(int  argc, char **argv)
 
     menu_create(&main_menu, 5);
     menu_add_entry(&main_menu, MENU_OPT_NEW_GAME, "NEW GAME (ALPHA)", MENU_TYPE_SIMPLE, &main_menu_new_game_option);
-    menu_add_entry(&main_menu, MENU_OPT_EDITOR, "EDITOR", MENU_TYPE_SIMPLE, nullptr);
-    menu_add_entry(&main_menu, MENU_OPT_EDITOR, "SEQUISSUANAU", MENU_TYPE_SIMPLE, nullptr);
+    menu_add_entry(&main_menu, MENU_OPT_EDITOR, "EDITOR", MENU_TYPE_SIMPLE, &main_menu_editor_option);
     menu_add_entry(&main_menu, MENU_OPT_QUIT,  "QUIT", MENU_TYPE_SIMPLE, nullptr);
 
     //level_init_default(&teste);
