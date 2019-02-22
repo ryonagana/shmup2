@@ -1,7 +1,9 @@
-#ifndef SHARED_HEADER
-#define SHARED_HEADER
-#include <stdio.h>
+#pragma once
 
+#include <cstdio>
+#include <iostream>
+#include <cstdarg>
+#include <cstring>
 
 #define PI 3.1415926535
 #define PI_2 (PI * PI)
@@ -10,6 +12,17 @@
 #define RAD2DEG 57.29577951
 
 
+#ifdef INLINE_FUNCTION
+#undef INLINE_FUNCTION
+#endif
+
+#if defined(WIN32) || defined(_WIN32) || defined(_MINGW32_)
+    #define INLINE_FUNCTION __inline
+#elif defined(__GNUC__) || defined(__APPLE__) || defined(__unix__)
+    #define INLINE_FUNCTION inline
+#else
+    #define INLINE_FUNCTION
+#endif
 
 #define  MIN(x,y) ((x) < (y) ? (x) : (y))
 #define  MAX(x,y) ((x) > (y) ? (x) : (y))
@@ -31,10 +44,20 @@ enum MSG_DEBUG_TYPES {
     MSG_CRITICAL
 };
 
- void msg_write(int type, char* file, int line, const char *fmt, ...);
+ void msg_write(int type, char* file, int line, char *fmt, ...);
 
-#define LOG(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, msg, ##__VA_ARGS__)
-#define WARN(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, msg, ##__VA_ARGS__)
-#define CRITICAL(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__,msg,  ##__VA_ARGS__)
 
-#endif
+
+
+
+#define STR(X) #X
+
+//#define LOG(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, msg, ##__VA_ARGS__)
+//#define WARN(msg, ...) msg_write(MSG_WARNING, __FILE__, __LINE__, msg, ##__VA_ARGS__)
+//#define CRITICAL(msg, ...) msg_write(MSG_CRITICAL, __FILE__, __LINE__,##msg,  ##__VA_ARGS__)
+
+#define LOG(msg, ...)
+#define WARN(msg, ...)
+#define CRITICAL(msg, ...)
+
+

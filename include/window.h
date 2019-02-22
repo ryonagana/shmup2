@@ -1,10 +1,11 @@
 #ifndef WINDOW_HEADER
 #define WINDOW_HEADER
 
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdbool.h>
+#include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <cstdlib>
+#include <cstdbool>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_image.h>
 #include <allegro5/allegro_font.h>
@@ -21,7 +22,7 @@ void window_init(void);
 void window_close(void);
 bool window_open(void);
 void window_exit_loop(void);
-void window_gracefully_quit(const char *msg);
+void window_gracefully_quit(const std::string &msg);
 bool window_request_gracefully_closing(void);
 
 int window_get_width(void);

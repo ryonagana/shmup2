@@ -3,29 +3,28 @@ CONFIG += console
 CONFIG -= app_bundle
 CONFIG -= qt
 
-QMAKE_CC=gcc
-QMAKE_CFLAGS += -std=c11
+QMAKE_CXX = g++
 
 SOURCES += \
-    src/main.c \
-    src/window.c \
-    src/keyboard.c \
-    src/mouse.c \
-    src/spaceship.c \
-    src/mixer.c \
-    src/shared.c \
-    src/level.c \
-    src/menu.c \
-    src/path.c \
-    src/render.c \
-    src/tiles.c \
-    src/config.c \
-    src/editor.c \
-    src/thread.c \
-    src/text.c \
-    src/particle.c \
-    src/vector2.c \
-    src/emitter.c
+    src/main.cpp \
+    src/window.cpp \
+    src/keyboard.cpp \
+    src/mouse.cpp \
+    src/spaceship.cpp \
+    src/mixer.cpp \
+    src/shared.cpp \
+    src/level.cpp \
+    src/menu.cpp \
+    src/path.cpp \
+    src/render.cpp \
+    src/tiles.cpp \
+    src/config.cpp \
+    src/editor.cpp \
+    src/thread.cpp \
+    src/text.cpp \
+    src/particle.cpp \
+    src/vector2.cpp \
+    src/emitter.cpp
 
 
 HEADERS += \
@@ -49,10 +48,20 @@ HEADERS += \
     include/vector2.h \
     include/emitter.h
 
+
+QMAKE_CXXFLAGS_DEBUG += -std=c++14 -Wall -Wextra -fpermissive -pedantic -O0
+QMAKE_CXXFLAGS_RELEASE += -s -std=c++14 -Wall -Wextra -fpermissive -pedantic -Os
+
+debug : {
+        DEFINES += DEBUG_SHMUP
+}
+
 win32: {
 
     INCLUDEPATH += include/
     DEPENDPATH  += include/
+
+
 
     DEFINES += ALLEGRO_STATICLINK
     LIBS += -L$$PWD/../../libs/Allegro524_mingw/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc

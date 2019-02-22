@@ -1,6 +1,6 @@
 #ifndef THREAD_HEADER
 #define THREAD_HEADER
-#include <stdio.h>
+#include <cstdio>
 #include <allegro5/allegro.h>
 
 /* TODO */

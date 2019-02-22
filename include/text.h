@@ -1,11 +1,11 @@
 #ifndef TEXT_HEADER
 #define TEXT_HEADER
 
-#include <stdio.h>
+#include <cstdio>
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_ttf.h>
-#include <stdarg.h>
+#include <cstdarg>
 
 typedef struct GAME_TEXT {
     ALLEGRO_FONT *font;

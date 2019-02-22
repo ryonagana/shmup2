@@ -1,10 +1,11 @@
 #ifndef LEVEL_HEADER
 #define LEVEL_HEADER
 
-#include <stdio.h>
-#include <ctype.h>
-#include <stdint.h>
-#include <stdbool.h>
+#include <iostream>
+#include <cstdio>
+#include <cctype>
+#include <cstdint>
+#include <cstdbool>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
@@ -33,7 +34,7 @@ typedef struct MAPCOORD {
 
 
 typedef struct LEVEL {
-    char magic[6]; // CBL
+    char magic[6]; // CBMAP
     int  ver;
     char mapname[20];
     MAPCOORD player_pos;
@@ -47,8 +48,6 @@ typedef struct LEVEL {
     TILE map_layer[MAX_GRID_Y][MAX_GRID_X];
     TILE obj_layer[MAX_GRID_Y][MAX_GRID_X];
 
-    //TODO ENEMIES
-    //TODO ITEMS
 }LEVEL;
 
 
@@ -59,7 +58,7 @@ bool level_load_i(LEVEL *lvl, char * mapname);
 bool level_save_i(LEVEL *lvl, char * mapname);
 
 bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char * mapname, bool dialog);
-bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, char *mapname, bool dialog);
+bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool dialog);
 
 bool level_file_exists(const char *mapname);
 TILE *level_get_tile(TILE map[MAX_GRID_Y][MAX_GRID_X], int x, int y);

@@ -9,12 +9,12 @@
 #include "editor.h"
 #include "tiles.h"
 
-static ALLEGRO_EVENT_QUEUE *g_queue = NULL;
-static ALLEGRO_DISPLAY *g_display = NULL;
+static ALLEGRO_EVENT_QUEUE *g_queue = nullptr;
+static ALLEGRO_DISPLAY *g_display = nullptr;
 static ALLEGRO_KEYBOARD_STATE g_kbdstate;
-static ALLEGRO_BITMAP *g_screen = NULL;
-static ALLEGRO_TIMER *g_timer = NULL;
-static ALLEGRO_TIMER *g_time  = NULL;
+static ALLEGRO_BITMAP *g_screen = nullptr;
+static ALLEGRO_TIMER *g_timer = nullptr;
+static ALLEGRO_TIMER *g_time  = nullptr;
 
 
 
@@ -53,7 +53,7 @@ static int init_allegro(void) {
     }
 
     if(!config_init()){
-        char *root = get_file_path(NULL, "config.ini");
+        char *root = get_file_path(nullptr, "config.ini");
         ALLEGRO_FILE * fp = al_fopen(root, "w");
         config_create_default(fp);
         al_fclose(fp);
@@ -174,11 +174,11 @@ void window_close(void){
     }
 
 
-    if (g_display != NULL) al_destroy_display(g_display);
-    if(g_queue    != NULL) al_destroy_event_queue(g_queue);
-    if(g_screen   != NULL) al_destroy_bitmap(g_screen);
-    if(g_timer    != NULL) al_destroy_timer(g_timer);
-    if(g_time     != NULL) al_destroy_timer(g_time);
+    if (g_display != nullptr) al_destroy_display(g_display);
+    if(g_queue    != nullptr) al_destroy_event_queue(g_queue);
+    if(g_screen   != nullptr) al_destroy_bitmap(g_screen);
+    if(g_timer    != nullptr) al_destroy_timer(g_timer);
+    if(g_time     != nullptr) al_destroy_timer(g_time);
 }
 
 ALLEGRO_DISPLAY* get_window_display(void){
@@ -214,14 +214,14 @@ void set_window_time_ms(int64_t time){
     timer_milliseconds = time;
 }
 
-void window_gracefully_quit(const char *msg){
+void window_gracefully_quit(const std::string &msg){
     if(!issue_gracefully_close) issue_gracefully_close = true;
     if(is_window_open) window_exit_loop();  // finish the main loop isnt finished
-    if(msg == NULL){
+    if(!msg.c_str()){
         LOG("---- GRACEFULLY QUITED: No Message ----\n\n");
     }
 
-    LOG("---- GRACEFULLY QUITED: %s ----\n\n", msg);
+    LOG("---- GRACEFULLY QUITED: %s ----\n\n", msg.c_str());
     window_close();
 }
 

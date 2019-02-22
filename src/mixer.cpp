@@ -1,8 +1,8 @@
 #include "mixer.h"
 #include "shared.h"
 
-static ALLEGRO_VOICE *voice = NULL;
-static ALLEGRO_MIXER *mixer = NULL;
+static ALLEGRO_VOICE *voice = nullptr;
+static ALLEGRO_MIXER *mixer = nullptr;
 
 void mixer_init(int samples){
     al_reserve_samples(samples);
@@ -19,11 +19,11 @@ void mixer_destroy(void){
 }
 
 void sfx_destroy(GAME_SFX* sfx){
-    if(sfx->instance != NULL) al_detach_sample_instance(sfx->instance);
+    if(sfx->instance != nullptr) al_detach_sample_instance(sfx->instance);
     al_destroy_sample_instance(sfx->instance);
     sfx->instance = 0x0;
 
-    if(sfx->sample  != NULL) al_destroy_sample(sfx->sample);
+    if(sfx->sample  != nullptr) al_destroy_sample(sfx->sample);
     return;
 
 
@@ -33,7 +33,7 @@ void sfx_destroy(GAME_SFX* sfx){
 void mixer_load_sound(GAME_SFX* sfx, const char* sound_path){
     sfx->sample = al_load_sample(sound_path);
 
-    if(sfx->sample == NULL){
+    if(sfx->sample == nullptr){
         WARN("mixer_load_sound(): cannot load  %s sound file...", sound_path);
         return;
     }

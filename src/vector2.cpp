@@ -1,7 +1,7 @@
 #include "vector2.h"
-#include <math.h>
-#include <string.h>
-#include <stdlib.h>
+#include <cmath>
+#include <cstring>
+#include <cstdlib>
 
 
 
@@ -19,8 +19,8 @@ void vector_Init(VECTOR2 *v, float x, float y){
 
 const VECTOR2* vector_Init2(float x, float y){
 
-    VECTOR2 *v = NULL;
-    v = (VECTOR2*) malloc(sizeof(VECTOR2));
+    VECTOR2 *v = nullptr;
+    v = new VECTOR2; //(VECTOR2*) malloc(sizeof(VECTOR2));
 
     v->x = x;
     v->y = y;
@@ -90,8 +90,8 @@ VECTOR2  vector_Reverse(const VECTOR2 *vec){
 }
 
 void vector_Copy(VECTOR2 *dest, const VECTOR2 *orig){
-    if(dest == NULL){
-        dest = malloc(sizeof(*orig));
+    if(dest == nullptr){
+        dest = new VECTOR2;
     }
 
     dest->x = orig->x;
@@ -123,9 +123,9 @@ INLINE_FUNCTION void vector_Reflection(VECTOR2 *dest,  VECTOR2 *incident, VECTOR
 }
 
 VECTOR2 *vector_Rotation(const VECTOR2 *v, const VECTOR2 *w){
-    VECTOR2 *res = NULL;
+    VECTOR2 *res = nullptr;
 
-    res = malloc(sizeof(VECTOR2));
+    res =  new VECTOR2;
 
     res->x = (v->x * w->x) - (v->y * w->y);
     res->y = (v->x * w->y) - (v->y * w->x);
@@ -135,7 +135,7 @@ VECTOR2 *vector_Rotation(const VECTOR2 *v, const VECTOR2 *w){
 
 void vector_Free(void *v){
     VECTOR2 *res = (VECTOR2*)v;
-    if(res != NULL) free(res);
+    if(res != nullptr) free(res);
     return;
 }
 

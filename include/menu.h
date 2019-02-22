@@ -1,16 +1,16 @@
 #ifndef MENU_HEADER
 #define MENU_HEADER
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <iostream>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 #include <allegro5/allegro.h>
 
 typedef enum  {
     MENU_TYPE_NONE,
     MENU_TYPE_SIMPLE,
-    MENU_TYPE_PAGE,
-    MENU_TYPE_OPTIONS
+    MENU_TYPE_PAGE
 }MENU_TYPE;
 
 
@@ -20,7 +20,18 @@ typedef struct MENU_ENTRY {
     char menu[56];
     int id;
     MENU_TYPE type;
+    float x1,x2,y1,y2;
     menuSelectCallback menu_callback;
+
+    MENU_ENTRY(){
+        menu[0] = {};
+        type = MENU_TYPE_NONE;
+        menu_callback = nullptr;
+        x1 = 0;
+        y1 = 0;
+        x2 = 0;
+        y2 = 0;
+    }
 
 }MENU_ENTRY;
 
@@ -32,6 +43,11 @@ typedef struct MENU {
      int menu_selected;
      float bg_x;
      float bg_y;
+
+     ~MENU(){
+         if(entries) delete[] entries;
+     }
+
 
 }MENU;
 

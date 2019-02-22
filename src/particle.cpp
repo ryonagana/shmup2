@@ -6,7 +6,7 @@
 void particle_create(PARTICLE *particle, VECTOR2 pos, VECTOR2 origin, float scale, float shrink_rate, float speed,  float angle, int duration, ALLEGRO_COLOR color)
 {
     if(!particle){
-        particle = (PARTICLE*) malloc(sizeof(PARTICLE));
+        particle = new PARTICLE; //(PARTICLE*) malloc(sizeof(PARTICLE));
     }
     vector_Copy(&particle->position, &pos);
     vector_Copy(&particle->origin, &origin);

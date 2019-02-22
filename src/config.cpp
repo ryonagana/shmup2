@@ -5,7 +5,7 @@
 #include <math.h>
 #include <stdarg.h>
 
-static ALLEGRO_CONFIG *settings_conf = NULL;
+static ALLEGRO_CONFIG *settings_conf = nullptr;
 
 static SETTINGS settings;
 
@@ -35,8 +35,8 @@ void config_create_default(ALLEGRO_FILE *fp_cfg){
 }
 
 bool config_init(void){
-    char *path = get_file_path(NULL, "config.ini");
-    ALLEGRO_FILE *fp =  NULL;
+    char *path = get_file_path(nullptr, "config.ini");
+    ALLEGRO_FILE *fp =  nullptr;
 
     if(!al_filename_exists(path)){
         fp = al_fopen(path, "wb");
@@ -68,9 +68,11 @@ void config_set_key(ALLEGRO_CONFIG *cfg, const char *key, const char *fmt, ...){
     char key_str[56];
     va_list lst;
 
+    const char *nfmt = fmt;
+
     va_start(lst, fmt);
-    vsnprintf(key_str, strlen(fmt), fmt, lst);
-    sprintf(key_str, "%s", key_str);
+    vsnprintf(key_str, strlen(fmt),  nfmt , lst);
+    //sprintf(key_str, "%s", key_str);
     al_set_config_value(cfg, "config", key, key_str);
     va_end(lst);
 }

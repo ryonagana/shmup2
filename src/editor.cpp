@@ -4,24 +4,24 @@
 #include "thread.h"
 #include "emitter.h"
 
-static EDITOR *editor = NULL;
+
+static EDITOR *editor = nullptr;
 static bool opened_dialog = false;
-static ALLEGRO_BITMAP *editor_cursor = NULL;
+static ALLEGRO_BITMAP *editor_cursor = nullptr;
 
-static ALLEGRO_BITMAP *canvas_screen = NULL;
-static ALLEGRO_BITMAP *tools_screen  = NULL;
-static ALLEGRO_BITMAP *info_screen = NULL;
-static ALLEGRO_FONT *editor_default_font = NULL;
-static ALLEGRO_BITMAP *tile_selected_miniature = NULL;
+static ALLEGRO_BITMAP *canvas_screen = nullptr;
+static ALLEGRO_BITMAP *tools_screen  = nullptr;
+static ALLEGRO_BITMAP *info_screen = nullptr;
+static ALLEGRO_FONT *editor_default_font = nullptr;
+static ALLEGRO_BITMAP *tile_selected_miniature = nullptr;
 
 
-static ALLEGRO_THREAD *dialog_thread = NULL;
+static ALLEGRO_THREAD *dialog_thread = nullptr;
 static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data);
 static THREAD_INFO thread_info;
 
 static char map_path[4096];
 
-static int player_count  = 0;
 static bool is_special_tile = false;
 
 
@@ -40,7 +40,7 @@ typedef struct EDITOR_THREAD_DATA {
 
 
 static EDITOR_THREAD_DATA editor_thread_data = {
-    NULL,
+    nullptr,
     EDITOR_SAVE_DIALOG,
     0,
     {0,0,0}
@@ -55,7 +55,7 @@ static EDITOR_THREAD_DATA editor_thread_data = {
 static TILE editor_tiles[GRID_TOOLS_H][GRID_TOOLS_W];
 static TILE editor_objects[GRID_TOOLS_H][GRID_TOOLS_W];
 
-static PARTICLE_EMITTER *emitter = NULL;
+static PARTICLE_EMITTER *emitter = nullptr;
 
 
 static char state_text[65];
@@ -80,11 +80,12 @@ static void editor_load_tile_file(const char* tile_file);
 void editor_init(void){
     /* INITIALIZE THE EDITOR STRUCT */
 
-    editor = (EDITOR*) malloc(sizeof (EDITOR));
+    editor = new EDITOR;
 
-    if(!editor) CRITICAL("EDITOR NOT LOADED!");
-
-    editor->level = NULL;
+    if(!editor) {
+        CRITICAL("EDITOR NOT LOADED!");
+    }
+    editor->level = nullptr;
     editor->state = EDITOR_STATE_EDIT;
     editor->selected_tile = TILE_GROUND01_F;
     editor->old_selected_tile = TILE_GROUND01_F;
@@ -100,7 +101,7 @@ void editor_init(void){
     editor->tools_rect.y2 = 0;
 
     /* init the camera (in 2d is scrolling) */
-    editor->camera = (CAMERA_EDITOR*) malloc(sizeof(CAMERA_EDITOR));
+    editor->camera = new CAMERA_EDITOR;
     editor->camera->height = window_get_height();
     editor->camera->width = window_get_width();
     editor->camera->x = 0;
@@ -119,7 +120,7 @@ void editor_init(void){
 
     editor_cursor = al_load_bitmap(path);
 
-    if(editor_cursor == NULL){
+    if(editor_cursor == nullptr){
         editor_cursor = al_create_bitmap(TILE_SIZE,TILE_SIZE);
         al_set_target_bitmap(editor_cursor);
         al_draw_rectangle(0,0,32,32,al_map_rgb(255,0,0),1.0);
@@ -187,13 +188,17 @@ void editor_init(void){
 
 LEVEL* editor_load_path(const char *filename){
 
-    LEVEL *level = NULL;
+    LEVEL *level = nullptr;
 
-    level = (LEVEL*) malloc(sizeof(LEVEL));
+    level = new LEVEL;
     level_init_default(level);
 
-    if(!level_load(get_window_display(), level, filename, false)){
-        return NULL;
+    char path[1024];
+
+    strncpy(path, filename, 1024);
+
+    if(!level_load(get_window_display(), level, path, false)){
+        return nullptr;
     }
 
     char *full_path = get_file_path("map", filename);
@@ -208,7 +213,7 @@ LEVEL* editor_load_path(const char *filename){
 
 bool editor_load_mem(LEVEL *level){
 
-    char *layer_name = NULL;
+    char *layer_name = nullptr;
 
     editor->level  =  level;
     editor->layer  = EDITOR_LAYER_MAP;
@@ -218,7 +223,7 @@ bool editor_load_mem(LEVEL *level){
     editor_layer_to_str(editor->layer);
     if(layer_name) free(layer_name);
 
-    return editor->level == NULL ? false : true;
+    return editor->level == nullptr ? false : true;
 }
 
 void editor_update_input(ALLEGRO_EVENT *e)
@@ -338,7 +343,7 @@ void editor_update(ALLEGRO_EVENT *e)
 
     if(mouse_get()->rButton && editor->state != EDITOR_STATE_NO_EDIT){
 
-        TILE *t = NULL;
+        TILE *t = nullptr;
 
         t = editor_select_layer(editor->layer, tile_x, tile_y);
 
@@ -352,7 +357,7 @@ void editor_update(ALLEGRO_EVENT *e)
 
     if(mouse_get()->lButton && editor->state != EDITOR_STATE_NO_EDIT){
 
-        TILE *t = NULL;
+        TILE *t = nullptr;
 
         t = editor_select_layer(editor->layer, tile_x, tile_y);
 
@@ -361,7 +366,7 @@ void editor_update(ALLEGRO_EVENT *e)
             if(t->id == editor->selected_tile) return;
 
 
-            editor_tile_put(t, editor->selected_tile);
+            editor_tile_put(t, (TILE_ID) editor->selected_tile);
 
             printf("\nTILE: x: %d y: %d\n", tile_x, tile_y);
             printf("\nTILE ID: %d BLOCK: %d PASSABLE: %d\n", t->id, t->block, t->passable);
@@ -421,19 +426,19 @@ void editor_render(void)
     editor_render_canvas_cursor();
 
     al_draw_scaled_bitmap(tile_selected_miniature,0,0, TILE_SIZE, TILE_SIZE, 22 * TILE_SIZE, 16 * TILE_SIZE, TILE_SIZE * 2,TILE_SIZE * 2,0);
-    emitter_draw(emitter, NULL);
+    emitter_draw(emitter, nullptr);
 }
 
 
 void editor_destroy(void)
 {
     if(editor->camera) free(editor->camera);
-    editor->camera = NULL;
+    editor->camera = nullptr;
 
     if(editor->level) free(editor->level);
 
     if(editor) free(editor);
-    editor = NULL;
+    editor = nullptr;
 
     if(editor_cursor) al_destroy_bitmap(editor_cursor);
     if(canvas_screen) al_destroy_bitmap(canvas_screen);
@@ -443,12 +448,12 @@ void editor_destroy(void)
 
     if(thread_info.mutex) {
         al_destroy_mutex(thread_info.mutex);
-        thread_info.mutex = NULL;
+        thread_info.mutex = nullptr;
     }
 
     if(thread_info.cond) {
         al_destroy_cond(thread_info.cond);
-        thread_info.cond = NULL;
+        thread_info.cond = nullptr;
     }
 
     if(dialog_thread){
@@ -492,7 +497,7 @@ static void editor_camera_bounds(void)
 static TILE* editor_tile_get(TILE map[MAX_GRID_Y][MAX_GRID_X], int tile_x, int tile_y)
 {
     TILE *t = &map[tile_y][tile_x];
-    return (t != NULL) ? t : NULL;
+    return (t != nullptr) ? t : nullptr;
 }
 
 static void editor_clear_screen(ALLEGRO_BITMAP* bmp, ALLEGRO_COLOR col)
@@ -548,7 +553,7 @@ void editor_render_coord_text(){
 }
 
 TILE *editor_select_layer(EDITOR_LAYER_STATE state, int tilex, int tiley){
-    TILE *t = NULL;
+    TILE *t = nullptr;
 
     switch(state){
         case EDITOR_LAYER_BG:
@@ -566,7 +571,7 @@ TILE *editor_select_layer(EDITOR_LAYER_STATE state, int tilex, int tiley){
         break;
 
         case EDITOR_LAYER_ALL:
-            t = NULL;
+            t = nullptr;
             editor->state = EDITOR_STATE_NO_EDIT;
         break;
     }
@@ -588,7 +593,7 @@ void editor_render_canvas(void){
          for(int x = 0; x < MAX_GRID_X; x++){
 
             if( x <= editor->level->map_width && y <= editor->level->map_height){
-                TILE_ID tile = (unsigned char)editor->level->map_layer[y][x].id;
+                TILE_ID tile = (TILE_ID) editor->level->map_layer[y][x].id;
 
                 if(tile != NO_TILE){
                    al_draw_bitmap( tiles_get_by_id( (unsigned char) tile), (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y,0);
@@ -649,11 +654,11 @@ static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
 
             switch(d->type){
                 case EDITOR_SAVE_DIALOG:
-                    level_save(get_window_display(), d->editor->level, NULL, true);
+                    level_save(get_window_display(), d->editor->level, nullptr, true);
                 break;
 
                 case EDITOR_LOAD_DIALOG:
-                    level_load(get_window_display(), d->editor->level, NULL, true);
+                    level_load(get_window_display(), d->editor->level, nullptr, true);
                 break;
 
             }
@@ -671,17 +676,17 @@ static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
     }
 
 
-    return NULL;
+    return nullptr;
 
 }
 
 static void editor_load_tile_file(const char* tile_file){
-    char *path = NULL;
-    static ALLEGRO_FILE *fp_file =  NULL;
+    char *path = nullptr;
+    static ALLEGRO_FILE *fp_file =  nullptr;
 
 
     if(!fp_file){
-        path = get_file_path(NULL,tile_file);
+        path = get_file_path(nullptr,tile_file);
 
         if(!al_filename_exists(path)){
             WARN("TILE EDITOR  -- %s -- NOT FOUND", path);
@@ -694,28 +699,28 @@ static void editor_load_tile_file(const char* tile_file){
 
 
    char linebuf[127];
-   char *text = NULL;
+   char *text = nullptr;
 
    memset(linebuf,0, sizeof(char) * 127);
    al_fgets(fp_file, linebuf, sizeof(char) * 127);
 
 
-   while( (al_fgets(fp_file, linebuf, sizeof(char) * 127)) != 0 && !al_feof(fp_file) ){
+   while( (al_fgets(fp_file, linebuf, sizeof(char) * 127)) != nullptr && !al_feof(fp_file) ){
        int id,row,col;
 
        text = strtok(linebuf,";");
        if(*text == '\n') break;
 
        id = atoi(text);
-       text = NULL;
-       text = strtok(NULL, ";");
+       text = nullptr;
+       text = strtok(nullptr, ";");
        row = atoi(text);
-       text = NULL;
-       text = strtok(NULL, ";");
+       text = nullptr;
+       text = strtok(nullptr, ";");
        col = atoi(text);
 
        memset(linebuf,0, sizeof(char) * 127);
-       editor_register_tile( (TILE_ID) id, row, col);
+       editor_register_tile( static_cast<TILE_ID>(id), row, col);
 
    }
 

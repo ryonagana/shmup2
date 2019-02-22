@@ -2,7 +2,7 @@
 
 #define TILES_HEADER
 
-#include <stdio.h>
+#include <cstdio>
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_native_dialog.h>
 #include "level.h"
@@ -35,5 +35,5 @@ ALLEGRO_BITMAP *tilemap_get_bmp(void);
 ALLEGRO_BITMAP *tiles_get_by_id(unsigned char id);
 ALLEGRO_BITMAP *special_tiles_get_by_id(unsigned char id);
 void tiles_set_properties(TILE *tile);
-char *tiles_get_name(unsigned char id);
+const char *tiles_get_name(unsigned char id);
 #endif

@@ -3,14 +3,14 @@
 #include "path.h"
 #include "shared.h"
 
-static MOUSE *mouse_input = NULL;
+static MOUSE *mouse_input = nullptr;
 
-static ALLEGRO_BITMAP *mouse_cursor = NULL;
-static ALLEGRO_MOUSE_CURSOR *a5_editor_mouse = NULL;
+static ALLEGRO_BITMAP *mouse_cursor = nullptr;
+static ALLEGRO_MOUSE_CURSOR *a5_editor_mouse = nullptr;
 
 void mouse_init(void){
-    if(mouse_input == NULL){
-        mouse_input = (MOUSE*) malloc(sizeof(MOUSE));
+    if(mouse_input == nullptr){
+        mouse_input = new MOUSE;//(MOUSE*) malloc(sizeof(MOUSE));
     }
 
     mouse_input->lButton = false;
@@ -23,7 +23,7 @@ void mouse_init(void){
 
     mouse_cursor = al_load_bitmap(path);
 
-    if(mouse_cursor == NULL){
+    if(mouse_cursor == nullptr){
         mouse_cursor = al_create_bitmap(16,16);
         al_set_target_bitmap(mouse_cursor);
         al_draw_filled_rectangle(0,16,16,0, al_map_rgb(255,0,255));
@@ -45,16 +45,16 @@ void mouse_init(void){
 
 void mouse_destroy(void){
     if(mouse_input) free(mouse_input);
-    mouse_input = NULL;
+    mouse_input = nullptr;
 
     if(a5_editor_mouse) al_destroy_mouse_cursor(a5_editor_mouse);
-    a5_editor_mouse = NULL;
+    a5_editor_mouse = nullptr;
 
 }
 
 
 MOUSE *mouse_get(void){
-    if(!mouse_input) return NULL;
+    if(!mouse_input) return nullptr;
     return mouse_input;
 }
 
