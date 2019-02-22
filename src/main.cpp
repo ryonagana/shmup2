@@ -39,6 +39,11 @@ bool  main_menu_editor_option(){
     return false;
 }
 
+bool  main_menu_quit_option(){
+    window_exit_loop();
+    return false;
+}
+
 int main(int  argc, char **argv)
 {
     srand(time(nullptr));
@@ -58,7 +63,7 @@ int main(int  argc, char **argv)
     menu_create(&main_menu, 5);
     menu_add_entry(&main_menu, MENU_OPT_NEW_GAME, "NEW GAME (ALPHA)", MENU_TYPE_SIMPLE, &main_menu_new_game_option);
     menu_add_entry(&main_menu, MENU_OPT_EDITOR, "EDITOR", MENU_TYPE_SIMPLE, &main_menu_editor_option);
-    menu_add_entry(&main_menu, MENU_OPT_QUIT,  "QUIT", MENU_TYPE_SIMPLE, nullptr);
+    menu_add_entry(&main_menu, MENU_OPT_QUIT,  "QUIT", MENU_TYPE_SIMPLE, &main_menu_quit_option);
 
     //level_init_default(&teste);
     //level_save(get_window_display(), &teste, "teste01.cbm", false);
