@@ -7,7 +7,10 @@
 
 
 static MENU_ENTRY* menu_find_empty_slot(MENU *menu, int *index);
-static bool menu_option_clicked(MENU_ENTRY *entry);
+static bool menu_option_clicked(MENU *menu, int index);
+
+
+static bool menu_mouse_on_entry(float x1, float y1, float x2, float y2);
 
 static GAME_TEXT menu_text;
 
@@ -24,7 +27,7 @@ void menu_create(MENU *menu, int size){
     menu->entries_count = 0;
     menu->menu_count = size;
     menu->entries = new (std::nothrow) MENU_ENTRY[size + 1];  //(MENU_ENTRY*) malloc(sizeof(MENU_ENTRY) * size + 1);
-    menu->bg_x = window_get_width() / 2 - 50;
+    menu->bg_x = window_get_width() / 2;
     menu->bg_y = (window_get_height() / 2);
     for(int i = 0; i < size;i++){
         strncpy(menu->entries[i].menu, "", 56);
@@ -54,6 +57,12 @@ void menu_add_entry(MENU *menu, int id,  const char *entry_name, MENU_TYPE type,
     entry->id = id;
     entry->menu_callback = callback;
     entry->type = type;
+    entry->x1 =  window_get_width() / 2 - 50;
+    entry->y1 = (25 * menu->entries_count) + window_get_height() / 2;
+    entry->x2 = 125;
+    entry->y2 = (25 * menu->entries_count) + 5;
+
+
     menu->entries_count++;
 
     return;
@@ -88,21 +97,25 @@ void menu_update(MENU* menu){
 
         if(mouse_get()->y > (i * 25) + (window_get_height()) / 2){
             if( mouse_get()->x >  window_get_width() / 2 + 50 ){
-                    menu->bg_x =  window_get_width() / 2 - 50 ;
-                    menu->bg_y =  (i * 25) + (window_get_height() / 2);
+                    menu->bg_x =  window_get_width() / 2;
+                    menu->bg_y =  (25 * i) +  window_get_height() / 2;
 
-                    menu_option_clicked(&menu->entries[i]);
-
-
-
+                    if(mouse_get()->lButton && menu_mouse_on_entry(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15 )){
+                            menu->menu_selected = i;
+                    }
             }
         }
-
-
-
     }
 
 
+    if(mouse_get()->lButton){
+           menu_option_clicked(menu, menu->menu_selected);
+    }
+    /*
+    if(!menu_option_clicked(&menu->entries[menu->menu_selected])){
+        LOG("MENU FAILED");
+    }
+    */
 
 
 }
@@ -126,8 +139,10 @@ void menu_input_update(ALLEGRO_EVENT *e){
 void menu_draw(MENU* menu){
 
     for(int i = 0; i < menu->menu_count;i++){
-        al_draw_filled_rectangle(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15, al_map_rgb(255,0,0));
 
+
+        al_draw_filled_rectangle(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15, al_map_rgb(255,0,0));
+        //al_draw_filled_rectangle(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15, al_map_rgb(0,0,255));
         al_draw_textf(menu_text.font, al_map_rgb(255,0,0), (window_get_width() / 2 + 50) + 2 , (i * 25) + (window_get_height() / 2), 0,"%s", menu->entries[i].menu);
         al_draw_textf(menu_text.font, al_map_rgb(255,255,255), window_get_width() / 2 + 50 , (i * 25) + (window_get_height() / 2),0 , "%s",  menu->entries[i].menu);
 
@@ -135,15 +150,26 @@ void menu_draw(MENU* menu){
     }
 }
 
-static bool menu_option_clicked(MENU_ENTRY *entry){
-    if(mouse_get()->lButton){
-        if( entry->menu_callback != nullptr){
-            if(entry->menu_callback()){
-                printf("Callback menu cahamado com sucesso! ID: %d \n", entry->id);
-                return true;
-            }
-        }
+static bool menu_option_clicked(MENU *menu, int index){
+   MENU_ENTRY *entry = nullptr;
+
+   entry = &menu->entries[index];
+
+   if(entry->menu_callback == nullptr) return false;
+
+   if(!entry->menu_callback()){
+       return false;
+   }
+
+   return true;
+
+}
+
+static bool menu_mouse_on_entry(float x1, float y1, float x2, float y2){
+    if(x1 < x2 && x2 > x1 && y1 > y1 && y2 < y1)
+    {
         return false;
     }
-    return false;
+
+    return true;
 }

@@ -10,8 +10,7 @@
 typedef enum  {
     MENU_TYPE_NONE,
     MENU_TYPE_SIMPLE,
-    MENU_TYPE_PAGE,
-    MENU_TYPE_OPTIONS
+    MENU_TYPE_PAGE
 }MENU_TYPE;
 
 
