@@ -109,7 +109,7 @@ int main(int  argc, char **argv)
            if(event.timer.source == get_window_timer()){
                if(!config_get()->editor_mode.b_field){
                    if(state_main_menu){
-                       menu_update(&main_menu);
+                       menu_update(&main_menu, &event);
                    }else {
                         spaceship_update(SHIP_P1);
                         spaceship_scrolling_update(player, &p1_camera, teste.map_width, teste.map_height);
@@ -134,12 +134,14 @@ int main(int  argc, char **argv)
        }
 
 
-        game_update_keyboard(&event);
-        mouse_update(&event);
+
 
         if(config_get()->editor_mode.i_field){
             editor_update_input(&event);
         }
+
+        game_update_keyboard(&event);
+        mouse_update(&event);
 
 
 

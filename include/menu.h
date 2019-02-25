@@ -59,8 +59,8 @@ void menu_destroy(MENU *menu);
 void menu_add_entry(MENU *menu, int id,  const char *entry_name, MENU_TYPE type, menuSelectCallback callback);
 void menu_remove_entry(MENU *menu, int index);
 
-void menu_update(MENU* menu);
+void menu_update(MENU* menu, ALLEGRO_EVENT *e);
 void menu_draw(MENU* menu);
-void menu_input_update(ALLEGRO_EVENT *e);
+void menu_input_update(MENU *menu, ALLEGRO_EVENT *e);
 
 #endif

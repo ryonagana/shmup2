@@ -89,7 +89,7 @@ void menu_remove_entry(MENU *menu, int index){
      entry->type = MENU_TYPE_NONE;
 }
 
-void menu_update(MENU* menu){
+void menu_update(MENU* menu, ALLEGRO_EVENT *e){
     if(menu->menu_count <= 0 ) return;
 
 
@@ -112,21 +112,27 @@ void menu_update(MENU* menu){
            menu_option_clicked(menu, menu->menu_selected);
     }
 
+    menu_input_update(menu, e);
 }
 
-void menu_input_update(ALLEGRO_EVENT *e){
+void menu_input_update(MENU *menu, ALLEGRO_EVENT *e){
+
+    if(menu->menu_selected <= 0)  menu->menu_selected = 0;
+    if(menu->menu_selected > menu->entries_count - 1) menu->menu_selected = menu->entries_count - 1;
 
 
     if( keyboard_pressed(ALLEGRO_KEY_UP)){
-
+        menu->bg_y =  (25 * menu->menu_selected) +  window_get_height() / 2;
+        menu->menu_selected--;
     }
 
     if( keyboard_pressed(ALLEGRO_KEY_DOWN)){
-
+        menu->bg_y =  (25 * menu->menu_selected) +  window_get_height() / 2;
+        menu->menu_selected++;
     }
 
     if( keyboard_pressed(ALLEGRO_KEY_ENTER)){
-
+        menu_option_clicked(menu, menu->menu_selected);
     }
 }
 
