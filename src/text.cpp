@@ -33,6 +33,6 @@ void text_draw(GAME_TEXT *text, ALLEGRO_COLOR color, float x, float y,  const ch
 void text_destroy(GAME_TEXT *text){
     if(text) al_destroy_font(text->font);
 
-    free(text);
+    delete[] text;
     text = nullptr;
 }

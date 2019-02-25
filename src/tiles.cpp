@@ -75,7 +75,7 @@ bool tiles_init(void){
 
     LOG("Spritesheet: %s successfully loaded!", filepath);
 
-    if(filepath) free(filepath);
+    if(filepath) delete[] filepath;
 
     //reset list of tiles to nullptr!
     for(int i = 0; i < TILE_COUNT + 1; i++){

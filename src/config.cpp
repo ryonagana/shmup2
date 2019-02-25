@@ -59,7 +59,7 @@ bool config_init(void){
     settings.fullscreen.i_field = atoi(config_get_key(settings_conf, "fullscreen"));
     settings.editor_mode.i_field = atoi(config_get_key(settings_conf,"editor_mode"));
     if(fp) al_fclose(fp);
-    if(path) free(path);
+    if(path)delete[] path;
     return true;
 
 }

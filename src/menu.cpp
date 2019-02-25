@@ -42,8 +42,8 @@ void menu_create(MENU *menu, int size){
 
 void menu_destroy(MENU *menu){
     if(menu){
-        free(menu->entries);
-        free(menu);
+        delete [] menu->entries;
+        delete[] menu;
         menu->entries = nullptr;
         menu = nullptr;
     }

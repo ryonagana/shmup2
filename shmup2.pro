@@ -68,7 +68,7 @@ win32: {
     INCLUDEPATH += $$PWD/../../libs/Allegro524_mingw/include
     DEPENDPATH += $$PWD/../../libs/Allegro524_mingw/include
 
-    LIBS += -L$$PWD/../libs/allegro-5.0.10-mingw-4.7.0/lib/ -lallegro_monolith-debug-static -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
+    LIBS += -L$$PWD/../libs/Allegro524_mingw/lib/ -lallegro_monolith-debug-static -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
     INCLUDEPATH += $$PWD/../libs/Allegro524_mingw/include
     DEPENDPATH += $$PWD/../libs/Allegro524_mingw/include
 

@@ -140,7 +140,7 @@ void editor_init(void){
 
     editor->dirty = false;
 
-    if(path)free(path);
+    if(path)delete[] path;
 
     /* INITIALIZE the map with all objects as 0 (NO_TILE)  */
     for(int y = 0; y < GRID_TOOLS_H; y++){
@@ -206,7 +206,7 @@ LEVEL* editor_load_path(const char *filename){
 
     editor->level = level;
 
-    if(full_path) free(full_path);
+    if(full_path) delete[] full_path;
     return level;
 
 }
@@ -221,7 +221,7 @@ bool editor_load_mem(LEVEL *level){
     al_set_window_title(get_window_display(), "CB EDITOR - noname.cbm");
 
     editor_layer_to_str(editor->layer);
-    if(layer_name) free(layer_name);
+    if(layer_name) delete[] layer_name;
 
     return editor->level == nullptr ? false : true;
 }
@@ -432,12 +432,12 @@ void editor_render(void)
 
 void editor_destroy(void)
 {
-    if(editor->camera) free(editor->camera);
+    if(editor->camera) delete[] editor->camera;
     editor->camera = nullptr;
 
-    if(editor->level) free(editor->level);
+    if(editor->level) delete[] editor->level;
 
-    if(editor) free(editor);
+    if(editor) delete[] editor;
     editor = nullptr;
 
     if(editor_cursor) al_destroy_bitmap(editor_cursor);

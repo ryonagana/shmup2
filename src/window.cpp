@@ -57,7 +57,7 @@ static int init_allegro(void) {
         ALLEGRO_FILE * fp = al_fopen(root, "w");
         config_create_default(fp);
         al_fclose(fp);
-        if(root) free(root);
+        if(root) delete[] root;
     }
 
 

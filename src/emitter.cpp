@@ -38,8 +38,8 @@ PARTICLE_EMITTER* emitter_create(VECTOR2 pos, VECTOR2 origin,  float scale, floa
 
 void emitter_destroy(PARTICLE_EMITTER *emitter){
 
-    free(emitter->particles);
-    if(emitter) free(emitter);
+    delete[] emitter->particles;
+    if(emitter) delete[] emitter;
 
     emitter->particles =  nullptr;
     emitter = nullptr;

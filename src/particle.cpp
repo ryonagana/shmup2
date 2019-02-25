@@ -87,6 +87,6 @@ void particle_draw(PARTICLE *particle, ALLEGRO_BITMAP *bmp)
 }
 
 void particle_destroy(PARTICLE *particle){
-    if(particle) free(particle);
-    particle = NULL;
+    if(particle) delete[] particle;
+    particle = nullptr;
 }

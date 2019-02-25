@@ -135,7 +135,7 @@ VECTOR2 *vector_Rotation(const VECTOR2 *v, const VECTOR2 *w){
 
 void vector_Free(void *v){
     VECTOR2 *res = (VECTOR2*)v;
-    if(res != nullptr) free(res);
+    if(res != nullptr) delete[] res;
     return;
 }
 

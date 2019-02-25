@@ -44,7 +44,7 @@ void mouse_init(void){
 
 
 void mouse_destroy(void){
-    if(mouse_input) free(mouse_input);
+    if(mouse_input) delete[] mouse_input;
     mouse_input = nullptr;
 
     if(a5_editor_mouse) al_destroy_mouse_cursor(a5_editor_mouse);
