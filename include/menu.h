@@ -46,6 +46,7 @@ typedef struct MENU {
 
      ~MENU(){
          if(entries) delete[] entries;
+         entries = nullptr;
      }
 
 

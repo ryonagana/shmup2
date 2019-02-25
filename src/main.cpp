@@ -167,7 +167,6 @@ int main(int  argc, char **argv)
         }
 
     }
-
     window_gracefully_quit("Quit END OF MAIN");
     return 0;
 }
