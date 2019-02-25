@@ -31,6 +31,8 @@ void emitter_draw(PARTICLE_EMITTER *emitter, ALLEGRO_BITMAP *tex);
 
 PARTICLE* emitter_find_dead_particle(PARTICLE *particles, int max);
 
+void emitter_burst(PARTICLE_EMITTER *emitter, float x, float y, int spread, int life, ALLEGRO_BITMAP *bmp);
+
 
 
 #endif

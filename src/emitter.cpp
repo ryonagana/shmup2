@@ -25,9 +25,8 @@ PARTICLE_EMITTER* emitter_create(VECTOR2 pos, VECTOR2 origin,  float scale, floa
     emitter->color = color;
 
     for(unsigned int i = 0; i < amount;i++){
-       float angle = rand() % 360 + 1;
        int speed = rand() % max_speed + 1;
-       particle_create(&emitter->particles[i], pos, origin, scale, shrink_rate, speed, angle, duration, color);
+       particle_create(&emitter->particles[i], pos, origin, scale, shrink_rate, speed, duration, color);
        emitter->particles[i].is_alive = false;
     }
 
@@ -55,11 +54,9 @@ void emitter_update(PARTICLE_EMITTER *emitter, int64_t time, float dir_x, float 
 
             PARTICLE *dead = emitter_find_dead_particle(emitter->particles, (int)emitter->size);
             int n_speed = RAND_INT(1, speed) + RAND_INT(1, time);
-            particle_set(dead, emitter->position, emitter->origin, dir_x, dir_y,  emitter->scale, emitter->shrink_rate, n_speed, angle, duration, emitter->color);
+            //particle_set(dead, emitter->position, emitter->origin, dir_x, dir_y,  emitter->scale, emitter->shrink_rate, n_speed, angle, duration, emitter->color);
             dead->is_alive = true;
         }
-
-
 
     }
 }
@@ -80,4 +77,24 @@ PARTICLE *emitter_find_dead_particle(PARTICLE *particles, int max){
     if(i == max) return nullptr;
 
     return &particles[i];
+}
+
+void emitter_burst(PARTICLE_EMITTER *emitter, float x, float y, int spread, int life, ALLEGRO_BITMAP *bmp){
+
+    PARTICLE *p = nullptr;
+
+    for(size_t i = 0; i < emitter->size; i++){
+        p = emitter_find_dead_particle(emitter->particles, emitter->size);
+        if(p != nullptr){
+            VECTOR2 pos;
+            VECTOR2 origin;
+
+           vector_Init(&pos, x,y);
+           vector_Copy(&origin, &emitter->origin);
+
+           //particle_set(p, pos, origin, RAND_INT(0.5,100) / 100.0 * spread, RAND_INT(0.5,100) / 100.0 * spread, 1.0, 0.5f, RAND_INT(1,100), RAND_INT(0,180), life ? life : 100, al_map_rgb(255,0,0));
+
+            //particle_set(p, pos
+        }
+    }
 }

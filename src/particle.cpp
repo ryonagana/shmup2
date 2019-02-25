@@ -24,7 +24,7 @@ void particle_create(PARTICLE *particle, VECTOR2 pos, VECTOR2 origin, float scal
 
 }
 
-void particle_set(PARTICLE *particle, VECTOR2 pos, VECTOR2 origin, float dir_x, float dir_y, float scale, float shrink_rate, float speed, float angle, int duration, ALLEGRO_COLOR color)
+void particle_set(PARTICLE *particle, VECTOR2 pos, VECTOR2 origin, float dir_x, float dir_y, float scale, float shrink_rate, float speed, int duration, ALLEGRO_COLOR color)
 {
     vector_Copy(&particle->position, &pos);
     vector_Copy(&particle->origin, &origin);
@@ -34,8 +34,8 @@ void particle_set(PARTICLE *particle, VECTOR2 pos, VECTOR2 origin, float dir_x, 
     particle->speed = speed;
     particle->shrink_rate = shrink_rate;
 
-    particle->direction.x = cos(angle);
-    particle->direction.y = sin(angle);
+    particle->direction.x = dir_x;
+    particle->direction.y = dir_y;
     particle->scale = scale;
 }
 
