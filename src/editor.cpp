@@ -55,8 +55,8 @@ static EDITOR_THREAD_DATA editor_thread_data = {
 static TILE editor_tiles[GRID_TOOLS_H][GRID_TOOLS_W];
 static TILE editor_objects[GRID_TOOLS_H][GRID_TOOLS_W];
 
-static PARTICLE_EMITTER *emitter = nullptr;
 
+static CParticleEmitter *testEmitter = nullptr;
 
 static char state_text[65];
 
@@ -182,7 +182,9 @@ void editor_init(void){
     vector_Init(&pos,100,100);
     vector_Init(&origin,100,45);
 
-    emitter = emitter_create(pos, origin, .1,0.1, 3000, 90, 10, al_map_rgb(255,0,0));
+    testEmitter = new CParticleEmitter(100,100,45);
+
+    //emitter = emitter_create(pos, origin, .1,0.1, 3000, 90, 10, al_map_rgb(255,0,0));
 
 }
 
@@ -300,9 +302,9 @@ void editor_update(ALLEGRO_EVENT *e)
 
     UNUSED_PARAM(e);
 
-    emitter_update(emitter, e->timer.count,RAND_INT(1,100) / 100 , RAND_INT(1,100) / 100,  RAND_NUMBER() * 400, RAND_NUMBER() * 400 , RAND_NUMBER() * 5 );
+    testEmitter->Update(45);
+    //emitter_update(emitter, e->timer.count,RAND_INT(1,100) / 100 , RAND_INT(1,100) / 100,  RAND_NUMBER() * 400, RAND_NUMBER() * 400 , RAND_NUMBER() * 5 );
 
-    //printf("TIME: %lld\n", get_window_time_ms());
 
     if(editor->state == EDITOR_STATE_SAVE){
         opened_dialog = false;
@@ -426,7 +428,9 @@ void editor_render(void)
     editor_render_canvas_cursor();
 
     al_draw_scaled_bitmap(tile_selected_miniature,0,0, TILE_SIZE, TILE_SIZE, 22 * TILE_SIZE, 16 * TILE_SIZE, TILE_SIZE * 2,TILE_SIZE * 2,0);
-    emitter_draw(emitter, nullptr);
+
+    testEmitter->Draw();
+    //emitter_draw(emitter, nullptr);
 }
 
 
@@ -460,9 +464,7 @@ void editor_destroy(void)
         al_destroy_thread(dialog_thread);
     }
 
-    if(emitter){
-        emitter_destroy(emitter);
-    }
+
 
 }
 
@@ -547,7 +549,7 @@ void editor_render_coord_text(){
     al_set_target_backbuffer(get_window_display());
 
     al_draw_bitmap(info_screen,0, (CANVAS_GRID_H * TILE_SIZE) + EDITOR_TOP_SPACER, 0);
-    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 85 ,0, "TileName: %s", tiles_get_name(editor->selected_tile));
+    //al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 85 ,0, "TileName: %s", tiles_get_name(static_cast<TILE_ID>(editor->selected_tile))->name.c_str() == nullptr ? "" : tiles_get_name(static_cast<TILE_ID>(editor->selected_tile))->name.c_str()  );
     al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 50 ,0, "Tile X: %d", editor->tile_selected_data.tilex);
     al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 35,0, "Tile Y: %d",editor->tile_selected_data.tiley);
 }

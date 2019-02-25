@@ -4,6 +4,7 @@
 #include "shared.h"
 #include "window.h"
 
+#include <algorithm>
 #include <vector>
 
 static ALLEGRO_BITMAP *tileset = nullptr;
@@ -13,19 +14,7 @@ static ALLEGRO_BITMAP* tiles_sub_bmp[TILE_COUNT + 1];
 static ALLEGRO_BITMAP* tiles_special_sub_bmp[SPECIAL_TILE_COUNT];
 
 
-typedef struct TILEINFO {
-    std::string name;
-    TILE_ID id;
-    TILEINFO(){
-        name = "";
-        id = NO_TILE;
-    }
-    TILEINFO(const std::string &tname , TILE_ID tid = NO_TILE){
-        name = tname;
-        id = tid;
-    }
 
-}TILEINFO;
 
 
 static void tiles_load_from_file(const char *filename);
@@ -166,10 +155,10 @@ void tiles_set_properties(TILE *tile){
 }
 
 
-const char *tiles_get_name(unsigned char id){
+TILEINFO *tiles_get_name(TILE_ID id){
 
-    unsigned int t_id = static_cast<unsigned int>(id);
-    return tile_names[t_id]->name.c_str();
+    auto it = std::find_if(tile_names.begin(), tile_names.end(), [&id](TILEINFO *info) { return info->id == id; } );
+    return *it.base();
 
 }
 
@@ -199,7 +188,7 @@ static void tiles_load_from_file(const char *filename){
 
      al_fgets(fp, linefeed, sizeof(char) * 127);
 
-     while(al_fgets(fp,linefeed, sizeof(char) * 127) != 0){
+     while(al_fgets(fp,linefeed, sizeof(char) * 127) != nullptr){
         int id, offsetx, offsety, width, height;
 
         line = strtok(linefeed,";");
