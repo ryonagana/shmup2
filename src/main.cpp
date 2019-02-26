@@ -200,21 +200,6 @@ int main(int  argc, char **argv)
                    break;
                }
 
-               /*
-               if(!config_get()->editor_mode.b_field){
-                   if(state_main_menu){
-                       menu_update(&main_menu, &event);
-                   }else {
-                        spaceship_update(SHIP_P1);
-                        spaceship_scrolling_update(player, &p1_camera, teste.map_width, teste.map_height);
-                   }
-               }else {
-                    editor_update(&event);
-              }
-              */
-
-
-
            }
 
            if(event.timer.source == get_window_actual_time()){
