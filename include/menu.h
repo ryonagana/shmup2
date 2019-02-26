@@ -14,7 +14,27 @@ typedef enum  {
 }MENU_TYPE;
 
 
-typedef bool (*menuSelectCallback)(void);
+struct MENU_ENTRY;
+
+
+
+typedef struct MENU {
+     MENU_ENTRY *entries;
+     int menu_count;
+     int entries_count;
+     int menu_selected;
+     float bg_x;
+     float bg_y;
+
+     ~MENU(){
+         if(entries) delete[] entries;
+         entries = nullptr;
+     }
+
+
+}MENU;
+
+typedef bool (*menuSelectCallback)(MENU *menu, int id);
 
 typedef struct MENU_ENTRY {
     char menu[56];
@@ -34,23 +54,6 @@ typedef struct MENU_ENTRY {
     }
 
 }MENU_ENTRY;
-
-
-typedef struct MENU {
-     MENU_ENTRY *entries;
-     int menu_count;
-     int entries_count;
-     int menu_selected;
-     float bg_x;
-     float bg_y;
-
-     ~MENU(){
-         if(entries) delete[] entries;
-         entries = nullptr;
-     }
-
-
-}MENU;
 
 void menu_init(void);
 void menu_create(MENU *menu, int size);

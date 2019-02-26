@@ -140,7 +140,6 @@ void menu_draw(MENU* menu){
 
     for(int i = 0; i < menu->menu_count;i++){
 
-
         al_draw_filled_rectangle(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15, al_map_rgb(255,0,0));
         //al_draw_filled_rectangle(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15, al_map_rgb(0,0,255));
         al_draw_textf(menu_text.font, al_map_rgb(255,0,0), (window_get_width() / 2 + 50) + 2 , (i * 25) + (window_get_height() / 2), 0,"%s", menu->entries[i].menu);
@@ -157,7 +156,8 @@ static bool menu_option_clicked(MENU *menu, int index){
 
    if(entry->menu_callback == nullptr) return false;
 
-   if(!entry->menu_callback()){
+   if(!entry->menu_callback(menu,index))
+   {
        return false;
    }
 

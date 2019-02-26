@@ -16,6 +16,7 @@ SOURCES += \
     src/level.cpp \
     src/menu.cpp \
     src/path.cpp \
+    src/dir.cpp \
     src/render.cpp \
     src/tiles.cpp \
     src/config.cpp \
@@ -37,6 +38,7 @@ HEADERS += \
     include/level.h \
     include/menu.h \
     include/path.h \
+    include/dir.h \
     include/render.h \
     include/main.h \
     include/tiles.h \
