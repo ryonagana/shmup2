@@ -5,12 +5,22 @@
 #include "menu.h"
 
 typedef enum {
-    MENU_OPT_QUIT = 0,
+    MENU_OPT_NONE = 0,
+    MENU_OPT_QUIT,
     MENU_OPT_NEW_GAME,
     MENU_OPT_EDITOR,
 
 
 }MENU_OPT_TYPE;
+
+
+typedef enum GAMESTATE {
+    GAMESTATE_MENU,
+    GAMESTATE_GAME,
+    GAMESTATE_EDITOR
+}GAMESTATE;
+
+
 
 static SPACESHIP *player =  nullptr;
 static CAMERA p1_camera;
@@ -18,24 +28,21 @@ static CAMERA p1_camera;
 static ALLEGRO_BITMAP *spr_player = nullptr; //test
 
 static MENU main_menu;
-static bool state_main_menu = true;
-static bool state_editor = false;
+static MENU menu_select_map;
+static GAMESTATE game_state = GAMESTATE_MENU;
 
 static void game_update_keyboard(ALLEGRO_EVENT *e);
 
 
 bool  main_menu_new_game_option(){
-
-    printf("CLICK! MENU!");
-
+    game_state = GAMESTATE_GAME;
     return false;
 }
 
 
 bool  main_menu_editor_option(){
 
-    printf("CLICK! EDITOR");
-
+    game_state = GAMESTATE_EDITOR;
     return false;
 }
 
@@ -67,6 +74,8 @@ int main(int  argc, char **argv)
 
     //level_init_default(&teste);
     //level_save(get_window_display(), &teste, "teste01.cbm", false);
+
+
 
     if(config_get()->editor_mode.i_field){
 
@@ -107,6 +116,23 @@ int main(int  argc, char **argv)
 
        if(event.type == ALLEGRO_EVENT_TIMER){
            if(event.timer.source == get_window_timer()){
+
+               switch(game_state){
+                    case GAMESTATE_GAME:
+                        spaceship_update(SHIP_P1);
+                        spaceship_scrolling_update(player, &p1_camera, teste.map_width, teste.map_height);
+                   break;
+
+                   case GAMESTATE_MENU:
+                       menu_update(&main_menu, &event);
+                   break;
+
+                   case GAMESTATE_EDITOR:
+                       editor_update(&event);
+                   break;
+               }
+
+               /*
                if(!config_get()->editor_mode.b_field){
                    if(state_main_menu){
                        menu_update(&main_menu, &event);
@@ -117,6 +143,7 @@ int main(int  argc, char **argv)
                }else {
                     editor_update(&event);
               }
+              */
 
 
 
@@ -147,8 +174,23 @@ int main(int  argc, char **argv)
 
         if(al_is_event_queue_empty(get_window_queue())){
 
+            switch(game_state){
+                case GAMESTATE_MENU:
+                    al_clear_to_color(al_map_rgb(0,0,0));
+                    menu_draw(&main_menu);
+                break;
+                case GAMESTATE_GAME:
+                    render_background_color(&teste);
+                    render_tilemap(&teste, &p1_camera);
+                    al_draw_bitmap(spr_player, player->x - p1_camera.x, player->y - p1_camera.y, 0);
+                break;
+                case GAMESTATE_EDITOR:
+                    editor_render();
+                break;
+            }
 
 
+            /*
             if(config_get()->editor_mode.i_field){
 
                 editor_render();
@@ -164,6 +206,7 @@ int main(int  argc, char **argv)
                     al_draw_bitmap(spr_player, player->x - p1_camera.x, player->y - p1_camera.y, 0);
                 }
             }
+            */
 
             al_flip_display();
         }
