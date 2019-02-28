@@ -27,13 +27,15 @@ private:
 
 
     // callbacks for the menu
-    static bool main_menu_new_game_option(MENU *menu, int id);
-    static bool main_menu_editor_option(MENU *menu, int id);
-    static bool main_menu_quit_option(MENU *menu, int id);
-    static bool main_menu_select_map(MENU *menu, int id);
-    static bool main_menu_select_map_editor(MENU *menu, int id);
-    static int  map_dir_callback(ALLEGRO_FS_ENTRY *dir, void *extra);
-    static int  map_dir_callback_editor(ALLEGRO_FS_ENTRY *dir, void *extra);
+    //please dont touch here if you dont know what are you doing..
+
+    static bool main_menu_new_game_option(MENU *menu, int id); // is called when you click in "new game"
+    static bool main_menu_editor_option(MENU *menu, int id); // is called when you click in "editor"
+    static bool main_menu_quit_option(MENU *menu, int id); // is called when you click in "quit"
+    static bool main_menu_select_map(MENU *menu, int id); // a sub menu with map list
+    static bool main_menu_select_map_editor(MENU *menu, int id); // a sub menu with map list
+    static int  map_dir_callback(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder
+    static int  map_dir_callback_editor(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder for editor
 
 
     // IGameState interface
