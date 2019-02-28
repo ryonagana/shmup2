@@ -27,6 +27,7 @@ public:
 
     /* this pure virtual function os for every state must have this draw function */
     virtual void Update(ALLEGRO_EVENT *e) = 0;  //must  be put inside  ALLEGRO_EVENT_TIMER
+    virtual void UpdateInput(ALLEGRO_EVENT *e) = 0;  //this must be outside ALLEGRO_EVENT_TIMER is related to keyboard, mouse, joypad
     virtual void Draw() = 0; // mst be put when things is being Draw
 
 

@@ -1,7 +1,11 @@
 #include "dir.h"
 #include "path.h"
 
-CDirectory::CDirectory(const std::string &folder){
+CDirectory::CDirectory() : CDirectory("map") {
+    return;
+}
+
+void CDirectory::SetPath(const std::string& folder){
     char path[1024] = {};
 
     strncpy(path,  get_root_dir(), strlen(get_root_dir()) + 1);
@@ -9,6 +13,10 @@ CDirectory::CDirectory(const std::string &folder){
 
     this->dir_entry = al_create_fs_entry(path);
     this->path = path;
+}
+
+CDirectory::CDirectory(const std::string &folder){
+    this->SetPath(folder);
 
 }
 
