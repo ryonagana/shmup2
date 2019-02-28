@@ -25,7 +25,10 @@ SOURCES += \
     src/text.cpp \
     src/particle.cpp \
     src/vector2.cpp \
-    src/emitter.cpp
+    src/emitter.cpp \
+    src/states/IGameState.cpp \
+    src/states/GameStateManager.cpp \
+    src/gamestates/CMainGame.cpp
 
 
 HEADERS += \
@@ -48,11 +51,14 @@ HEADERS += \
     include/text.h \
     include/particle.h \
     include/vector2.h \
-    include/emitter.h
+    include/emitter.h \
+    include/states/IGameState.h \
+    include/states/GameStateManager.h \
+    include/gamestates/CMainGame.h
 
 
-QMAKE_CXXFLAGS_DEBUG += -std=c++14 -Wall -Wextra -fpermissive -pedantic -O0
-QMAKE_CXXFLAGS_RELEASE += -s -std=c++14 -Wall -Wextra -fpermissive -pedantic -Os
+QMAKE_CXXFLAGS_DEBUG += -std=c++17 -Wall -Wextra -fpermissive -pedantic -O0
+QMAKE_CXXFLAGS_RELEASE += -s -std=c++17 -Wall -Wextra -fpermissive -pedantic -Os
 
 debug : {
         DEFINES += DEBUG_SHMUP

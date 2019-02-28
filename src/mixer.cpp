@@ -21,7 +21,7 @@ void mixer_destroy(void){
 void sfx_destroy(GAME_SFX* sfx){
     if(sfx->instance != nullptr) al_detach_sample_instance(sfx->instance);
     al_destroy_sample_instance(sfx->instance);
-    sfx->instance = 0x0;
+    sfx->instance = nullptr;
 
     if(sfx->sample  != nullptr) al_destroy_sample(sfx->sample);
     return;

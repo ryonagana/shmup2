@@ -4,6 +4,10 @@
 #include "config.h"
 #include "menu.h"
 #include "dir.h"
+#include "states/GameStateManager.h"
+
+#include "gamestates/CMainGame.h"
+#include "states/IGameState.h"
 
 typedef enum {
     MENU_OPT_NONE = 0,
@@ -138,6 +142,17 @@ int main(int  argc, char **argv)
     player = spaceship_get_player(SHIP_P1);
     spaceship_set_default_flags(player);
 
+    CGameStateManager manager;
+    IGameState* mainGame = new CMainGame();
+    IGameState* menuGame = new CMainGame();
+
+    manager.addState(0, mainGame);
+    manager.addState(1, menuGame);
+
+    manager.SetStateActive(1, true);
+
+    manager.InitStates();
+
     CDirectory dir("map");
 
 
@@ -177,6 +192,9 @@ int main(int  argc, char **argv)
        if(event.type == ALLEGRO_EVENT_TIMER){
            if(event.timer.source == get_window_timer()){
 
+               manager.stateActive()->Update(&event);
+
+               /*
                switch(game_state){
                     case GAMESTATE_SELECT_MAP_EDITOR:
                         al_flush_event_queue(get_window_queue());
@@ -199,6 +217,7 @@ int main(int  argc, char **argv)
                        editor_update(&event);
                    break;
                }
+               */
 
            }
 
@@ -230,6 +249,9 @@ int main(int  argc, char **argv)
 
         if(al_is_event_queue_empty(get_window_queue())){
 
+            manager.stateActive()->Draw();
+
+            /*
             switch(game_state){
                 case GAMESTATE_SELECT_MAP_EDITOR:
                     al_clear_to_color(al_map_rgb(0,0,0));
@@ -252,6 +274,7 @@ int main(int  argc, char **argv)
                     editor_render();
                 break;
             }
+            */
 
             al_flip_display();
         }

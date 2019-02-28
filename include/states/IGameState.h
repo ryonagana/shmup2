@@ -1,0 +1,33 @@
+#pragma once
+#include <iostream>
+#include <allegro5/allegro.h>
+
+enum class GAMESTATE_ID : uint32_t {
+    GAMESTATE_MENU,
+    GAMESTATE_GAME,
+    GAMESTATE_SELECT_MAP,
+    GAMESTATE_SELECT_MAP_EDITOR,
+    GAMESTATE_EDITOR
+};
+
+class IGameState {
+protected:
+
+    std::string name; // name of this event..
+public:
+    int id;
+    bool active;
+
+    virtual ~IGameState() {}
+
+    // pure functions states functions
+    virtual void Init() = 0;  // to init variables
+    virtual void Start() = 0; // to start them
+    virtual void Destroy() = 0; // destroy
+
+    /* this pure virtual function os for every state must have this draw function */
+    virtual void Update(ALLEGRO_EVENT *e) = 0;  //must  be put inside  ALLEGRO_EVENT_TIMER
+    virtual void Draw() = 0; // mst be put when things is being Draw
+
+
+};
