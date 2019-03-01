@@ -1,5 +1,7 @@
 #pragma once
 #include <iostream>
+#include <functional>
+#include <memory>
 #include "states/IGameState.h"
 #include "menu.h"
 #include "shared.h"
@@ -16,6 +18,10 @@ enum class MENU_OPT_TYPE : uint32_t {
     MENU_OPT_EDITOR,
 };
 
+
+
+
+
 class CMenuState : public IGameState {
 
 private:
@@ -25,17 +31,19 @@ private:
     std::string level_path;
     CDirectory dir;
 
+    MENU_OPT_TYPE state;
+
 
     // callbacks for the menu
     //please dont touch here if you dont know what are you doing..
 
-    static bool main_menu_new_game_option(MENU *menu, int id); // is called when you click in "new game"
-    static bool main_menu_editor_option(MENU *menu, int id); // is called when you click in "editor"
-    static bool main_menu_quit_option(MENU *menu, int id); // is called when you click in "quit"
-    static bool main_menu_select_map(MENU *menu, int id); // a sub menu with map list
-    static bool main_menu_select_map_editor(MENU *menu, int id); // a sub menu with map list
-    static int  map_dir_callback(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder
-    static int  map_dir_callback_editor(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder for editor
+     bool menuClickNewGame(int id); // is called when you click in "new game"
+     bool menuClickEditor(int id); // is called when you click in "editor"
+     bool menuClickQuit( int id); // is called when you click in "quit"
+     bool menuClickSelectNewMap(int id); // a sub menu with map list
+     bool menuClickSelectEditor( int id); // a sub menu with map list
+     int  readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder
+     int  readMapDirCallbackEditor(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder for editor
 
 
     // IGameState interface

@@ -82,7 +82,7 @@ void mouse_update(ALLEGRO_EVENT *e){
     if(e->type == ALLEGRO_EVENT_MOUSE_AXES){
         mouse_input->x = e->mouse.x;
         mouse_input->y = e->mouse.y;
-        mouse_input->z = (double) e->mouse.dz;
+        mouse_input->z = e->mouse.dz;
     }
 
 

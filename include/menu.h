@@ -5,6 +5,8 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <functional>
+#include <vector>
 #include <allegro5/allegro.h>
 
 typedef enum  {
@@ -13,17 +15,13 @@ typedef enum  {
     MENU_TYPE_PAGE
 }MENU_TYPE;
 
+//typedef bool (*menuSelectCallback)(int id);
 
-struct MENU;
-
-
-
-
-
-typedef bool (*menuSelectCallback)(MENU *menu, int id);
+using menuSelectCallback = std::function<bool(int)>;
 
 typedef struct MENU_ENTRY {
-    char menu[56];
+    //char menu[56];
+    std::string menu;
     int id;
     MENU_TYPE type;
     float x1,x2,y1,y2;
@@ -43,27 +41,37 @@ typedef struct MENU_ENTRY {
 
 }MENU_ENTRY;
 
+
+
+
 typedef struct MENU {
-     MENU_ENTRY *entries;
-     int menu_count;
+     //MENU_ENTRY *entries;
+    std::vector<MENU_ENTRY> entries;
+    int menu_count;
      int entries_count;
      int menu_selected;
      float bg_x;
      float bg_y;
 
      ~MENU(){
-         if(entries) delete[] entries;
-         entries = nullptr;
+        entries.clear();
      }
 
 
 }MENU;
 
+
+
+
+
+
+
+
 void menu_init(void);
 void menu_create(MENU *menu, int size);
 void menu_destroy(MENU *menu);
 
-void menu_add_entry(MENU *menu, int id,  const char *entry_name, MENU_TYPE type, menuSelectCallback callback);
+void menu_add_entry(MENU *menu, int id,  const char *entry_name, MENU_TYPE type, std::function<bool(int)> callback);
 void menu_remove_entry(MENU *menu, int index);
 
 void menu_update(MENU* menu, ALLEGRO_EVENT *e);

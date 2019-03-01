@@ -1,15 +1,23 @@
 #include "dir.h"
 #include "path.h"
 
-CDirectory::CDirectory() : CDirectory("map") {
+CDirectory::CDirectory()  {
+    this->dir_entry = nullptr;
+    this->path = "";
     return;
 }
 
 void CDirectory::SetPath(const std::string& folder){
     char path[1024] = {};
 
+
+
     strncpy(path,  get_root_dir(), strlen(get_root_dir()) + 1);
     strncat(path, folder.c_str(), folder.size());
+
+    if(this->dir_entry != nullptr ){
+        al_change_directory(path);
+    }
 
     this->dir_entry = al_create_fs_entry(path);
     this->path = path;
