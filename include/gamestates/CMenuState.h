@@ -42,8 +42,8 @@ private:
      bool menuClickQuit( int id); // is called when you click in "quit"
      bool menuClickSelectNewMap(int id); // a sub menu with map list
      bool menuClickSelectEditor( int id); // a sub menu with map list
-     int  readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder
-     int  readMapDirCallbackEditor(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder for editor
+     static int  readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder
+     static int  readMapDirCallbackEditor(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder for editor
 
 
     // IGameState interface

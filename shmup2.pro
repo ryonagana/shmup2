@@ -7,12 +7,12 @@ QMAKE_CXX = g++
 
 SOURCES += \
     src/main.cpp \
+    src/shared.cpp \
     src/window.cpp \
     src/keyboard.cpp \
     src/mouse.cpp \
     src/spaceship.cpp \
     src/mixer.cpp \
-    src/shared.cpp \
     src/level.cpp \
     src/menu.cpp \
     src/path.cpp \
@@ -34,11 +34,11 @@ SOURCES += \
 
 HEADERS += \
     include/window.h \
+    include/shared.h \
     include/keyboard.h \
     include/mouse.h \
     include/spaceship.h \
     include/mixer.h \
-    include/shared.h \
     include/level.h \
     include/menu.h \
     include/path.h \

@@ -44,12 +44,17 @@ bool CMenuState::menuClickSelectEditor(int id){
 
 /* LOAD ALL MAPS VIA CALLBACKS*/
 int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
+
+    MENU *menu = static_cast<MENU*>(extra);
+
+
+
     UNUSED_PARAM(extra);
     static int i = 0;
     ALLEGRO_PATH *path = al_create_path(al_get_fs_entry_name(dir));
 
     std::string menu_name = al_get_path_basename(path);
-    //menu_add_entry(CMenuState::s_new_map,i++, menu_name.c_str(), MENU_TYPE_SIMPLE, &menuClickSelectNewMap);
+    menu_add_entry(menu,i++, menu_name.c_str(), MENU_TYPE_SIMPLE, nullptr);
     al_destroy_path(path);
     return ALLEGRO_FOR_EACH_FS_ENTRY_OK;
 }
@@ -57,11 +62,13 @@ int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
 /* LOAD ALL MAPS EDITOR VIA CALLBACKS*/
 int  CMenuState::readMapDirCallbackEditor(ALLEGRO_FS_ENTRY *dir, void *extra){
     static int i = 0;
+    MENU *menu = static_cast<MENU*>(extra);
+
     UNUSED_PARAM(extra);
     ALLEGRO_PATH *path = al_create_path(al_get_fs_entry_name(dir));
 
     std::string menu_name = al_get_path_basename(path);
-    //menu_add_entry(&menu_select_map_editor,i++, menu_name.c_str(), MENU_TYPE_SIMPLE,&main_menu_select_map_editor);
+    menu_add_entry(menu,i++, menu_name.c_str(), MENU_TYPE_SIMPLE, nullptr);
     //(CMenuState::s_map_editor, i++, menu_name.c_str(), MENU_TYPE_SIMPLE, &menuClickSelectEditor);
     al_destroy_path(path);
     return ALLEGRO_FOR_EACH_FS_ENTRY_OK;
@@ -84,9 +91,10 @@ void CMenuState::Init()
 
 
     menu_create(&menu_select_map,10);
-    //al_for_each_fs_entry(dir.getEntry(), &this->readMapDirCallback, nullptr);
+    al_for_each_fs_entry(dir.getEntry(), &this->readMapDirCallback, &menu_select_map);
 
     menu_create(&menu_select_map_editor,10);
+    al_for_each_fs_entry(dir.getEntry(), &this->readMapDirCallback, &menu_select_map_editor);
 
 
 

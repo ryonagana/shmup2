@@ -6,7 +6,6 @@
 #include "shared.h"
 
 
-static MENU_ENTRY* menu_find_empty_slot(MENU *menu, int *index);
 static bool menu_option_clicked(MENU *menu, int index);
 
 
@@ -63,8 +62,10 @@ void menu_add_entry(MENU *menu, int id,  const char *entry_name, MENU_TYPE type,
     entry->id = id;
     entry->menu = entry_name;
     entry->type = type;
-    entry->menu_callback =  std::bind(callback, id);
-
+    entry->menu_callback = nullptr;
+    if(callback != nullptr) {
+        entry->menu_callback =  std::bind(callback, id);
+    }
     menu->entries.push_back(*entry);
     menu->entries_count = static_cast<int>(menu->entries.size());
 
@@ -163,17 +164,7 @@ void menu_draw(MENU* menu){
         i++;
     }
 
-    /*
-    for(int i = 0; i < menu->menu_count;i++){
 
-        al_draw_filled_rectangle(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15, al_map_rgb(255,0,0));
-        //al_draw_filled_rectangle(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15, al_map_rgb(0,0,255));
-        al_draw_textf(menu_text.font, al_map_rgb(255,0,0), (window_get_width() / 2 + 50) + 2 , (i * 25) + (window_get_height() / 2), 0,"%s", menu->entries[i].menu.c_str());
-        al_draw_textf(menu_text.font, al_map_rgb(255,255,255), window_get_width() / 2 + 50 , (i * 25) + (window_get_height() / 2),0 , "%s",  menu->entries[i].menu.c_str());
-
-        //text_draw(&menu_text, al_map_rgb(255,255,255), 150, i * 25, "%s", menu->entries[i].id);
-    }
-    */
 }
 
 static bool menu_option_clicked(MENU *menu, int index){
@@ -181,7 +172,10 @@ static bool menu_option_clicked(MENU *menu, int index){
 
    entry = &menu->entries[static_cast<size_t>(index)];
 
-   if(entry->menu_callback == nullptr) return false;
+   if(entry->menu_callback == nullptr){
+       WARN("Menu Option [ %s ] has no action callback -- ignoring", entry->menu.c_str());
+       return false;
+    }
 
    if(!entry->menu_callback(index))
    {
