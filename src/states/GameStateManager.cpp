@@ -2,6 +2,7 @@
 
 CGameStateManager::CGameStateManager(){
     states =  std::vector<IGameState*>();
+    active = nullptr;
 }
 
 CGameStateManager::~CGameStateManager(){
@@ -13,6 +14,7 @@ void CGameStateManager::InitStates(){
     for(auto s : this->states){
         s->Init();
         s->Start();
+        s->active = false;
     }
 }
 
@@ -53,27 +55,28 @@ bool CGameStateManager::removeState(const int index){
     return true;
 }
 
-IGameState *CGameStateManager::FindStateActive(){
-    auto f = std::find_if(this->states.begin(), states.end(), [](IGameState* &state)-> bool { return state->active == true; });
+IGameState *CGameStateManager::FindStateActive(bool status){
+    auto f = std::find_if(this->states.begin(), states.end(), [&status](IGameState* &state)-> bool { return state->active == status; });
     return *f.base();
 }
 
 IGameState *CGameStateManager::stateActive(){
-    auto f = FindStateActive();
 
-    if(f == nullptr){
+    if(active == nullptr || states.size() <= 0 ){
         return nullptr;
     }
-
-    return f;
+    return active;
 }
 
 bool CGameStateManager::SetStateActive(const int index, bool state){
+
+
     auto f = states.at(static_cast<size_t>(index));
 
     if(f == nullptr) return false;
 
     f->active = state;
+    this->active = f;
     return true;
 }
 

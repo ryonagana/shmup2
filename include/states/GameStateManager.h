@@ -12,6 +12,7 @@
 class CGameStateManager {
 private:
         std::vector<IGameState*> states;
+        IGameState *active;
 public:
 
     CGameStateManager();
@@ -19,7 +20,7 @@ public:
     bool addState(int id, IGameState *state);
     bool removeState(const int index);
     IGameState* FindState(const int &id);
-    IGameState* FindStateActive();
+    IGameState* FindStateActive(bool status);
     IGameState *stateActive();
     bool SetStateActive(const int index, bool state);
     bool GetStateActive(const int index);

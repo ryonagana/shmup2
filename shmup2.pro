@@ -29,7 +29,8 @@ SOURCES += \
     src/states/IGameState.cpp \
     src/states/GameStateManager.cpp \
     src/gamestates/CMainGameState.cpp \
-    src/gamestates/CMenuState.cpp
+    src/gamestates/CMenuState.cpp \
+    src/CEngine.cpp
 
 
 HEADERS += \
@@ -56,7 +57,8 @@ HEADERS += \
     include/states/IGameState.h \
     include/states/GameStateManager.h \
     include/gamestates/CMainGameState.h \
-    include/gamestates/CMenuState.h
+    include/gamestates/CMenuState.h \
+    include/CEngine.h
 
 
 QMAKE_CXXFLAGS_DEBUG += -std=c++17 -Wall -Wextra -fpermissive -pedantic -O0
