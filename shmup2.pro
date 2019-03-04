@@ -65,7 +65,7 @@ QMAKE_CXXFLAGS_DEBUG += -std=c++17 -Wall -Wextra -fpermissive -pedantic -O0
 QMAKE_CXXFLAGS_RELEASE += -s -std=c++17 -Wall -Wextra -fpermissive -pedantic -Os
 
 debug : {
-        DEFINES += DEBUG_SHMUP
+        DEFINES += DEBUG_MODE
 }
 
 win32: {

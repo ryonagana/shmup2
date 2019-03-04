@@ -48,10 +48,15 @@ void msg_write(int type,  const std::string &file, int line, const std::string f
 
 
 
-
-#define LOG(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, msg, ##__VA_ARGS__)
-#define WARN(msg, ...) msg_write(MSG_WARNING, __FILE__, __LINE__, msg, ##__VA_ARGS__)
-#define CRITICAL(msg, ...) msg_write(MSG_CRITICAL, __FILE__, __LINE__,msg,  ##__VA_ARGS__)
+#if defined (DEBUG_MODE)
+    #define LOG(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, msg, ##__VA_ARGS__)
+    #define WARN(msg, ...) msg_write(MSG_WARNING, __FILE__, __LINE__, msg, ##__VA_ARGS__)
+    #define CRITICAL(msg, ...) msg_write(MSG_CRITICAL, __FILE__, __LINE__,msg,  ##__VA_ARGS__)
+#else
+    #define LOG(msg, ...)
+    #define WARN(msg, ...)
+    #define CRITICAL(msg, ...)
+#endif
 
 //#define LOG(msg, ...)
 //#define WARN(msg, ...)
