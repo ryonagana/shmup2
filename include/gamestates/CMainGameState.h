@@ -1,6 +1,10 @@
 #pragma once
+#include <allegro5/allegro5.h>
+#include <allegro5/allegro_native_dialog.h>
 #include "states/IGameState.h"
 #include "CEngine.h"
+#include "spaceship.h"
+#include "render.h"
 
 class CEngine;
 
@@ -8,6 +12,9 @@ class CMainGameState : public IGameState {
 
 private:
     CEngine *engine;
+    SPACESHIP *ship;
+    CAMERA    ship_camera;
+
 
     // IGameState interface
 public:

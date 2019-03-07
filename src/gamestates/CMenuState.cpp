@@ -1,5 +1,10 @@
 #include "gamestates/CMenuState.h"
 
+typedef  struct MENU_PARAM_CALLBACK {
+    MENU *menu;
+    CEngine *engine;
+}MENU_PARAM_CALLBACK;
+
 
 bool CMenuState::menuClickNewGame(int id){
     UNUSED_PARAM(id);
@@ -55,7 +60,9 @@ int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
     ALLEGRO_PATH *path = al_create_path(al_get_fs_entry_name(dir));
 
     std::string menu_name = al_get_path_basename(path);
-    menu_add_entry(menu,i++, menu_name.c_str(), MENU_TYPE_SIMPLE, nullptr);
+    menu_add_entry(menu,i++, menu_name.c_str(), MENU_TYPE_SIMPLE, [&](int index) -> bool {
+
+    });
     al_destroy_path(path);
     return ALLEGRO_FOR_EACH_FS_ENTRY_OK;
 }

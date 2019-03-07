@@ -3,6 +3,7 @@
 CGameStateManager::CGameStateManager(){
     states =  std::vector<IGameState*>();
     active = nullptr;
+
 }
 
 CGameStateManager::~CGameStateManager(){
