@@ -12,11 +12,11 @@ void keyboard_start(void){
 
 
 int keyboard_pressed(int key){
-    return (int)key_list[key];
+    return  static_cast<int>(key_list[key]);
 }
 
 int keyboard_released(int key){
-    return (int)!key_list[key];
+    return ! static_cast<int>(key_list[key]);
 }
 
 void keyboard_map(ALLEGRO_EVENT *e){

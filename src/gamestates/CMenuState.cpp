@@ -76,7 +76,7 @@ int  CMenuState::readMapDirCallbackEditor(ALLEGRO_FS_ENTRY *dir, void *extra){
 
 void CMenuState::Init()
 {
-
+    menu_init();
     dir.SetPath("map");
 
     // access static members to non static you must pass the pointer
@@ -119,6 +119,8 @@ void CMenuState::Destroy()
 
 void CMenuState::Update(ALLEGRO_EVENT *e)
 {
+
+
     switch(state){
         case MENU_OPT_TYPE::MENU_OPT_NEW_GAME:
         menu_update(&this->menu_select_map, e);
