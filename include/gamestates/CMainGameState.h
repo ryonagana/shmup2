@@ -1,13 +1,18 @@
 #pragma once
 #include "states/IGameState.h"
+#include "CEngine.h"
 
+class CEngine;
 
 class CMainGameState : public IGameState {
 
+private:
+    CEngine *engine;
 
     // IGameState interface
 public:
     CMainGameState();
+    CMainGameState(CEngine *parent = nullptr);
     ~CMainGameState() override;
     virtual void Init() override;
     virtual void Start() override;

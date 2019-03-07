@@ -26,11 +26,12 @@ SOURCES += \
     src/particle.cpp \
     src/vector2.cpp \
     src/emitter.cpp \
+    src/CEngine.cpp \
     src/states/IGameState.cpp \
     src/states/GameStateManager.cpp \
     src/gamestates/CMainGameState.cpp \
-    src/gamestates/CMenuState.cpp \
-    src/CEngine.cpp
+    src/gamestates/CMenuState.cpp
+
 
 
 HEADERS += \

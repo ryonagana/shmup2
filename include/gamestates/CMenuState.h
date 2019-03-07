@@ -2,6 +2,7 @@
 #include <iostream>
 #include <functional>
 #include <memory>
+#include "CEngine.h"
 #include "states/IGameState.h"
 #include "menu.h"
 #include "shared.h"
@@ -10,6 +11,7 @@
 #include "dir.h"
 #include "mouse.h"
 #include "keyboard.h"
+
 
 enum class MENU_OPT_TYPE : uint32_t {
     MENU_OPT_NONE = 0,
@@ -20,7 +22,7 @@ enum class MENU_OPT_TYPE : uint32_t {
 
 
 
-
+class CEngine;
 
 class CMenuState : public IGameState {
 
@@ -30,6 +32,7 @@ private:
     MENU menu_select_map_editor;
     std::string level_path;
     CDirectory dir;
+    CEngine *engine;
 
     MENU_OPT_TYPE state;
 
@@ -48,6 +51,9 @@ private:
 
     // IGameState interface
 public:
+    CMenuState();
+    CMenuState(CEngine *parent = nullptr);
+    ~CMenuState() override;
     virtual void Init() override;
     virtual void Start() override;
     virtual void Destroy() override;

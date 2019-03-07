@@ -42,6 +42,7 @@ bool CMenuState::menuClickSelectEditor(int id){
 }
 
 
+
 /* LOAD ALL MAPS VIA CALLBACKS*/
 int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
 
@@ -69,9 +70,20 @@ int  CMenuState::readMapDirCallbackEditor(ALLEGRO_FS_ENTRY *dir, void *extra){
 
     std::string menu_name = al_get_path_basename(path);
     menu_add_entry(menu,i++, menu_name.c_str(), MENU_TYPE_SIMPLE, nullptr);
-    //(CMenuState::s_map_editor, i++, menu_name.c_str(), MENU_TYPE_SIMPLE, &menuClickSelectEditor);
     al_destroy_path(path);
     return ALLEGRO_FOR_EACH_FS_ENTRY_OK;
+}
+
+CMenuState::CMenuState() : CMenuState(nullptr) {
+
+}
+
+CMenuState::CMenuState(CEngine *parent) : engine(parent){
+
+}
+
+CMenuState::~CMenuState(){
+
 }
 
 void CMenuState::Init()
@@ -166,7 +178,7 @@ void CMenuState::Draw()
 
     switch(state){
         case MENU_OPT_TYPE::MENU_OPT_NEW_GAME:
-            menu_draw(&this->menu_select_map);
+          menu_draw(&this->menu_select_map);
         break;
 
     case MENU_OPT_TYPE::MENU_OPT_EDITOR:
@@ -175,7 +187,7 @@ void CMenuState::Draw()
 
     case MENU_OPT_TYPE::MENU_OPT_NONE:
     default:
-        menu_draw(&this->main_menu);
+          menu_draw(&this->main_menu);
         break;
 
     }

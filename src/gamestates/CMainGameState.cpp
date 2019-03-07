@@ -1,5 +1,17 @@
 #include "gamestates/CMainGameState.h"
 
+CMainGameState::CMainGameState() : CMainGameState(nullptr){
+
+}
+
+CMainGameState::CMainGameState(CEngine *parent) : engine(parent){
+
+}
+
+CMainGameState::~CMainGameState(){
+
+}
+
 void CMainGameState::Init()
 {
 }
@@ -23,13 +35,7 @@ void CMainGameState::Draw()
     return;
 }
 
-CMainGameState::CMainGameState(){
 
-}
-
-CMainGameState::~CMainGameState() {
-
-}
 
 
 
