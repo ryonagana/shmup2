@@ -20,10 +20,9 @@ public:
     bool addState(int id, IGameState *state);
     bool removeState(const int index);
     IGameState* FindState(const int &id);
-    IGameState* FindStateActive(bool status);
     IGameState *stateActive();
-    bool SetStateActive(const int index, bool state);
-    bool GetStateActive(const int index);
+    bool SetStateActive(const int index);
+
 
     ~CGameStateManager();
 };

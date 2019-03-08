@@ -7,8 +7,6 @@ CMainGameState::CMainGameState() : CMainGameState(nullptr){
 CMainGameState::CMainGameState(CEngine *parent) : engine(parent){
 
 
-
-
 }
 
 CMainGameState::~CMainGameState(){
@@ -16,6 +14,11 @@ CMainGameState::~CMainGameState(){
 }
 
 void CMainGameState::Init()
+{
+
+}
+
+void CMainGameState::Start()
 {
     this->ship = spaceship_get_player(SHIP_P1);
     spaceship_set_default_flags(ship);
@@ -28,10 +31,7 @@ void CMainGameState::Init()
         window_exit_loop();
         return;
     }
-}
 
-void CMainGameState::Start()
-{
 }
 
 void CMainGameState::Destroy()

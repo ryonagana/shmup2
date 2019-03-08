@@ -17,6 +17,7 @@ private:
     //TODO PARTICLE LIST
 public:
     CEngine();
+    void Start();
     IGameState *getState();
     void setState(int index);
     LEVEL *getLoadedLevel();

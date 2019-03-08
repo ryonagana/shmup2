@@ -14,6 +14,7 @@ class IGameState {
 protected:
 
     std::string name; // name of this event..
+
 public:
     int id;
     bool active;

@@ -14,10 +14,18 @@ int main(int  argc, char **argv)
     bool redraw = false;
     CEngine mainEngine;
 
-    do {
-        ALLEGRO_EVENT ev;
+    mainEngine.Start();
 
-        if(al_get_next_event(get_window_queue(), &ev)){
+    // main allegro event
+    ALLEGRO_EVENT ev;
+
+    do {
+
+        ALLEGRO_TIMEOUT timeout;
+
+        al_init_timeout(&timeout, 0.6);
+        al_wait_for_event_until(get_window_queue(), &ev, &timeout);
+
 
             switch(ev.type){
                 case ALLEGRO_EVENT_DISPLAY_CLOSE:
@@ -36,9 +44,7 @@ int main(int  argc, char **argv)
                 }
             }
 
-            mainEngine.getState()->UpdateInput(&ev);
-
-        }
+         mainEngine.getState()->UpdateInput(&ev);
 
         if(redraw && al_event_queue_is_empty(get_window_queue())){
             redraw = false;

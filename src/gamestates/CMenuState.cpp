@@ -1,9 +1,6 @@
 #include "gamestates/CMenuState.h"
 
-typedef  struct MENU_PARAM_CALLBACK {
-    MENU *menu;
-    CEngine *engine;
-}MENU_PARAM_CALLBACK;
+
 
 
 bool CMenuState::menuClickNewGame(int id){
@@ -30,7 +27,7 @@ bool  CMenuState::menuClickQuit(int id){
 
 
 
-bool CMenuState::menuClickSelectNewMap(int id)
+bool CMenuState::menuClickMapList(int id)
 {
     std::string menu_name =  this->menu_select_map.entries[id].menu;
     menu_name += ".cbm";
@@ -39,7 +36,7 @@ bool CMenuState::menuClickSelectNewMap(int id)
     return false;
 }
 
-bool CMenuState::menuClickSelectEditor(int id){
+bool CMenuState::menuClickMapListEditor(int id){
     std::string menu_name = this->menu_select_map.entries[id].menu;
     menu_name += ".cbm";
 
@@ -47,11 +44,38 @@ bool CMenuState::menuClickSelectEditor(int id){
 }
 
 
+bool CMenuState::menuClickSelectMap(int id)
+{
+    return false;
+}
+
 
 /* LOAD ALL MAPS VIA CALLBACKS*/
 int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
+    CMenuState *xtra = static_cast<CMenuState*>(extra);
+    static int i = 0;
 
-    MENU *menu = static_cast<MENU*>(extra);
+     ALLEGRO_PATH *path = al_create_path(al_get_fs_entry_name(dir));
+     std::string menu_name = al_get_path_basename(path);
+
+    MENU_PARAM_CALLBACK *param = new MENU_PARAM_CALLBACK;
+
+
+    param->name = menu_name;
+    param->path = al_get_path_filename(path);
+
+
+    xtra->menuMapDirCallbackF(&xtra->menu_select_map, i++, menu_name);
+
+
+    al_destroy_path(path);
+
+     /*
+     MENU_PARAM_CALLBACK *menu = static_cast<MENU_PARAM_CALLBACK*>(extra);
+     CMenuState cstate(menu->self->engine);
+
+
+     cstate = *menu->self;
 
 
 
@@ -60,24 +84,9 @@ int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
     ALLEGRO_PATH *path = al_create_path(al_get_fs_entry_name(dir));
 
     std::string menu_name = al_get_path_basename(path);
-    menu_add_entry(menu,i++, menu_name.c_str(), MENU_TYPE_SIMPLE, [&](int index) -> bool {
-
-    });
+    menu_add_entry(menu->menu,i++, menu_name.c_str(), MENU_TYPE_SIMPLE, nullptr);
     al_destroy_path(path);
-    return ALLEGRO_FOR_EACH_FS_ENTRY_OK;
-}
-
-/* LOAD ALL MAPS EDITOR VIA CALLBACKS*/
-int  CMenuState::readMapDirCallbackEditor(ALLEGRO_FS_ENTRY *dir, void *extra){
-    static int i = 0;
-    MENU *menu = static_cast<MENU*>(extra);
-
-    UNUSED_PARAM(extra);
-    ALLEGRO_PATH *path = al_create_path(al_get_fs_entry_name(dir));
-
-    std::string menu_name = al_get_path_basename(path);
-    menu_add_entry(menu,i++, menu_name.c_str(), MENU_TYPE_SIMPLE, nullptr);
-    al_destroy_path(path);
+    */
     return ALLEGRO_FOR_EACH_FS_ENTRY_OK;
 }
 
@@ -93,6 +102,12 @@ CMenuState::~CMenuState(){
 
 }
 
+
+void CMenuState::menuMapDirCallbackF(MENU *m, int id, const std::string name){
+    menu_add_entry(m,id, name.c_str(), MENU_TYPE_SIMPLE, &this->menuClickSelectMap);
+    return;
+}
+
 void CMenuState::Init()
 {
     menu_init();
@@ -101,19 +116,23 @@ void CMenuState::Init()
     // access static members to non static you must pass the pointer
     // is this  a bad pratice?
 
-
     menu_create(&main_menu, 5);
     menu_add_entry(&main_menu, 1, "TESTE", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickNewGame, this, std::placeholders::_1));
     menu_add_entry(&main_menu, 2, "MAP EDITOR", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
     menu_add_entry(&main_menu, 2, "QUIT", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickQuit, this, std::placeholders::_1));
 
+    MENU_PARAM_CALLBACK params;
+
 
 
     menu_create(&menu_select_map,10);
-    al_for_each_fs_entry(dir.getEntry(), &this->readMapDirCallback, &menu_select_map);
+    al_for_each_fs_entry(dir.getEntry(), &this->readMapDirCallback,  this);
 
-    menu_create(&menu_select_map_editor,10);
-    al_for_each_fs_entry(dir.getEntry(), &this->readMapDirCallback, &menu_select_map_editor);
+   // menu_create(&menu_select_map_editor,10);
+   // al_for_each_fs_entry(dir.getEntry(), &this->readMapDirCallback, this);
+
+
+
 
 
 

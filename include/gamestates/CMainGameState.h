@@ -20,7 +20,7 @@ private:
 public:
     CMainGameState();
     CMainGameState(CEngine *parent = nullptr);
-    ~CMainGameState() override;
+    ~CMainGameState();
     virtual void Init() override;
     virtual void Start() override;
     virtual void Destroy() override;

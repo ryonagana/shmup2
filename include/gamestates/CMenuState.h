@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include <functional>
+#include <algorithm>
 #include <memory>
 #include "CEngine.h"
 #include "states/IGameState.h"
@@ -21,6 +22,13 @@ enum class MENU_OPT_TYPE : uint32_t {
 };
 
 
+typedef  struct MENU_PARAM_CALLBACK {
+    std::string name;
+    std::string path;
+}MENU_PARAM_CALLBACK;
+
+
+
 
 class CEngine;
 
@@ -36,6 +44,8 @@ private:
 
     MENU_OPT_TYPE state;
 
+    // callback to call an action opaque  callback inside static callback
+    void menuMapDirCallbackF(MENU *menu, int id, const std::string name);
 
     // callbacks for the menu
     //please dont touch here if you dont know what are you doing..
@@ -43,14 +53,30 @@ private:
      bool menuClickNewGame(int id); // is called when you click in "new game"
      bool menuClickEditor(int id); // is called when you click in "editor"
      bool menuClickQuit( int id); // is called when you click in "quit"
-     bool menuClickSelectNewMap(int id); // a sub menu with map list
-     bool menuClickSelectEditor( int id); // a sub menu with map list
+     bool menuClickMapList(int id); // a sub menu with map list
+     bool menuClickMapListEditor( int id); // a sub menu with map list
+
+
+
+
      static int  readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder
      static int  readMapDirCallbackEditor(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder for editor
-
+     static bool menuClickSelectMap(int id);
 
     // IGameState interface
 public:
+
+     CMenuState operator=(const CMenuState &rhs){
+         if(&rhs == this){
+             return *this;
+         }
+
+         return rhs;
+
+
+
+     }
+
     CMenuState();
     CMenuState(CEngine *parent = nullptr);
     ~CMenuState() override;
