@@ -40,6 +40,9 @@ bool CGameStateManager::removeState(const int index){
     return true;
 }
 
+IGameState *CGameStateManager::getStatebyIndex(int i){
+    return this->states.at(static_cast<size_t>(i));
+}
 
 
 IGameState *CGameStateManager::stateActive(){
@@ -47,7 +50,7 @@ IGameState *CGameStateManager::stateActive(){
 }
 
 bool CGameStateManager::SetStateActive(const int index){
-    auto f = states.at(index);
+    IGameState *f =  this->FindState(index);
     this->active = f;
     return f == nullptr ? false : true;
 }

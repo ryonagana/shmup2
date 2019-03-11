@@ -21,6 +21,7 @@ public:
     bool removeState(const int index);
     IGameState* FindState(const int &id);
     IGameState *stateActive();
+    IGameState *getStatebyIndex(int i);
     bool SetStateActive(const int index);
 
 

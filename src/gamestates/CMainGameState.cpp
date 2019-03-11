@@ -24,6 +24,7 @@ void CMainGameState::Start()
     spaceship_set_default_flags(ship);
     spaceship_camera_init(&ship_camera, ship);
 
+    /*
     if(this->engine->getLoadedLevel()  == nullptr)
     {
         al_show_native_message_box(get_window_display(), "Error: Map Not Loaded!", "Map Not Loaded", "the map file was not found or corrupted", "Fuck You!",0);
@@ -31,6 +32,7 @@ void CMainGameState::Start()
         window_exit_loop();
         return;
     }
+    */
 
 }
 

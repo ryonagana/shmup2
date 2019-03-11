@@ -7,14 +7,15 @@ CEngine::CEngine()
     loadedLevel = nullptr;
 
 
-    stateList.push_back(new CMenuState(this));
+    stateManager.addState(0, new CMenuState(nullptr));
+    stateManager.addState(1, new CMainGameState(nullptr));
 
-    stateList.push_back(new CMainGameState(this));
-
-    stateManager.addState(1, stateList[0]);
-    stateManager.addState(2, stateList[1]);
-
-    stateManager.SetStateActive(1);
+    if(!stateManager.SetStateActive(1)){
+        std::stringstream msg;
+        msg << "State Not Loaded Correctly! Sorry" << std::endl;
+        WARN(msg.str());
+        al_show_native_message_box(get_window_display(), "Error!", "Error:", msg.str().c_str(),"OK", 0);
+    }
 
 
 
@@ -22,7 +23,7 @@ CEngine::CEngine()
 
 IGameState *CEngine::getState()
 {
-    return stateManager.stateActive();
+    return stateManager.getStatebyIndex(0);
 }
 
 void CEngine::setState(int index)
