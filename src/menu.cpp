@@ -103,7 +103,7 @@ void menu_remove_entry(MENU *menu, int index){
 }
 
 void menu_update(MENU* menu, ALLEGRO_EVENT *e){
-    static int click_count = 0;
+    static int click_counter = 0;
 
     if(menu->menu_count <= 0 ) return;
     if(menu->entries_count <= 0) return ;
@@ -126,12 +126,12 @@ void menu_update(MENU* menu, ALLEGRO_EVENT *e){
     if(mouse_get()->lButton){
         // jst for slow down the click
         // was very fast you cant select the map cause it clicks  multiple times in a short time
-        click_count++;
+        click_counter++;
 
 
-        if(click_count >= 6){
+        if(click_counter >= 5){
             menu_option_clicked(menu, menu->menu_selected);
-            click_count = 0;
+            click_counter = 0;
         }
 
     }
