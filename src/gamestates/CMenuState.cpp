@@ -46,6 +46,7 @@ bool CMenuState::menuClickMapListEditor(int id){
 
 bool CMenuState::menuClickSelectMap(int id)
 {
+    LOG("CLICKED MAP");
     return false;
 }
 
@@ -112,6 +113,11 @@ void CMenuState::menuMapDirCallbackF(MENU *m, int id, const std::string name){
     return;
 }
 
+void CMenuState::menuClickedLoadMap(MENU *menu, int index)
+{
+    this->mainEngine->loadNewLevel(menu->entries[static_cast<size_t>(index)].menu);
+}
+
 void CMenuState::Init()
 {
     menu_init();
@@ -121,9 +127,11 @@ void CMenuState::Init()
     // is this  a bad pratice?
 
     menu_create(&main_menu, 5);
-    menu_add_entry(&main_menu, 1, "TESTE", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickNewGame, this, std::placeholders::_1));
+    menu_add_entry(&main_menu, 1, "NEW GAME", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickNewGame, this, std::placeholders::_1));
     menu_add_entry(&main_menu, 2, "MAP EDITOR", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
-    menu_add_entry(&main_menu, 2, "QUIT", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickQuit, this, std::placeholders::_1));
+    menu_add_entry(&main_menu, 3, "LOAD..", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
+    menu_add_entry(&main_menu, 4, "SAVE..", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
+    menu_add_entry(&main_menu, 5, "QUIT", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickQuit, this, std::placeholders::_1));
 
     MENU_PARAM_CALLBACK params;
 
@@ -182,9 +190,11 @@ void CMenuState::Update(ALLEGRO_EVENT *e)
 
 void CMenuState::HandleInput(ALLEGRO_EVENT *e){
 
+
+
     if(e->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN){
         if(e->mouse.button & 1){
-            mouse_get()->lButton = true;
+           mouse_get()->lButton = true;
         }
     }
 

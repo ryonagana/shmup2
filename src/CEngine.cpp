@@ -6,7 +6,6 @@ using GameState = std::unique_ptr<IGameState>;
 CEngine::CEngine()
 {
 
-    loadedLevel = nullptr;
    // menuState = std::make_unique<IGameState>();
 
    // stateManager.addState("Menu",1, menuState);
@@ -15,7 +14,7 @@ CEngine::CEngine()
     stateManager.addState("Menu",1, std::make_shared<CMenuState>(this));
     stateManager.addState("Game",2, std::make_shared<CMainGameState>(this));
 
-    stateManager.SetStateActive(2);
+    stateManager.SetStateActive(1);
 
     stateManager.InitStates();
 
@@ -42,6 +41,11 @@ IGameState *CEngine::getState()
     return stateManager.stateActive();
 }
 
+void CEngine::loadNewLevel(const std::string &mapname)
+{
+    level_load(get_window_display(), &this->loadedLevel, mapname.c_str(), false);
+}
+
 void CEngine::setState(int index)
 {
     stateManager.SetStateActive(index);
@@ -49,7 +53,7 @@ void CEngine::setState(int index)
 }
 
 LEVEL *CEngine::getLoadedLevel(){
-    return loadedLevel;
+    return &loadedLevel;
 }
 
 CEngine::~CEngine()

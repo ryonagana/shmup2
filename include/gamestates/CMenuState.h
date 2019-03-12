@@ -41,6 +41,7 @@ private:
 
     // callback to call an action opaque  callback inside static callback
     void menuMapDirCallbackF(MENU *menu, int id, const std::string name);
+    void menuClickedLoadMap(MENU *menu, int index);
 
     // callbacks for the menu
     //please dont touch here if you dont know what are you doing..

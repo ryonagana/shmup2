@@ -6,6 +6,7 @@
 #include "spaceship.h"
 #include "render.h"
 
+
 class CEngine;
 
 class CMainGameState : public IGameState {

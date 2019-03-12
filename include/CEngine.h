@@ -16,7 +16,7 @@
 class CEngine {
 private:
     CGameStateManager stateManager;
-    LEVEL *loadedLevel;
+    LEVEL loadedLevel;
     //TODO ENEMIES LIST
     //TODO POWERUP/COINS/GOODIES/LIFE/ITEMS LIST
     //TODO PARTICLE LIST
@@ -26,6 +26,7 @@ public:
     ~CEngine();
     void Start();
     IGameState *getState();
+    void loadNewLevel(const std::string &mapname);
     void setState(int index);
     LEVEL *getLoadedLevel();
 
