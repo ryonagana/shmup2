@@ -49,6 +49,11 @@ bool CMenuState::menuClickSelectMap(int id)
     return false;
 }
 
+CMenuState::CMenuState()
+{
+
+}
+
 
 /* LOAD ALL MAPS VIA CALLBACKS*/
 int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
@@ -65,6 +70,7 @@ int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
     param->path = al_get_path_filename(path);
 
 
+    LOG("Dir Read: %s\nMap Found: %s", param->path.c_str(), param->name.c_str());
     xtra->menuMapDirCallbackF(&xtra->menu_select_map, i++, menu_name);
 
 
@@ -90,13 +96,11 @@ int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
     return ALLEGRO_FOR_EACH_FS_ENTRY_OK;
 }
 
-CMenuState::CMenuState() : CMenuState(nullptr) {
+CMenuState::CMenuState(CEngine *parent) : mainEngine(parent)
+{
 
 }
 
-CMenuState::CMenuState(CEngine *parent) : engine(parent){
-
-}
 
 CMenuState::~CMenuState(){
 

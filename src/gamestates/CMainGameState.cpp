@@ -42,6 +42,7 @@ void CMainGameState::Destroy()
 
 void CMainGameState::Update(ALLEGRO_EVENT *e)
 {
+    UNUSED_PARAM(e);
     return;
 }
 
@@ -58,4 +59,6 @@ void CMainGameState::Draw()
 
 void CMainGameState::HandleInput(ALLEGRO_EVENT *e)
 {
+    UNUSED_PARAM(e);
+    return;
 }

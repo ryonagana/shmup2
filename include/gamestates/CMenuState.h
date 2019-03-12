@@ -28,10 +28,6 @@ typedef  struct MENU_PARAM_CALLBACK {
 }MENU_PARAM_CALLBACK;
 
 
-
-
-class CEngine;
-
 class CMenuState : public IGameState {
 
 private:
@@ -40,8 +36,7 @@ private:
     MENU menu_select_map_editor;
     std::string level_path;
     CDirectory dir;
-    CEngine *engine;
-
+    CEngine *mainEngine;
     MENU_OPT_TYPE state;
 
     // callback to call an action opaque  callback inside static callback

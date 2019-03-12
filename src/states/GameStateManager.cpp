@@ -4,7 +4,7 @@
 
 IGameState *CGameStateManager::findStateById(int id)
 {
-    auto f = std::find_if(states.begin(), states.end(), [&id](const std::unique_ptr<IGameState> &state) -> bool {
+    auto f = std::find_if(states.begin(), states.end(), [&id](const std::shared_ptr<IGameState> &state) -> bool {
             return state.get()->id == id;
     });
 
@@ -14,7 +14,7 @@ IGameState *CGameStateManager::findStateById(int id)
 
 CGameStateManager::CGameStateManager()
 {
-    states  = std::vector< std::unique_ptr<IGameState>>();
+    states  = std::vector< std::shared_ptr<IGameState>>();
 
 }
 
@@ -25,12 +25,13 @@ void CGameStateManager::InitStates()
     }
 }
 
-bool CGameStateManager::addState(const std::string &name, int id, std::unique_ptr<IGameState> state)
+bool CGameStateManager::addState(const std::string &name, int id, std::shared_ptr<IGameState> state)
 {
 
     states.push_back( std::move(state) );
     states.back()->id = id;
     states.back()->name = name;
+    states.back()->Init();
     return true;
 }
 

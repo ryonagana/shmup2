@@ -7,6 +7,8 @@ QMAKE_CXX = g++
 
 SOURCES += \
     src/main.cpp \
+    src/states/IGameState.cpp \
+    src/CEngine.cpp \
     src/shared.cpp \
     src/window.cpp \
     src/keyboard.cpp \
@@ -26,8 +28,6 @@ SOURCES += \
     src/particle.cpp \
     src/vector2.cpp \
     src/emitter.cpp \
-    src/CEngine.cpp \
-    src/states/IGameState.cpp \
     src/states/GameStateManager.cpp \
     src/gamestates/CMainGameState.cpp \
     src/gamestates/CMenuState.cpp \
@@ -38,6 +38,8 @@ SOURCES += \
 
 HEADERS += \
     include/window.h \
+    include/states/IGameState.h \
+    include/CEngine.h \
     include/shared.h \
     include/keyboard.h \
     include/mouse.h \
@@ -57,11 +59,9 @@ HEADERS += \
     include/particle.h \
     include/vector2.h \
     include/emitter.h \
-    include/states/IGameState.h \
     include/states/GameStateManager.h \
     include/gamestates/CMainGameState.h \
     include/gamestates/CMenuState.h \
-    include/CEngine.h \
     include/states/NonCopyable.h \
     include/states/NonMovable.h
 

@@ -1,13 +1,24 @@
 #include "CEngine.h"
 #include "states/IGameState.h"
+#include "gamestates/CMenuState.h"
 using GameState = std::unique_ptr<IGameState>;
 
 CEngine::CEngine()
 {
 
     loadedLevel = nullptr;
+   // menuState = std::make_unique<IGameState>();
 
-    //stateManager.addState("Menu",1, std::make_unique<IGameState>(new CMenuState(nullptr)));
+   // stateManager.addState("Menu",1, menuState);
+
+
+    stateManager.addState("Menu",1, std::make_shared<CMenuState>(this));
+    stateManager.addState("Game",2, std::make_shared<CMainGameState>(this));
+
+    stateManager.SetStateActive(2);
+
+    stateManager.InitStates();
+
     //stateManager.addState("Menu",1, std::make_unique<IGameState>(new  CMainGameState(nullptr)));
 
     //stateManager.addState("Teste",0, std::unique_ptr<GameState>(new CMenuState(nullptr)));
