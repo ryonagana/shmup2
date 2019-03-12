@@ -2,8 +2,8 @@
 #include <iostream>
 #include <allegro5/allegro.h>
 #include <memory>
-
-
+#include "states/NonCopyable.h"
+#include "states/NonMovable.h"
 
 enum class GAMESTATE_ID : uint32_t {
     GAMESTATE_MENU,
@@ -13,7 +13,7 @@ enum class GAMESTATE_ID : uint32_t {
     GAMESTATE_EDITOR
 };
 
-class IGameState  {
+class IGameState : public NonCopyable, public NonMovable {
 protected:
 
 
