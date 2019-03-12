@@ -13,7 +13,7 @@
 #include "states/NonMovable.h"
 
 
-class CEngine : public NonCopyable, public NonMovable {
+class CEngine {
 private:
     CGameStateManager stateManager;
     LEVEL *loadedLevel;

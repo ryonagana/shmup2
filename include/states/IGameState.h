@@ -3,6 +3,7 @@
 #include <allegro5/allegro.h>
 #include <memory>
 #include "NonCopyable.h"
+#include "NonMovable.h"
 
 enum class GAMESTATE_ID : uint32_t {
     GAMESTATE_MENU,
@@ -12,7 +13,7 @@ enum class GAMESTATE_ID : uint32_t {
     GAMESTATE_EDITOR
 };
 
-class IGameState  {
+class IGameState : public NonCopyable, public NonMovable {
 protected:
 
 
@@ -21,7 +22,7 @@ public:
     int id;
     bool active;
     std::string name; // name of this event..
-
+    IGameState(){}
     virtual ~IGameState() {}
 
     // pure functions states functions
@@ -37,4 +38,4 @@ public:
 
 };
 
-using GameState = std::unique_ptr<IGameState>;
+
