@@ -56,6 +56,6 @@ void CMainGameState::Draw()
 
 
 
-void CMainGameState::UpdateInput(ALLEGRO_EVENT *e)
+void CMainGameState::HandleInput(ALLEGRO_EVENT *e)
 {
 }

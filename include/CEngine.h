@@ -1,27 +1,32 @@
 #pragma once
 #include <iostream>
+#include <memory>
 #include <string>
 #include <sstream>
 #include <cstdlib>
 #include <vector>
+
 #include "level.h"
 #include "states/GameStateManager.h"
 #include "gamestates/CMainGameState.h"
 #include "gamestates/CMenuState.h"
+#include "states/NonMovable.h"
 
-class CEngine {
+
+class CEngine : public NonCopyable, public NonMovable {
 private:
     CGameStateManager stateManager;
-    std::vector<IGameState*> stateList;
     LEVEL *loadedLevel;
     //TODO ENEMIES LIST
     //TODO POWERUP/COINS/GOODIES/LIFE/ITEMS LIST
     //TODO PARTICLE LIST
+
 public:
     CEngine();
+    ~CEngine();
     void Start();
     IGameState *getState();
     void setState(int index);
     LEVEL *getLoadedLevel();
-    ~CEngine();
+
 };

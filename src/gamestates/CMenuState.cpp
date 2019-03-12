@@ -176,7 +176,7 @@ void CMenuState::Update(ALLEGRO_EVENT *e)
     }
 }
 
-void CMenuState::UpdateInput(ALLEGRO_EVENT *e){
+void CMenuState::HandleInput(ALLEGRO_EVENT *e){
 
     if(e->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN){
         if(e->mouse.button & 1){

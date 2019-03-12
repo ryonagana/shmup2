@@ -66,16 +66,7 @@ private:
     // IGameState interface
 public:
 
-     CMenuState operator=(const CMenuState &rhs){
-         if(&rhs == this){
-             return *this;
-         }
 
-         return rhs;
-
-
-
-     }
 
     CMenuState();
     CMenuState(CEngine *parent = nullptr);
@@ -85,7 +76,7 @@ public:
     virtual void Destroy() override;
     virtual void Update(ALLEGRO_EVENT *e) override;
     virtual void Draw() override;
-    virtual void UpdateInput(ALLEGRO_EVENT *e) override;
+    virtual void HandleInput(ALLEGRO_EVENT *e) override;
 
 
 };

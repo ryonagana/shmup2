@@ -30,7 +30,9 @@ SOURCES += \
     src/states/IGameState.cpp \
     src/states/GameStateManager.cpp \
     src/gamestates/CMainGameState.cpp \
-    src/gamestates/CMenuState.cpp
+    src/gamestates/CMenuState.cpp \
+    src/states/NonCopyable.cpp \
+    src/states/NonMovable.cpp
 
 
 
@@ -59,9 +61,11 @@ HEADERS += \
     include/states/GameStateManager.h \
     include/gamestates/CMainGameState.h \
     include/gamestates/CMenuState.h \
-    include/CEngine.h
+    include/CEngine.h \
+    include/states/NonCopyable.h \
+    include/states/NonMovable.h
 
-
+QMAKE_CXXFLAGS += -std=c++17
 QMAKE_CXXFLAGS_DEBUG += -std=c++17 -Wall -Wextra -fpermissive -pedantic -O0
 QMAKE_CXXFLAGS_RELEASE += -s -std=c++17 -Wall -Wextra -fpermissive -pedantic -Os
 

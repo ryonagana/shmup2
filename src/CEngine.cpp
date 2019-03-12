@@ -1,14 +1,13 @@
 #include "CEngine.h"
+#include "states/IGameState.h"
+using GameState = std::unique_ptr<IGameState>;
 
 CEngine::CEngine()
 {
-    stateList = std::vector<IGameState*>();
-    stateList.reserve(10);
+
     loadedLevel = nullptr;
-
-
-    stateManager.addState(0, new CMenuState(nullptr));
-    stateManager.addState(1, new CMainGameState(nullptr));
+    //stateManager.addState("Teste",0, std::unique_ptr<GameState>(new CMenuState(nullptr)));
+    //stateManager.addState("Teste 2",1, std::std::unique_ptr<GameState>(new CMainGameState(nullptr)));
 
     if(!stateManager.SetStateActive(1)){
         std::stringstream msg;
@@ -38,7 +37,7 @@ LEVEL *CEngine::getLoadedLevel(){
 
 CEngine::~CEngine()
 {
-    stateList.clear();
+
 }
 
 void CEngine::Start(){

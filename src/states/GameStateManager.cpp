@@ -1,8 +1,8 @@
 #include "states/GameStateManager.h"
 
 CGameStateManager::CGameStateManager(){
-    states =  std::vector<IGameState*>();
-    active = nullptr;
+    states =  std::vector<GameState>();
+
 
 }
 
@@ -11,27 +11,23 @@ CGameStateManager::~CGameStateManager(){
 }
 
 void CGameStateManager::InitStates(){
-
-    for(auto s : this->states){
-        s->Start();
+    for(auto i = states.begin(); i != states.end();i++){
+        i.base()->get()->Init();
     }
+
 }
 
-
-
-bool CGameStateManager::addState(int id, IGameState *state){
-    if(state == nullptr) return false;
+bool CGameStateManager::addState(const std::string &name, int id, GameState state)
+{
     states.push_back(std::move(state));
-    states.back()->id = id;
-    states.back()->active = false;
-    states.back()->Init();
+    states.back().get()->name = name;
+    states.back().get()->id = id;
     return true;
 }
 
-IGameState *CGameStateManager::FindState(const int& id){
-    auto f = std::find_if(this->states.begin(), this->states.end(), [&id](IGameState* &state)-> bool { return state->id == id; });
-    return *f.base();
-}
+
+
+
 
 bool CGameStateManager::removeState(const int index){
 
@@ -41,17 +37,16 @@ bool CGameStateManager::removeState(const int index){
 }
 
 IGameState *CGameStateManager::getStatebyIndex(int i){
-    return this->states.at(static_cast<size_t>(i));
+    return this->states.at(static_cast<size_t>(i)).get();
 }
 
 
 IGameState *CGameStateManager::stateActive(){
-    return active;
+    return active.get();
 }
 
 bool CGameStateManager::SetStateActive(const int index){
-    IGameState *f =  this->FindState(index);
-    this->active = f;
-    return f == nullptr ? false : true;
+    //IGameState *f =  this->FindState(index);
+   // return f == nullptr ? false : true;
 }
 

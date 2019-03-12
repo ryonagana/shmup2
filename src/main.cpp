@@ -14,7 +14,7 @@ int main(int  argc, char **argv)
     bool redraw = false;
     CEngine mainEngine;
 
-    mainEngine.Start();
+    //mainEngine.Start();
 
     // main allegro event
     ALLEGRO_EVENT ev;
@@ -35,7 +35,7 @@ int main(int  argc, char **argv)
                 case ALLEGRO_EVENT_TIMER:
                 {
                     if(ev.timer.source == get_window_timer()){
-                        mainEngine.getState()->Update(&ev);
+                        //mainEngine.getState()->Update(&ev);
                         redraw = true;
                     }else if(ev.timer.source == get_window_actual_time()){
 
@@ -44,11 +44,11 @@ int main(int  argc, char **argv)
                 }
             }
 
-         mainEngine.getState()->UpdateInput(&ev);
+        // mainEngine.getState()->HandleInput(&ev);
 
         if(redraw && al_event_queue_is_empty(get_window_queue())){
             redraw = false;
-            mainEngine.getState()->Draw();
+            //mainEngine.getState()->Draw();
             al_flip_display();
         }
 

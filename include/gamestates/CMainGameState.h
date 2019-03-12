@@ -25,7 +25,7 @@ public:
     virtual void Start() override;
     virtual void Destroy() override;
     virtual void Update(ALLEGRO_EVENT *e) override;
-    virtual void UpdateInput(ALLEGRO_EVENT *e) override;
+    virtual void HandleInput(ALLEGRO_EVENT *e) override;
     virtual void Draw() override;
 
 
