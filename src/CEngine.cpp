@@ -49,6 +49,7 @@ void CEngine::loadNewLevel(const std::string &mapname)
 void CEngine::setState(int index)
 {
     stateManager.SetStateActive(index);
+    stateManager.stateActive()->Start();
     return;
 }
 

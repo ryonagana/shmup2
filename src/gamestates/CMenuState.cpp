@@ -118,6 +118,11 @@ void CMenuState::menuClickedLoadMap(MENU *menu, int index)
     this->mainEngine->loadNewLevel(menu->entries[static_cast<size_t>(index)].menu);
 }
 
+void CMenuState::resetMenuState()
+{
+    this->state = MENU_OPT_TYPE::MENU_OPT_NONE;
+}
+
 void CMenuState::Init()
 {
     menu_init();
@@ -161,6 +166,7 @@ void CMenuState::Init()
 
 void CMenuState::Start()
 {
+    resetMenuState();
 }
 
 void CMenuState::Destroy()
