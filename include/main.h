@@ -4,6 +4,7 @@
 #include <memory>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 
 #include "render.h"
 #include "window.h"

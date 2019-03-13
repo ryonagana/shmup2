@@ -6,8 +6,10 @@
 bool CMenuState::menuClickNewGame(int id){
     UNUSED_PARAM(id);
     state = MENU_OPT_TYPE::MENU_OPT_NEW_GAME;
+
     printf("Click\n");
     return false;
+
 }
 
 
@@ -46,7 +48,9 @@ bool CMenuState::menuClickMapListEditor(int id){
 
 bool CMenuState::menuClickSelectMap(int id)
 {
-    LOG("CLICKED MAP");
+
+
+   LOG("CLICKED MAP");
     return false;
 }
 
@@ -72,7 +76,7 @@ int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
 
 
     LOG("Dir Read: %s\nMap Found: %s", param->path.c_str(), param->name.c_str());
-    xtra->menuMapDirCallbackF(&xtra->menu_select_map, i++, menu_name);
+    xtra->menuOpaqueCallbackDir(&xtra->menu_select_map, i++, menu_name);
 
 
     al_destroy_path(path);
@@ -108,12 +112,12 @@ CMenuState::~CMenuState(){
 }
 
 
-void CMenuState::menuMapDirCallbackF(MENU *m, int id, const std::string name){
+void CMenuState::menuOpaqueCallbackDir(MENU *m, int id, const std::string name){
     menu_add_entry(m,id, name.c_str(), MENU_TYPE_SIMPLE, &this->menuClickSelectMap);
     return;
 }
 
-void CMenuState::menuClickedLoadMap(MENU *menu, int index)
+void CMenuState::menuOpaqueClickedLoadMap(MENU *menu, int index)
 {
     this->mainEngine->loadNewLevel(menu->entries[static_cast<size_t>(index)].menu);
 }
@@ -131,15 +135,17 @@ void CMenuState::Init()
     // access static members to non static you must pass the pointer
     // is this  a bad pratice?
 
-    menu_create(&main_menu, 5);
+    menu_create(&main_menu, 10);
     menu_add_entry(&main_menu, 1, "NEW GAME", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickNewGame, this, std::placeholders::_1));
-    menu_add_entry(&main_menu, 2, "MAP EDITOR", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
+     menu_add_entry(&main_menu, 2, "MAP EDITOR", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
     menu_add_entry(&main_menu, 3, "LOAD..", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
     menu_add_entry(&main_menu, 4, "SAVE..", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
+    menu_add_entry(&main_menu, 4, "ABOUT", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
     menu_add_entry(&main_menu, 5, "QUIT", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickQuit, this, std::placeholders::_1));
 
     MENU_PARAM_CALLBACK params;
 
+    text_init(&credits, nullptr, 25);
 
 
     menu_create(&menu_select_map,10);
@@ -220,7 +226,7 @@ void CMenuState::HandleInput(ALLEGRO_EVENT *e){
 
 void CMenuState::Draw()
 {
-    al_clear_to_color(al_map_rgb(0,0,0));
+    al_clear_to_color(al_map_rgb(33,150,243));
 
     switch(state){
         case MENU_OPT_TYPE::MENU_OPT_NEW_GAME:
@@ -237,5 +243,7 @@ void CMenuState::Draw()
         break;
 
     }
+
+    text_draw(&credits, al_map_rgb(255,0,0), (window_get_width() / 2) + 100 , window_get_height() - 50, "by ArchDark\n And JRCL - 2019");
 
 }

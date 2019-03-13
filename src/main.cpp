@@ -12,8 +12,7 @@ int main(int  argc, char *argv[])
     UNUSED_PARAM(argc);
     UNUSED_PARAM(argv);
 
-
-    srand(static_cast<unsigned int>(time(nullptr)));
+    srand(static_cast<unsigned int>(std::time(nullptr)));
     window_init();
     bool redraw = false;
     CEngine mainEngine;

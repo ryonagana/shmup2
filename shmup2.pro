@@ -32,7 +32,8 @@ SOURCES += \
     src/gamestates/CMainGameState.cpp \
     src/gamestates/CMenuState.cpp \
     src/states/NonCopyable.cpp \
-    src/states/NonMovable.cpp
+    src/states/NonMovable.cpp \
+    src/Utils/CRandom.cpp
 
 
 
@@ -63,7 +64,8 @@ HEADERS += \
     include/gamestates/CMainGameState.h \
     include/gamestates/CMenuState.h \
     include/states/NonCopyable.h \
-    include/states/NonMovable.h
+    include/states/NonMovable.h \
+    include/Utils/CRandom.h
 
 CONFIG += c++14
 QMAKE_CXXFLAGS += -std=c++14

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <functional>
 #include <algorithm>
+#include <ctime>
 #include <memory>
 #include "CEngine.h"
 #include "states/IGameState.h"
@@ -12,6 +13,8 @@
 #include "dir.h"
 #include "mouse.h"
 #include "keyboard.h"
+#include "text.h"
+#include "Utils/CRandom.h"
 
 
 enum class MENU_OPT_TYPE : uint32_t {
@@ -39,9 +42,13 @@ private:
     CEngine *mainEngine;
     MENU_OPT_TYPE state;
 
+    GAME_TEXT credits;
+
+
+
     // callback to call an action opaque  callback inside static callback
-    void menuMapDirCallbackF(MENU *menu, int id, const std::string name);
-    void menuClickedLoadMap(MENU *menu, int index);
+    void menuOpaqueCallbackDir(MENU *menu, int id, const std::string name);
+    void menuOpaqueClickedLoadMap(MENU *menu, int index);
 
 
     void resetMenuState(void);
