@@ -9,6 +9,10 @@
 typedef struct VECTOR2 {
     float x;
     float y;
+    VECTOR2(){
+        x = 0;
+        y = 0;
+    }
 } VECTOR2;
 
 #ifdef _WIN32

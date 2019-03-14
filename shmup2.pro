@@ -35,8 +35,10 @@ SOURCES += \
     src/states/NonMovable.cpp \
     src/Utils/CRandom.cpp \
     src/Utils/CRect.cpp \
-    src/GUI/CWidget.cpp
-
+    src/Utils/CText.cpp \
+    src/GUI/CWidget.cpp \
+    src/GUI/CButtonRect.cpp \
+    src/GUI/CButton.cpp \
 
 
 HEADERS += \
@@ -69,7 +71,10 @@ HEADERS += \
     include/states/NonMovable.h \
     include/Utils/CRandom.h \
     include/Utils/CRect.h \
-    include/GUI/CWidget.h
+    include/Utils/CText.h \
+    include/GUI/CWidget.h \
+    include/GUI/CButtonRect.h \
+    include/GUI/CButton.h
 
 CONFIG += c++14
 QMAKE_CXXFLAGS += -std=c++14

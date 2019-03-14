@@ -2,23 +2,24 @@
 #include <iostream>
 #include <allegro5/allegro.h>
 #include "Utils/CRect.h"
-#include "text.h"
-
+#include "Utils/CText.h"
+#include "GUI/CButtonRect.h"
 namespace GUI {
     class CWidget {
     private:
-
-       GAME_TEXT *text;
     public:
-        virtual ~CWidget() = 0;
+        CWidget();
+        virtual ~CWidget() {}
         virtual void handleEvent(ALLEGRO_EVENT *e) = 0;
         virtual void Draw() = 0;
         virtual void SetWidgetPos(float x, float y) = 0;
 
+        GUI::CButtonRect buttonRect;
 
-        class ButtonRect : public Utils::CRect {
-            bool onMouseOver(ALLEGRO_EVENT *e);
-            bool onClick(ALLEGRO_EVENT *e);
+        class WidgetText : public  Utils::CText{
+        public:
+            WidgetText();
         };
+
     };
 }

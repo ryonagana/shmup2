@@ -103,7 +103,7 @@ int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
 
 CMenuState::CMenuState(CEngine *parent) : mainEngine(parent)
 {
-
+    buttonTest = new  GUI::CButton(100,100,"");
 }
 
 
@@ -183,6 +183,7 @@ void CMenuState::Update(ALLEGRO_EVENT *e)
 {
 
 
+    /*
     switch(state){
         case MENU_OPT_TYPE::MENU_OPT_NEW_GAME:
         menu_update(&this->menu_select_map, e);
@@ -198,6 +199,7 @@ void CMenuState::Update(ALLEGRO_EVENT *e)
         break;
 
     }
+    */
 }
 
 void CMenuState::HandleInput(ALLEGRO_EVENT *e){
@@ -228,6 +230,9 @@ void CMenuState::Draw()
 {
     al_clear_to_color(al_map_rgb(33,150,243));
 
+    buttonTest->Draw();
+
+    /*
     switch(state){
         case MENU_OPT_TYPE::MENU_OPT_NEW_GAME:
           menu_draw(&this->menu_select_map);
@@ -243,6 +248,7 @@ void CMenuState::Draw()
         break;
 
     }
+    */
 
     text_draw(&credits, al_map_rgb(255,0,0), (window_get_width() / 2) + 100 , window_get_height() - 50, "by ArchDark\n And JRCL - 2019");
 
