@@ -34,15 +34,13 @@ typedef  struct MENU_PARAM_CALLBACK {
 class CMenuState : public IGameState {
 
 private:
-    MENU main_menu;
-    MENU menu_select_map;
-    MENU menu_select_map_editor;
+
     std::string level_path;
     CDirectory dir;
     CEngine *mainEngine;
     MENU_OPT_TYPE state;
 
-    GAME_TEXT credits;
+
 
     bool windowMainMenu;
     bool windowSelectMap;
@@ -53,18 +51,6 @@ private:
     // callback to call an action opaque  callback inside static callback
     void menuOpaqueCallbackDir(MENU *menu, int id, const std::string name);
     void menuOpaqueClickedLoadMap(MENU *menu, int index);
-
-
-    void resetMenuState(void);
-
-    // callbacks for the menu
-    //please dont touch here if you dont know what are you doing..
-
-     bool menuClickNewGame(int id); // is called when you click in "new game"
-     bool menuClickEditor(int id); // is called when you click in "editor"
-     bool menuClickQuit( int id); // is called when you click in "quit"
-     bool menuClickMapList(int id); // a sub menu with map list
-     bool menuClickMapListEditor( int id); // a sub menu with map list
 
 
 
