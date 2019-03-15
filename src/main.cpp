@@ -32,8 +32,8 @@ int main(int  argc, char *argv[])
 
             switch(ev.type){
                 case ALLEGRO_EVENT_DISPLAY_CLOSE:
-                    //window_exit_loop();
-                    mainEngine.setState(1); // call menu
+                    window_exit_loop();
+
                 break;
 
                 case ALLEGRO_EVENT_TIMER:

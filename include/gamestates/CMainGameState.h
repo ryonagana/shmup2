@@ -16,6 +16,8 @@ private:
     SPACESHIP *ship;
     CAMERA    ship_camera;
 
+    ALLEGRO_BITMAP *ship_bmp;
+
 
     // IGameState interface
 public:

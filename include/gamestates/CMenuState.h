@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <ctime>
 #include <memory>
+#include <string>
 #include "CEngine.h"
 #include "states/IGameState.h"
 #include "menu.h"
@@ -28,6 +29,10 @@ enum class MENU_OPT_TYPE : uint32_t {
 typedef  struct MENU_PARAM_CALLBACK {
     std::string name;
     std::string path;
+    MENU_PARAM_CALLBACK(const std::string name, const std::string path){
+        this->name = name;
+        this->path = path;
+    }
 }MENU_PARAM_CALLBACK;
 
 
@@ -39,6 +44,8 @@ private:
     CDirectory dir;
     CEngine *mainEngine;
     MENU_OPT_TYPE state;
+
+
 
 
 
@@ -62,7 +69,8 @@ private:
     // IGameState interface
 public:
 
-
+    std::vector<MENU_PARAM_CALLBACK*> mapList;
+    std::string mapSelected;
 
     CMenuState();
     CMenuState(CEngine *parent = nullptr);

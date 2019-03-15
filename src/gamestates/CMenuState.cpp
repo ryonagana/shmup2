@@ -5,6 +5,7 @@
 
 CMenuState::CMenuState()
 {
+    mapList = std::vector<MENU_PARAM_CALLBACK*>();
 
 }
 
@@ -12,23 +13,20 @@ CMenuState::CMenuState()
 /* LOAD ALL MAPS VIA CALLBACKS*/
 int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
     CMenuState *xtra = static_cast<CMenuState*>(extra);
-    static int i = 0;
+
 
      ALLEGRO_PATH *path = al_create_path(al_get_fs_entry_name(dir));
      std::string menu_name = al_get_path_basename(path);
 
-    MENU_PARAM_CALLBACK *param = new MENU_PARAM_CALLBACK;
-
-
-    param->name = menu_name;
-    param->path = al_get_path_filename(path);
+    MENU_PARAM_CALLBACK *param = new MENU_PARAM_CALLBACK(menu_name,al_get_path_filename(path));
 
 
     LOG("Dir Read: %s\nMap Found: %s", param->path.c_str(), param->name.c_str());
     //xtra->menuOpaqueCallbackDir(&xtra->menu_select_map, i++, menu_name);
-
+    xtra->mapList.push_back(new MENU_PARAM_CALLBACK(menu_name, param->path));
 
     al_destroy_path(path);
+    delete param;
 
     return ALLEGRO_FOR_EACH_FS_ENTRY_OK;
 }
@@ -157,7 +155,18 @@ void CMenuState::Draw()
     if(windowSelectMap){
          ImGui::Begin("Select Map", &windowSelectMap);
 
-         if(ImGui::Button("Quit")){
+         for(auto m : this->mapList){
+             std::string name = m->name + ".cbm";
+
+             if( ImGui::Button(name.c_str())){
+                mapSelected = m->name;
+                this->mainEngine->loadNewLevel(m->path);
+                this->mainEngine->setState(2); // goto game
+
+             }
+         }
+
+         if(ImGui::Button("Back")){
              windowSelectMap = false;
              windowMainMenu = true;
 
