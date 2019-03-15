@@ -8,6 +8,8 @@
 #include "mouse.h"
 #include "editor.h"
 #include "tiles.h"
+#include "imgui.h"
+#include "GUI/imgui_impl_allegro5.h"
 
 static ALLEGRO_EVENT_QUEUE *g_queue = nullptr;
 static ALLEGRO_DISPLAY *g_display = nullptr;
@@ -159,10 +161,19 @@ void window_init(void){
         editor_init();
     }
 
+    /* init IMGUI */
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGui::StyleColorsDark();
+    ImGui_ImplAllegro5_Init(get_window_display());
+
     is_window_open = true;
 }
 
 void window_close(void){
+    ImGui_ImplAllegro5_Shutdown();
+    ImGui::DestroyContext();
+
     destroy_path();
     mixer_destroy();
     config_destroy();

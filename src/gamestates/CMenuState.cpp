@@ -1,7 +1,6 @@
 #include "gamestates/CMenuState.h"
-
-
-
+#include "imgui.h"
+#include "examples/imgui_impl_allegro5.h"
 
 bool CMenuState::menuClickNewGame(int id){
     UNUSED_PARAM(id);
@@ -103,7 +102,11 @@ int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
 
 CMenuState::CMenuState(CEngine *parent) : mainEngine(parent)
 {
-    buttonTest = new  GUI::CButton(100,100,"");
+
+    teste = true;
+    windowMainMenu = true;
+    windowSelectMap = false;
+
 }
 
 
@@ -137,7 +140,7 @@ void CMenuState::Init()
 
     menu_create(&main_menu, 10);
     menu_add_entry(&main_menu, 1, "NEW GAME", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickNewGame, this, std::placeholders::_1));
-     menu_add_entry(&main_menu, 2, "MAP EDITOR", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
+    menu_add_entry(&main_menu, 2, "MAP EDITOR", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
     menu_add_entry(&main_menu, 3, "LOAD..", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
     menu_add_entry(&main_menu, 4, "SAVE..", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
     menu_add_entry(&main_menu, 4, "ABOUT", MENU_TYPE_SIMPLE, std::bind(&CMenuState::menuClickEditor, this, std::placeholders::_1));
@@ -177,10 +180,22 @@ void CMenuState::Start()
 
 void CMenuState::Destroy()
 {
+    ImGui_ImplAllegro5_Shutdown();
+    ImGui::DestroyContext();
 }
 
 void CMenuState::Update(ALLEGRO_EVENT *e)
 {
+
+
+
+
+    if(e->type == ALLEGRO_EVENT_DISPLAY_RESIZE){
+         ImGui_ImplAllegro5_InvalidateDeviceObjects();
+         al_acknowledge_resize(get_window_display());
+         ImGui_ImplAllegro5_CreateDeviceObjects();
+    }
+
 
 
     /*
@@ -205,6 +220,8 @@ void CMenuState::Update(ALLEGRO_EVENT *e)
 void CMenuState::HandleInput(ALLEGRO_EVENT *e){
 
 
+     ImGui_ImplAllegro5_ProcessEvent(e);
+
 
     if(e->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN){
         if(e->mouse.button & 1){
@@ -228,9 +245,47 @@ void CMenuState::HandleInput(ALLEGRO_EVENT *e){
 
 void CMenuState::Draw()
 {
-    al_clear_to_color(al_map_rgb(33,150,243));
 
-    buttonTest->Draw();
+    ImGui_ImplAllegro5_NewFrame();
+    ImGui::NewFrame();
+
+    if(windowMainMenu){
+        ImGui::Begin("Main Menu", &windowMainMenu, ImGuiWindowFlags_NoTitleBar |  ImGuiWindowFlags_NoCollapse );                          // Create a window called "Hello, world!" and append into it.
+
+        if(ImGui::Button("New Game")){
+                windowMainMenu = false;
+                windowSelectMap = true;
+        }
+
+        if(ImGui::Button("Editor")){
+
+        }
+
+        if(ImGui::Button("Quit")){
+            window_exit_loop();
+
+        }
+
+
+        ImGui::End();
+
+    }
+
+    if(windowSelectMap){
+         ImGui::Begin("Select Map", &windowSelectMap);
+
+         if(ImGui::Button("Quit")){
+             windowSelectMap = false;
+             windowMainMenu = true;
+
+         }
+
+         ImGui::End();
+    }
+
+    ImGui::Render();
+    al_clear_to_color(al_map_rgb(33,150,243));
+    ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
 
     /*
     switch(state){
@@ -250,6 +305,6 @@ void CMenuState::Draw()
     }
     */
 
-    text_draw(&credits, al_map_rgb(255,0,0), (window_get_width() / 2) + 100 , window_get_height() - 50, "by ArchDark\n And JRCL - 2019");
+   // text_draw(&credits, al_map_rgb(255,0,0), (window_get_width() / 2) + 100 , window_get_height() - 50, "by ArchDark\n And JRCL - 2019");
 
 }

@@ -5,6 +5,7 @@
 #include <math.h>
 #include <stdarg.h>
 
+
 static ALLEGRO_CONFIG *settings_conf = nullptr;
 
 static SETTINGS settings;

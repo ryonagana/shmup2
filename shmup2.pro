@@ -39,6 +39,11 @@ SOURCES += \
     src/GUI/CWidget.cpp \
     src/GUI/CButtonRect.cpp \
     src/GUI/CButton.cpp \
+    lib/imgui/imgui_demo.cpp \
+    lib/imgui/imgui_draw.cpp \
+    lib/imgui/imgui.cpp \
+    lib/imgui/imgui_widgets.cpp \
+    src/GUI/imgui_impl_allegro5.cpp \
 
 
 HEADERS += \
@@ -74,7 +79,9 @@ HEADERS += \
     include/Utils/CText.h \
     include/GUI/CWidget.h \
     include/GUI/CButtonRect.h \
-    include/GUI/CButton.h
+    include/GUI/CButton.h \
+    lib/imgui/imgui.h \
+    include/GUI/imgui_impl_allegro5.h \
 
 CONFIG += c++14
 QMAKE_CXXFLAGS += -std=c++14
@@ -90,7 +97,8 @@ win32: {
     INCLUDEPATH += include/
     DEPENDPATH  += include/
 
-    INCLUDEPATH += /
+    INCLUDEPATH += lib/imgui
+    DEPENDPATH  += lib/imgui
 
 
     DEFINES += ALLEGRO_STATICLINK

@@ -15,7 +15,6 @@
 #include "keyboard.h"
 #include "text.h"
 #include "Utils/CRandom.h"
-#include "GUI/CButton.h"
 
 
 enum class MENU_OPT_TYPE : uint32_t {
@@ -45,8 +44,11 @@ private:
 
     GAME_TEXT credits;
 
-    GUI::CButton *buttonTest;
+    bool windowMainMenu;
+    bool windowSelectMap;
 
+    bool redraw;
+    bool teste;
 
     // callback to call an action opaque  callback inside static callback
     void menuOpaqueCallbackDir(MENU *menu, int id, const std::string name);
