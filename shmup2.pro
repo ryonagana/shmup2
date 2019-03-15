@@ -90,6 +90,7 @@ win32: {
     INCLUDEPATH += include/
     DEPENDPATH  += include/
 
+    INCLUDEPATH += /
 
 
     DEFINES += ALLEGRO_STATICLINK
