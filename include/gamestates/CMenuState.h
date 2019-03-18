@@ -51,6 +51,7 @@ private:
 
     bool windowMainMenu;
     bool windowSelectMap;
+    bool windowEditorMode;
 
     bool redraw;
     bool teste;

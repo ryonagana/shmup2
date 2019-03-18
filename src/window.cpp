@@ -157,9 +157,9 @@ void window_init(void){
     }
 
 
-    if(config_get()->editor_mode.i_field){
-        editor_init();
-    }
+    // start the editor essential variables;
+    editor_init();
+
 
     /* init IMGUI */
     IMGUI_CHECKVERSION();
@@ -174,15 +174,14 @@ void window_close(void){
     ImGui_ImplAllegro5_Shutdown();
     ImGui::DestroyContext();
 
+    editor_destroy();
     destroy_path();
     mixer_destroy();
     config_destroy();
     tiles_destroy();
     mouse_destroy();
 
-    if(config_get()->editor_mode.i_field){
-        editor_destroy();
-    }
+
 
 
     if (g_display != nullptr) al_destroy_display(g_display);

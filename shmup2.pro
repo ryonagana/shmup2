@@ -44,6 +44,7 @@ SOURCES += \
     lib/imgui/imgui.cpp \
     lib/imgui/imgui_widgets.cpp \
     src/GUI/imgui_impl_allegro5.cpp \
+    src/gamestates/CEditorState.cpp
 
 
 HEADERS += \
@@ -82,6 +83,7 @@ HEADERS += \
     include/GUI/CButton.h \
     lib/imgui/imgui.h \
     include/GUI/imgui_impl_allegro5.h \
+    include/gamestates/CEditorState.h
 
 CONFIG += c++14
 QMAKE_CXXFLAGS += -std=c++14

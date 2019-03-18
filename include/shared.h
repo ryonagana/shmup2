@@ -58,6 +58,8 @@ void msg_write(int type,  const std::string &file, int line, const std::string f
     #define CRITICAL(msg, ...)
 #endif
 
+#define strncpy strncpy_s
+#define strcpy  strcpy_s
 //#define LOG(msg, ...)
 //#define WARN(msg, ...)
 //#define CRITICAL(msg, ...)

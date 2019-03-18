@@ -36,7 +36,7 @@ typedef struct MAPCOORD {
 typedef struct LEVEL {
     char magic[6]; // CBMAP
     int  ver;
-    char mapname[20];
+    char mapname[96];
     MAPCOORD player_pos;
     MAPCOORD keys[4];
     bool valid_file;
@@ -47,6 +47,10 @@ typedef struct LEVEL {
     TILE bg_layer [MAX_GRID_Y][MAX_GRID_X];
     TILE map_layer[MAX_GRID_Y][MAX_GRID_X];
     TILE obj_layer[MAX_GRID_Y][MAX_GRID_X];
+
+    LEVEL(){
+        *mapname = {};
+    }
 
 }LEVEL;
 

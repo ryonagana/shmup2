@@ -58,6 +58,6 @@ void CMainGameState::Draw()
 
 void CMainGameState::HandleInput(ALLEGRO_EVENT *e)
 {
-    keyboard_map(e);
+    keyboard_update(e);
     return;
 }

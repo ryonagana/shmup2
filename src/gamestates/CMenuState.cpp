@@ -37,6 +37,7 @@ CMenuState::CMenuState(CEngine *parent) : mainEngine(parent)
     teste = true;
     windowMainMenu = true;
     windowSelectMap = false;
+    windowEditorMode = false;
 
 }
 
@@ -139,7 +140,8 @@ void CMenuState::Draw()
         }
 
         if(ImGui::Button("Editor")){
-
+            windowMainMenu = false;
+            windowEditorMode = true;
         }
 
         if(ImGui::Button("Quit")){
@@ -175,8 +177,29 @@ void CMenuState::Draw()
          ImGui::End();
     }
 
+    if(windowEditorMode){
+         ImGui::Begin("Select Map for Editor:", &windowEditorMode);
+         for(auto m : this->mapList){
+             std::string name = m->name + ".cbm";
+
+             if( ImGui::Button(name.c_str())){
+                mapSelected = m->name;
+                this->mainEngine->loadNewLevel(m->path);
+                this->mainEngine->setState(3); // goto editor
+
+             }
+        }
+        if(ImGui::Button("Back")){
+             windowEditorMode = false;
+             windowMainMenu = true;
+
+        }
+        ImGui::End();
+    }
+
     ImGui::Render();
     al_clear_to_color(al_map_rgb(33,150,243));
     ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
+
 
 }

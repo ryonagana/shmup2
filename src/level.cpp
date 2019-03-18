@@ -25,6 +25,7 @@ void level_init_default(LEVEL* level){
     level->background_id = 0;
     level->valid_file = false;
 
+
     strncpy(level->mapname, "Mapa Teste", 19);
 
     for(unsigned int i = 0; i < 4; i++){
@@ -93,6 +94,8 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool 
 
     strncpy(path_lowercase, filepath, strlen(filepath) + 1);
 
+
+    strcpy(lvl->mapname, mapname);
 
 
     ALLEGRO_FILE *fp = al_fopen(path_lowercase,"rb");

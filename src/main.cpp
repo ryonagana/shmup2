@@ -5,6 +5,8 @@
 #include "menu.h"
 #include "dir.h"
 #include "CEngine.h"
+#include "imgui.h"
+#include "GUI/imgui_impl_allegro5.h"
 
 
 int main(int  argc, char *argv[])

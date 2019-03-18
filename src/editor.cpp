@@ -3,7 +3,8 @@
 #include "render.h"
 #include "thread.h"
 #include "emitter.h"
-
+#include "imgui.h"
+#include "GUI/imgui_impl_allegro5.h"
 
 static EDITOR *editor = nullptr;
 static bool opened_dialog = false;
@@ -25,6 +26,12 @@ static char map_path[4096];
 static bool is_special_tile = false;
 
 
+static bool saveLevelDialog = false;
+static bool loadLevelDialog = false;
+
+
+static bool dialogSaveStatus = false;
+static bool dialogLoadStatus = false;
 
 typedef enum EDITOR_DIALOG_TYPE {
     EDITOR_SAVE_DIALOG,
@@ -56,7 +63,7 @@ static TILE editor_tiles[GRID_TOOLS_H][GRID_TOOLS_W];
 static TILE editor_objects[GRID_TOOLS_H][GRID_TOOLS_W];
 
 
-static CParticleEmitter *testEmitter = nullptr;
+
 
 static char state_text[65];
 
@@ -182,7 +189,7 @@ void editor_init(void){
     vector_Init(&pos,100,100);
     vector_Init(&origin,100,45);
 
-    testEmitter = new CParticleEmitter(100,100,45);
+
 
     //emitter = emitter_create(pos, origin, .1,0.1, 3000, 90, 10, al_map_rgb(255,0,0));
 
@@ -216,11 +223,14 @@ LEVEL* editor_load_path(const char *filename){
 bool editor_load_mem(LEVEL *level){
 
     char *layer_name = nullptr;
+    std::string title = "CB EDITOR - " + std::string(level->mapname) + ".bpm";
 
     editor->level  =  level;
     editor->layer  = EDITOR_LAYER_MAP;
 
-    al_set_window_title(get_window_display(), "CB EDITOR - noname.cbm");
+
+
+    al_set_window_title(get_window_display(), title.c_str());
 
     editor_layer_to_str(editor->layer);
     if(layer_name) delete[] layer_name;
@@ -230,12 +240,14 @@ bool editor_load_mem(LEVEL *level){
 
 void editor_update_input(ALLEGRO_EVENT *e)
 {
-    UNUSED_PARAM(e);
+    ImGui_ImplAllegro5_ProcessEvent(e);
+
 
     if(keyboard_pressed(ALLEGRO_KEY_LCTRL) && editor->state != EDITOR_STATE_SAVE ){
         if(keyboard_pressed(ALLEGRO_KEY_F1) && editor->state != EDITOR_STATE_SAVE){
-            editor->state = EDITOR_STATE_SAVE;
-            opened_dialog = true;
+            saveLevelDialog = true;
+            //editor->state = EDITOR_STATE_SAVE;
+            //opened_dialog = true;
 
 
         }
@@ -243,8 +255,9 @@ void editor_update_input(ALLEGRO_EVENT *e)
 
     if(keyboard_pressed(ALLEGRO_KEY_LCTRL) && editor->state != EDITOR_STATE_LOAD){
         if(keyboard_pressed(ALLEGRO_KEY_F2) && editor->state != EDITOR_STATE_LOAD){
-            editor->state = EDITOR_STATE_LOAD;
-             opened_dialog = true;
+            loadLevelDialog = true;
+            //editor->state = EDITOR_STATE_LOAD;
+            // opened_dialog = true;
        }
     }
 
@@ -295,6 +308,19 @@ void editor_update_input(ALLEGRO_EVENT *e)
     }
     */
      editor_layer_to_str(editor->layer);
+
+
+     keyboard_update(e);
+
+     //this prevents map being updated with mouse cursor while the dialog is opened
+     if(!saveLevelDialog &&
+     !loadLevelDialog &&
+     !dialogLoadStatus &&
+     !dialogSaveStatus)
+     {
+
+        mouse_update(e);
+     }
 }
 
 void editor_update(ALLEGRO_EVENT *e)
@@ -302,7 +328,8 @@ void editor_update(ALLEGRO_EVENT *e)
 
     UNUSED_PARAM(e);
 
-    testEmitter->Update(45);
+
+
     //emitter_update(emitter, e->timer.count,RAND_INT(1,100) / 100 , RAND_INT(1,100) / 100,  RAND_NUMBER() * 400, RAND_NUMBER() * 400 , RAND_NUMBER() * 5 );
 
 
@@ -418,7 +445,10 @@ void editor_map_to_coord(void)
 
 void editor_render(void)
 {
-    render_background_color(editor->level);
+
+
+
+
     editor_render_canvas();
     editor_render_bg();
     tile_selected_miniature =  tiles_get_by_id(editor->selected_tile);
@@ -429,8 +459,65 @@ void editor_render(void)
 
     al_draw_scaled_bitmap(tile_selected_miniature,0,0, TILE_SIZE, TILE_SIZE, 22 * TILE_SIZE, 16 * TILE_SIZE, TILE_SIZE * 2,TILE_SIZE * 2,0);
 
-    testEmitter->Draw();
-    //emitter_draw(emitter, nullptr);
+    ImGui_ImplAllegro5_NewFrame();
+    ImGui::NewFrame();
+
+    if(saveLevelDialog){
+        char buf[1024] = {};
+        ImGui::Begin("Save Map", &saveLevelDialog);
+        ImGui::InputText("Filename:", buf, 1024);
+        if(ImGui::Button("Save")){
+            level_save(get_window_display(), editor->level, buf, false);
+            dialogSaveStatus = true;
+            saveLevelDialog = false;
+        }
+        if(ImGui::Button("Cancel")){
+            saveLevelDialog = false;
+        }
+        ImGui::End();
+    }
+
+    if(loadLevelDialog){
+        char buf[1024] = {};
+        ImGui::Begin("Save Map", &saveLevelDialog);
+        ImGui::InputText("Filename:", buf, 1024);
+        if(ImGui::Button("Save")){
+            level_load(get_window_display(), editor->level, editor->level->mapname, false);
+            dialogLoadStatus = true;
+            loadLevelDialog = false;
+        }
+        if(ImGui::Button("Cancel")){
+            loadLevelDialog = false;
+        }
+        ImGui::End();
+    }
+
+    if(dialogLoadStatus){
+        ImGui::Begin("Status:", &dialogSaveStatus);
+        ImGui::Text("%s loaded!", editor->level->mapname);
+        if(ImGui::Button("Close")){
+            dialogLoadStatus = false;
+        }
+        ImGui::End();
+    }
+
+
+    if(dialogSaveStatus){
+        ImGui::Begin("Status:", &dialogSaveStatus);
+        ImGui::Text("Map Saved Sucess!");
+        if(ImGui::Button("Close")){
+            dialogSaveStatus = false;
+        }
+        ImGui::End();
+    }
+
+
+
+    ImGui::Render();
+    //al_clear_to_color(al_map_rgb(33,150,243));
+    ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
+
+
 }
 
 
