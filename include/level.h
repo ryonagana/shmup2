@@ -21,7 +21,7 @@
 
 
 #define MAP_ID "CBMAP"
-#define MAP_VER 1
+#define MAP_VER 2
 typedef struct TILE {
     unsigned char id;
     bool passable;
@@ -33,12 +33,16 @@ typedef struct MAPCOORD {
 }MAPCOORD;
 
 
+
+
+
 typedef struct LEVEL {
     char magic[6]; // CBMAP
     int  ver;
     char mapname[96];
     MAPCOORD player_pos;
     MAPCOORD keys[4];
+    std::string level_path;
     bool valid_file;
     unsigned char map_width;
     unsigned char map_height;
@@ -52,8 +56,9 @@ typedef struct LEVEL {
         *mapname = {};
     }
 
-}LEVEL;
 
+
+}LEVEL;
 
 
 void level_init_default(LEVEL* level);
@@ -66,5 +71,8 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool 
 
 bool level_file_exists(const char *mapname);
 TILE *level_get_tile(TILE map[MAX_GRID_Y][MAX_GRID_X], int x, int y);
+void level_copy_tiles(LEVEL *dest, const LEVEL *orig);
+
+
 
 #endif

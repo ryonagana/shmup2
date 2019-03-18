@@ -17,6 +17,7 @@ class CEngine {
 private:
     CGameStateManager stateManager;
     LEVEL loadedLevel;
+    bool redraw;
     //TODO ENEMIES LIST
     //TODO POWERUP/COINS/GOODIES/LIFE/ITEMS LIST
     //TODO PARTICLE LIST

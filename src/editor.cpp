@@ -32,6 +32,13 @@ static bool loadLevelDialog = false;
 
 static bool dialogSaveStatus = false;
 static bool dialogLoadStatus = false;
+static bool dialogToolbar = true;
+static  bool confirmSaveDialogWindow = false;
+
+
+static bool openDialogSaveDialog();
+static bool openDialogLoadDialog();
+static bool openDialogToolbar();
 
 typedef enum EDITOR_DIALOG_TYPE {
     EDITOR_SAVE_DIALOG,
@@ -242,31 +249,34 @@ void editor_update_input(ALLEGRO_EVENT *e)
 {
     ImGui_ImplAllegro5_ProcessEvent(e);
 
-
-    if(keyboard_pressed(ALLEGRO_KEY_LCTRL) && editor->state != EDITOR_STATE_SAVE ){
-        if(keyboard_pressed(ALLEGRO_KEY_F1) && editor->state != EDITOR_STATE_SAVE){
-            saveLevelDialog = true;
-            //editor->state = EDITOR_STATE_SAVE;
-            //opened_dialog = true;
-
-
-        }
+    if(e->type == ALLEGRO_EVENT_DISPLAY_CLOSE){
+        window_exit_loop();
     }
 
-    if(keyboard_pressed(ALLEGRO_KEY_LCTRL) && editor->state != EDITOR_STATE_LOAD){
-        if(keyboard_pressed(ALLEGRO_KEY_F2) && editor->state != EDITOR_STATE_LOAD){
-            loadLevelDialog = true;
+    if( (keyboard_pressed(ALLEGRO_KEY_LCTRL) && keyboard_pressed(ALLEGRO_KEY_F2)) && editor->state != EDITOR_STATE_LOAD){
+        loadLevelDialog |= true;
+    }
+
+    if( (keyboard_pressed(ALLEGRO_KEY_LCTRL) && keyboard_pressed(ALLEGRO_KEY_F1)) && editor->state != EDITOR_STATE_LOAD){
+        saveLevelDialog |= true;
+    }
+
+
+    if( (keyboard_pressed(ALLEGRO_KEY_LCTRL) && keyboard_pressed(ALLEGRO_KEY_T)) && editor->state != EDITOR_STATE_LOAD){
+            loadLevelDialog |= true;
             //editor->state = EDITOR_STATE_LOAD;
             // opened_dialog = true;
-       }
     }
 
+
+    /*
     if(keyboard_pressed(ALLEGRO_KEY_P)){
 
         editor_select_tile(SPECIAL_TILE_PLAYER_POS);
         is_special_tile = true;
         editor->layer = EDITOR_LAYER_MAP;
     }
+    */
 
     if(keyboard_pressed(ALLEGRO_KEY_W)){
         editor_move_camera(0,-1);
@@ -443,7 +453,7 @@ void editor_map_to_coord(void)
     editor->editor_rect.y2 = y2;
 }
 
-void editor_render(void)
+void editor_draw(void)
 {
 
 
@@ -462,53 +472,22 @@ void editor_render(void)
     ImGui_ImplAllegro5_NewFrame();
     ImGui::NewFrame();
 
-    if(saveLevelDialog){
-        char buf[1024] = {};
-        ImGui::Begin("Save Map", &saveLevelDialog);
-        ImGui::InputText("Filename:", buf, 1024);
-        if(ImGui::Button("Save")){
-            level_save(get_window_display(), editor->level, buf, false);
-            dialogSaveStatus = true;
-            saveLevelDialog = false;
-        }
-        if(ImGui::Button("Cancel")){
-            saveLevelDialog = false;
-        }
-        ImGui::End();
-    }
+    if(saveLevelDialog)   openDialogSaveDialog();
+    if(loadLevelDialog)   openDialogLoadDialog();
+    if(dialogToolbar)     openDialogToolbar();
 
-    if(loadLevelDialog){
-        char buf[1024] = {};
-        ImGui::Begin("Save Map", &saveLevelDialog);
-        ImGui::InputText("Filename:", buf, 1024);
-        if(ImGui::Button("Save")){
-            level_load(get_window_display(), editor->level, editor->level->mapname, false);
-            dialogLoadStatus = true;
-            loadLevelDialog = false;
-        }
-        if(ImGui::Button("Cancel")){
-            loadLevelDialog = false;
-        }
-        ImGui::End();
-    }
+    if(confirmSaveDialogWindow){
+            ImGui::Begin("Status:", &confirmSaveDialogWindow);
+            ImGui::BulletText("the Map is not saved.. do you want to save it now?");
+            if(ImGui::Button("Yes..")){
 
-    if(dialogLoadStatus){
-        ImGui::Begin("Status:", &dialogSaveStatus);
-        ImGui::Text("%s loaded!", editor->level->mapname);
-        if(ImGui::Button("Close")){
-            dialogLoadStatus = false;
-        }
-        ImGui::End();
-    }
+            }
 
+            if(ImGui::Button("No!")){
 
-    if(dialogSaveStatus){
-        ImGui::Begin("Status:", &dialogSaveStatus);
-        ImGui::Text("Map Saved Sucess!");
-        if(ImGui::Button("Close")){
-            dialogSaveStatus = false;
-        }
-        ImGui::End();
+            }
+
+            ImGui::End();
     }
 
 
@@ -820,3 +799,63 @@ static void editor_load_tile_file(const char* tile_file){
 }
 
 
+
+EDITOR *editor_get()
+{
+    return editor;
+}
+
+
+static bool openDialogSaveDialog(){
+    char buf[1024] = {};
+    ImGui::Begin("Save Map", &saveLevelDialog);
+    ImGui::InputText("Filename:", buf, 1024);
+    if(ImGui::Button("Save")){
+
+        if(editor->level){
+            level_init_default(editor->level);
+        }
+
+        level_save(get_window_display(), editor->level, buf, false);
+        dialogSaveStatus = true;
+        saveLevelDialog = false;
+    }
+    if(ImGui::Button("Cancel")){
+        saveLevelDialog = false;
+    }
+    ImGui::End();
+
+    return saveLevelDialog;
+}
+static bool openDialogLoadDialog(){
+    char buf[1024] = {};
+    strncpy(buf, 1024, editor->level->mapname, strlen(editor->level->mapname));
+    ImGui::Begin("Load Level", &loadLevelDialog);
+    ImGui::InputTextWithHint("Filename:", "Teste", buf, 1024);
+    if(ImGui::Button("Load Level")){
+
+        if(editor->level){
+            level_init_default(editor->level);
+        }
+
+        level_load(get_window_display(), editor->level, editor->level->mapname, false);
+        dialogLoadStatus = true;
+        loadLevelDialog = false;
+    }
+    if(ImGui::Button("Cancel")){
+        loadLevelDialog = false;
+    }
+    ImGui::End();
+
+    return loadLevelDialog;
+}
+
+static bool openDialogToolbar(){
+
+    if(ImGui::BeginMenu("Menu")){
+        ImGui::MenuItem("Teste", "CTRL+I", true, true);
+        ImGui::EndMenu();
+    }
+
+    return dialogToolbar;
+}

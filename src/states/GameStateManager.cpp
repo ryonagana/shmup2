@@ -12,6 +12,12 @@ IGameState *CGameStateManager::findStateById(int id)
 
 }
 
+bool CGameStateManager::findAndRemoveById(int id)
+{
+    UNUSED_PARAM(id);
+    return false;
+}
+
 CGameStateManager::CGameStateManager()
 {
     states  = std::vector< std::shared_ptr<IGameState>>();
@@ -35,8 +41,11 @@ bool CGameStateManager::addState(const std::string &name, int id, std::shared_pt
     return true;
 }
 
-bool CGameStateManager::removeState(const int index)
+bool CGameStateManager::removeState(const int id)
 {
+    //auto state = findStateById(id);
+
+
     //auto f = states.erase(states.begin(), states.end() + )
     return false;
 }

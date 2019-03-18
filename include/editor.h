@@ -76,9 +76,11 @@ LEVEL* editor_load_path(const char *filename);
 void editor_update_input(ALLEGRO_EVENT *e);
 TILE* editor_select_layer(EDITOR_LAYER_STATE state, int tilex, int tiley);
 void editor_update(ALLEGRO_EVENT *e);
-void editor_render(void);
+void editor_draw(void);
 void editor_map_to_coord(void);
 void editor_destroy(void);
+
+EDITOR *editor_get();
 
 
 

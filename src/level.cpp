@@ -69,6 +69,7 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool 
 
    if(mapname){
         filepath = get_file_path("map", mapname);
+        lvl->level_path = filepath;
 
         if(!al_filename_exists(filepath)){
            WARN("FILENAME %s not loaded!", filepath);
@@ -96,9 +97,10 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool 
 
 
     strcpy(lvl->mapname, mapname);
+    lvl->level_path = path_lowercase;
 
 
-    ALLEGRO_FILE *fp = al_fopen(path_lowercase,"rb");
+    ALLEGRO_FILE *fp = al_fopen(lvl->level_path.c_str(),"rb");
 
     al_fread(fp, lvl->magic, sizeof (char) * strlen(MAP_ID));
 
@@ -115,7 +117,7 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool 
 
 
 
-    if(lvl->ver > MAP_VER){
+    if(lvl->ver > MAP_VER || lvl->ver != MAP_VER){
        WARN("%s map version incorrect ", filepath);
        goto FINISH;
     }
@@ -462,4 +464,35 @@ bool level_file_exists(const char *mapname){
     if(al_filename_exists(path)) return true;
 
     return false;
+}
+
+// just copy the tiles layers to a new level
+// if the level struct is t changes  this function must change too
+void level_copy_tiles(LEVEL *dest, const LEVEL *orig){
+    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+        for(unsigned int x = 0; x < MAX_GRID_X;x++){
+            dest->bg_layer[y][x].id = orig->bg_layer[y][x].id;
+            dest->bg_layer[y][x].block = orig->bg_layer[y][x].block;
+            dest->bg_layer[y][x].passable = orig->bg_layer[y][x].passable;
+        }
+    }
+
+    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+        for(unsigned int x = 0; x < MAX_GRID_X;x++){
+            dest->map_layer[y][x].id = orig->map_layer[y][x].id;
+            dest->map_layer[y][x].block = orig->map_layer[y][x].block;
+            dest->map_layer[y][x].passable = orig->map_layer[y][x].passable;
+        }
+    }
+
+
+    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
+        for(unsigned int x = 0; x < MAX_GRID_X;x++){
+            dest->obj_layer[y][x].id = orig->obj_layer[y][x].id;
+            dest->obj_layer[y][x].block = orig->obj_layer[y][x].block;
+            dest->obj_layer[y][x].passable = orig->obj_layer[y][x].passable;
+        }
+    }
+
+    return;
 }

@@ -21,6 +21,7 @@ CEngine::CEngine()
 
     stateManager.InitStates();
 
+    redraw = false;
     //stateManager.addState("Menu",1, std::make_unique<IGameState>(new  CMainGameState(nullptr)));
 
     //stateManager.addState("Teste",0, std::unique_ptr<GameState>(new CMenuState(nullptr)));

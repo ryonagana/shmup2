@@ -36,9 +36,6 @@ SOURCES += \
     src/Utils/CRandom.cpp \
     src/Utils/CRect.cpp \
     src/Utils/CText.cpp \
-    src/GUI/CWidget.cpp \
-    src/GUI/CButtonRect.cpp \
-    src/GUI/CButton.cpp \
     lib/imgui/imgui_demo.cpp \
     lib/imgui/imgui_draw.cpp \
     lib/imgui/imgui.cpp \
@@ -78,9 +75,6 @@ HEADERS += \
     include/Utils/CRandom.h \
     include/Utils/CRect.h \
     include/Utils/CText.h \
-    include/GUI/CWidget.h \
-    include/GUI/CButtonRect.h \
-    include/GUI/CButton.h \
     lib/imgui/imgui.h \
     include/GUI/imgui_impl_allegro5.h \
     include/gamestates/CEditorState.h

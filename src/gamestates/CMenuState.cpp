@@ -105,6 +105,8 @@ void CMenuState::HandleInput(ALLEGRO_EVENT *e){
      ImGui_ImplAllegro5_ProcessEvent(e);
 
 
+
+
     if(e->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN){
         if(e->mouse.button & 1){
            mouse_get()->lButton = true;
@@ -179,16 +181,19 @@ void CMenuState::Draw()
 
     if(windowEditorMode){
          ImGui::Begin("Select Map for Editor:", &windowEditorMode);
+
          for(auto m : this->mapList){
              std::string name = m->name + ".cbm";
 
              if( ImGui::Button(name.c_str())){
+
                 mapSelected = m->name;
                 this->mainEngine->loadNewLevel(m->path);
                 this->mainEngine->setState(3); // goto editor
 
              }
         }
+
         if(ImGui::Button("Back")){
              windowEditorMode = false;
              windowMainMenu = true;
