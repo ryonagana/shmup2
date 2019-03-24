@@ -36,7 +36,6 @@ SOURCES += \
     src/Utils/CRandom.cpp \
     src/Utils/CRect.cpp \
     src/Utils/CText.cpp \
-    lib/imgui/imgui_demo.cpp \
     lib/imgui/imgui_draw.cpp \
     lib/imgui/imgui.cpp \
     lib/imgui/imgui_widgets.cpp \
@@ -112,6 +111,9 @@ win32: {
 unix: {
     INCLUDEPATH += include/
     DEPENDPATH  += include/
+
+    INCLUDEPATH += lib/imgui
+    DEPENDPATH  += lib/imgui
 
     INCLUDEPATH += -I/usr/local/include
     DEPENDPATH  += /usr/local/include

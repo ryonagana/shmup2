@@ -829,7 +829,8 @@ static bool openDialogSaveDialog(){
 }
 static bool openDialogLoadDialog(){
     char buf[1024] = {};
-    strncpy(buf, 1024, editor->level->mapname, strlen(editor->level->mapname));
+    strncpy(buf,editor->level->mapname, 1024);
+    //strncpy(buf, 1024, editor->level->mapname, strlen(editor->level->mapname));
     ImGui::Begin("Load Level", &loadLevelDialog);
     ImGui::InputTextWithHint("Filename:", "Teste", buf, 1024);
     if(ImGui::Button("Load Level")){
