@@ -7,6 +7,9 @@
 CMenuState::CMenuState()
 {
     mapList = std::vector<MENU_PARAM_CALLBACK*>();
+    windowNewMap = false;
+    windowEditorMode = false;
+
 
 }
 
@@ -30,6 +33,128 @@ int CMenuState::readMapDirCallback(ALLEGRO_FS_ENTRY *dir, void *extra){
     delete param;
 
     return ALLEGRO_FOR_EACH_FS_ENTRY_OK;
+}
+
+bool CMenuState::windowMainMenuDialog()
+{
+    ImGui::Begin("Main Menu", &windowMainMenu, ImGuiWindowFlags_NoTitleBar |  ImGuiWindowFlags_NoCollapse );                          // Create a window called "Hello, world!" and append into it.
+
+    if(ImGui::Button("New Game")){
+            windowMainMenu = false;
+            windowSelectMap = true;
+    }
+
+    if(ImGui::Button("Editor")){
+        windowMainMenu = true;
+        windowEditorMode = true;
+    }
+
+    if(ImGui::Button("Quit")){
+        window_exit_loop();
+
+    }
+
+
+    ImGui::End();
+
+    return windowMainMenu;
+}
+
+bool CMenuState::windowNewGameDialog()
+{
+    ImGui::Begin("Select Map for Editor:", &windowEditorMode,  ImGuiWindowFlags_NoTitleBar |  ImGuiWindowFlags_NoCollapse );
+
+    if( ImGui::Button("New Map...")){
+          LEVEL *lvl =  this->mainEngine->getLoadedLevel();
+          level_init_default(lvl); // will destroy all map changes and set to default
+          windowNewMap = true;
+    }
+
+    for(auto m : this->mapList){
+
+
+        if( ImGui::Button(m->name.c_str())){
+
+           mapSelected = m->name;
+           this->mainEngine->loadNewLevel(m->path);
+           this->mainEngine->setState(GameStateID::Editor); // go to editor
+
+        }
+   }
+
+   if(ImGui::Button("Back")){
+        windowEditorMode = false;
+        windowMainMenu = true;
+
+   }
+   ImGui::End();
+
+   return windowEditorMode;
+}
+
+bool CMenuState::windowNewGameParamsDialog()
+{
+    char buf[1024] = "";
+    int h = static_cast<int>(this->mainEngine->getLoadedLevel()->map_width);
+    int w = static_cast<int>(this->mainEngine->getLoadedLevel()->map_height);
+    bool max_h = false, max_w = false;
+
+    ImGui::Begin("New Map", &windowNewMap,  ImGuiWindowFlags_NoTitleBar);
+
+    ImGui::InputText("Map Name",buf, 1024);
+    ImGui::InputInt("Grid Size Width", &w, 1,100);
+    ImGui::InputInt("Grid Size Height",&h, 1,100);
+
+    if(w > MAX_GRID_X) max_w = true;
+    else max_w = false;
+
+    if(h > MAX_GRID_Y) max_w = true;
+    else  max_h = false;
+
+    if(ImGui::Button("Ok")){
+
+        if(max_w){
+            ImGui::Text("Sorry Max Width: %d  ", MAX_GRID_X);
+
+        }else if(max_h){
+             ImGui::Text("Sorry Max Height %d  ", MAX_GRID_Y);
+        }else {
+              windowNewMap = false;
+              windowMainMenu = true;
+              level_save(get_window_display(), this->mainEngine->getLoadedLevel(), "~map_tmp.cbm", false);
+              this->mainEngine->setState(GameStateID::Editor);
+        }
+    }
+
+    ImGui::End();
+
+    return windowNewMap;
+}
+
+bool CMenuState::windowSelectMapDialog()
+{
+    ImGui::Begin("Select Map", &windowSelectMap);
+
+    for(auto m : this->mapList){
+
+
+        if( ImGui::Button(m->name.c_str())){
+           mapSelected = m->name;
+           this->mainEngine->loadNewLevel(m->path);
+           this->mainEngine->setState(GameStateID::MainGame); // goto game
+
+        }
+    }
+
+    if(ImGui::Button("Back")){
+        windowSelectMap = false;
+        windowMainMenu = true;
+
+    }
+
+    ImGui::End();
+
+    return windowSelectMap;
 }
 
 CMenuState::CMenuState(CEngine *parent) : mainEngine(parent)
@@ -89,9 +214,6 @@ void CMenuState::Destroy()
 void CMenuState::Update(ALLEGRO_EVENT *e)
 {
 
-
-
-
     if(e->type == ALLEGRO_EVENT_DISPLAY_RESIZE){
          ImGui_ImplAllegro5_InvalidateDeviceObjects();
          al_acknowledge_resize(get_window_display());
@@ -130,77 +252,24 @@ void CMenuState::HandleInput(ALLEGRO_EVENT *e){
 
 void CMenuState::Draw()
 {
-
     ImGui_ImplAllegro5_NewFrame();
     ImGui::NewFrame();
 
     if(windowMainMenu){
-        ImGui::Begin("Main Menu", &windowMainMenu, ImGuiWindowFlags_NoTitleBar |  ImGuiWindowFlags_NoCollapse );                          // Create a window called "Hello, world!" and append into it.
-
-        if(ImGui::Button("New Game")){
-                windowMainMenu = false;
-                windowSelectMap = true;
-        }
-
-        if(ImGui::Button("Editor")){
-            windowMainMenu = false;
-            windowEditorMode = true;
-        }
-
-        if(ImGui::Button("Quit")){
-            window_exit_loop();
-
-        }
-
-
-        ImGui::End();
+        windowMainMenuDialog();
 
     }
 
     if(windowSelectMap){
-         ImGui::Begin("Select Map", &windowSelectMap);
-
-         for(auto m : this->mapList){
-
-
-             if( ImGui::Button(m->name.c_str())){
-                mapSelected = m->name;
-                this->mainEngine->loadNewLevel(m->path);
-                this->mainEngine->setState(GameStateID::MainGame); // goto game
-
-             }
-         }
-
-         if(ImGui::Button("Back")){
-             windowSelectMap = false;
-             windowMainMenu = true;
-
-         }
-
-         ImGui::End();
+        windowSelectMapDialog();
     }
 
     if(windowEditorMode){
-         ImGui::Begin("Select Map for Editor:", &windowEditorMode);
+       windowNewGameDialog();
+    }
 
-         for(auto m : this->mapList){
-
-
-             if( ImGui::Button(m->name.c_str())){
-
-                mapSelected = m->name;
-                this->mainEngine->loadNewLevel(m->path);
-                this->mainEngine->setState(GameStateID::Editor); // goto editor
-
-             }
-        }
-
-        if(ImGui::Button("Back")){
-             windowEditorMode = false;
-             windowMainMenu = true;
-
-        }
-        ImGui::End();
+    if(windowNewMap){
+         windowNewGameParamsDialog();
     }
 
     ImGui::Render();

@@ -171,8 +171,9 @@ void window_init(void){
 }
 
 void window_close(void){
-    ImGui_ImplAllegro5_Shutdown();
-    ImGui::DestroyContext();
+    //ImGui::DestroyContext();
+    //ImGui_ImplAllegro5_Shutdown();
+
 
     editor_destroy();
     destroy_path();

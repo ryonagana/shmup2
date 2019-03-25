@@ -52,6 +52,7 @@ private:
     bool windowMainMenu;
     bool windowSelectMap;
     bool windowEditorMode;
+    bool windowNewMap;
 
     bool redraw;
     bool teste;
@@ -67,11 +68,18 @@ private:
      static int  readMapDirCallbackEditor(ALLEGRO_FS_ENTRY *dir, void *extra); // this is a  callback to list all map files inside "map" folder for editor
      static bool menuClickSelectMap(int id);
 
+     bool windowMainMenuDialog();
+     bool windowNewGameDialog();
+     bool windowNewGameParamsDialog();
+     bool windowSelectMapDialog();
+
     // IGameState interface
 public:
 
     std::vector<MENU_PARAM_CALLBACK*> mapList;
     std::string mapSelected;
+
+
 
     CMenuState();
     CMenuState(CEngine *parent = nullptr);

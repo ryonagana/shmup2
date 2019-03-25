@@ -324,9 +324,7 @@ void editor_update_input(ALLEGRO_EVENT *e)
 
      //this prevents map being updated with mouse cursor while the dialog is opened
      if(!saveLevelDialog &&
-     !loadLevelDialog &&
-     !dialogLoadStatus &&
-     !dialogSaveStatus)
+     !loadLevelDialog)
      {
 
         mouse_update(e);
