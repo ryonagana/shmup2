@@ -13,11 +13,11 @@ CEngine::CEngine()
    // stateManager.addState("Menu",1, menuState);
 
 
-    stateManager.addState("Menu"  ,1, std::make_shared<CMenuState>(this));
-    stateManager.addState("Game"  ,2, std::make_shared<CMainGameState>(this));
-    stateManager.addState("Editor",3, std::make_shared<CEditorState>(this));
+    stateManager.addState("Menu"  , GameStateID::Menu , std::make_shared<CMenuState>(this));
+    stateManager.addState("Game"  , GameStateID::MainGame, std::make_shared<CMainGameState>(this));
+    stateManager.addState("Editor", GameStateID::Editor, std::make_shared<CEditorState>(this));
 
-    stateManager.SetStateActive(1);
+    stateManager.SetStateActive(GameStateID::Menu);
 
     stateManager.InitStates();
 
@@ -50,11 +50,16 @@ void CEngine::loadNewLevel(const std::string &mapname)
     level_load(get_window_display(), &this->loadedLevel, mapname.c_str(), false);
 }
 
-void CEngine::setState(int index)
+void CEngine::setState(const GameStateID id)
 {
-    stateManager.SetStateActive(index);
+    stateManager.SetStateActive(id);
     stateManager.stateActive()->Start();
     return;
+}
+
+CGameStateManager CEngine::getStateManager()
+{
+    return this->stateManager;
 }
 
 LEVEL *CEngine::getLoadedLevel(){

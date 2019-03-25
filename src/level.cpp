@@ -170,7 +170,7 @@ bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool 
 
      if(lvl->valid_file == valid_header)
      {
-        LOG("MAP LOADED SUCCESS!");
+        LOG("MAP [ %s ] LOADED SUCCESS!", path_lowercase);
      }
 
      if(dialog){
@@ -280,6 +280,8 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char *mapname, bool dialog)
 
     lvl->valid_file = true;
 
+     LOG("MAP [ %s ] SAVED SUCCESS!", file_lc);
+
     al_fclose(fp);
 
     if(dialog){
@@ -288,169 +290,6 @@ bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char *mapname, bool dialog)
 
     //if(filepath) free(filepath);
     return true;
-}
-
-
-
-/* LEVEL LOADER NON DEPENDS WITH ALLEGRO_DISPLAY */
-bool level_load_i(LEVEL *lvl, char * mapname)
-{
-
-
-
-    char path_lowercase[4096] = "";
-
-    strncpy(path_lowercase, mapname, strlen(mapname) + 1);
-
-
-
-    ALLEGRO_FILE *fp = al_fopen(path_lowercase,"rb");
-
-    al_fread(fp, lvl->magic, sizeof (char) * strlen(MAP_ID));
-
-
-    lvl->ver= al_fgetc(fp);
-    bool valid_header = false;
-
-    if(lvl->magic[0] == 'C' && lvl->magic[1] == 'B' && lvl->magic[2] == 'M' && lvl->magic[3] == 'A' && lvl->magic[4] == 'P'){
-        valid_header = true;
-    }else {
-        WARN("MAP HEADER INVALID");
-        goto FINISH;
-    }
-
-
-
-    if(lvl->ver > MAP_VER){
-       WARN("%s map version incorrect ", mapname);
-       goto FINISH;
-    }
-
-     lvl->player_pos.x = (unsigned char) al_fgetc(fp);
-     lvl->player_pos.y = (unsigned char) al_fgetc(fp);
-
-     for(unsigned int i = 0;i < 4; i++){
-         lvl->keys[i].x = (unsigned char) al_fgetc(fp);
-         lvl->keys[i].y = (unsigned char) al_fgetc(fp);
-     }
-
-
-
-     lvl->map_width = (unsigned char) al_fgetc(fp);
-     lvl->map_height = (unsigned char) al_fgetc(fp);
-
-     if(lvl->map_width > MAX_GRID_X) lvl->map_width =  MAX_GRID_X;
-     if(lvl->map_height > MAX_GRID_Y) lvl->map_width =  MAX_GRID_Y;
-
-     lvl->background_id = (unsigned char)al_fgetc(fp);
-
-     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-         for(unsigned int x = 0; x < MAX_GRID_X;x++){
-             lvl->bg_layer[y][x].id = (unsigned char) al_fgetc(fp);
-             lvl->bg_layer[y][x].block = (unsigned char) al_fgetc(fp);
-             lvl->bg_layer[y][x].passable = (unsigned char) al_fgetc(fp);
-         }
-     }
-
-     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-         for(unsigned int x = 0; x < MAX_GRID_X;x++){
-             lvl->map_layer[y][x].id = (unsigned char) al_fgetc(fp);
-             lvl->map_layer[y][x].block = (unsigned char) al_fgetc(fp);
-             lvl->map_layer[y][x].passable = (unsigned char) al_fgetc(fp);
-         }
-     }
-
-
-     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-         for(unsigned int x = 0; x < MAX_GRID_X;x++){
-             lvl->obj_layer[y][x].id = (unsigned char) al_fgetc(fp);
-             lvl->obj_layer[y][x].block = (unsigned char) al_fgetc(fp);
-             lvl->obj_layer[y][x].passable = (unsigned char) al_fgetc(fp);
-         }
-     }
-
-
-     lvl->valid_file = (unsigned char)al_fgetc(fp);
-
-     if(lvl->valid_file == valid_header)
-     {
-        LOG("MAP LOADED SUCCESS!");
-     }
-
-      al_fclose(fp);
-      return true;
-
-FINISH:
-        if(fp)al_fclose(fp);
-        return false;
-
-
-}
-bool level_save_i(LEVEL *lvl, char * mapname)
-{
-
-
-    char file_lc[4096] =  ""; // need to fit not only the filename but full path, on windows this  can be huge, so we need to use a big buffer to store the path
-
-    strncpy(file_lc, mapname, strlen(mapname) + 1);
-
-
-    ALLEGRO_FILE *fp = nullptr;
-
-    fp = al_fopen(file_lc,"wb");
-
-    if(fp == nullptr){
-        return false;
-    }
-
-    al_fwrite(fp, lvl->magic, strlen(lvl->magic));
-
-    al_fputc(fp, lvl->ver);
-    al_fputc(fp, lvl->player_pos.x);
-    al_fputc(fp, lvl->player_pos.y);
-
-    for(unsigned int i = 0;i < 4; i++){
-        al_fputc(fp, lvl->keys[i].x);
-        al_fputc(fp, lvl->keys[i].y);
-    }
-
-    al_fputc(fp, lvl->map_width);
-    al_fputc(fp, lvl->map_height);
-
-    al_fputc(fp, lvl->background_id);
-
-    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-        for(unsigned int x = 0; x < MAX_GRID_X;x++){
-            al_fputc(fp, lvl->bg_layer[y][x].id);
-            al_fputc(fp, lvl->bg_layer[y][x].block);
-            al_fputc(fp, lvl->bg_layer[y][x].passable);
-        }
-    }
-
-    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-        for(unsigned int x = 0; x < MAX_GRID_X;x++){
-            al_fputc(fp, lvl->map_layer[y][x].id);
-            al_fputc(fp, lvl->map_layer[y][x].block);
-            al_fputc(fp, lvl->map_layer[y][x].passable);
-        }
-    }
-
-    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-        for(unsigned int x = 0; x < MAX_GRID_X;x++){
-            al_fputc(fp, lvl->obj_layer[y][x].id);
-            al_fputc(fp, lvl->obj_layer[y][x].block);
-            al_fputc(fp, lvl->obj_layer[y][x].passable);
-        }
-    }
-
-    lvl->valid_file = true;
-
-    al_fclose(fp);
-
-
-
-    return true;
-
 }
 
 
@@ -466,9 +305,23 @@ bool level_file_exists(const char *mapname){
     return false;
 }
 
-// just copy the tiles layers to a new level
-// if the level struct is t changes  this function must change too
-void level_copy_tiles(LEVEL *dest, const LEVEL *orig){
+// copy level;
+void level_map_copy(LEVEL *dest, const LEVEL *orig){
+
+    dest->background_id = orig->background_id;
+
+    for(int i = 0; i < 4; i++){
+        dest->keys[i].x = orig[i].keys->x;
+        dest->keys[i].y = orig[i].keys->y;
+    }
+
+    dest->level_path = orig->level_path;
+    strncpy(dest->magic, orig->magic, 6);
+    dest->map_width = orig->map_width;
+    dest->map_height = orig->map_height;
+    dest->player_pos = orig->player_pos;
+    dest->powerup_count = orig->powerup_count;
+
     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
         for(unsigned int x = 0; x < MAX_GRID_X;x++){
             dest->bg_layer[y][x].id = orig->bg_layer[y][x].id;

@@ -656,7 +656,7 @@ void editor_render_canvas(void){
 
     al_set_target_bitmap(canvas_screen);
     render_background_color(editor->level);
-
+    al_hold_bitmap_drawing(true);
     for(int y = 0; y < MAX_GRID_Y; y++){
          for(int x = 0; x < MAX_GRID_X; x++){
 
@@ -672,6 +672,7 @@ void editor_render_canvas(void){
 
          }
     }
+    al_hold_bitmap_drawing(false);
 
 
 
@@ -695,6 +696,7 @@ void editor_render_bg(void){
 
 void editor_render_tools(void){
 
+    al_hold_bitmap_drawing(true);
     for(unsigned int y = 0; y < GRID_TOOLS_H ; y++){
         for(unsigned  int x = 0; x < GRID_TOOLS_W ; x++){
 
@@ -704,6 +706,7 @@ void editor_render_tools(void){
 
         }
     }
+    al_hold_bitmap_drawing(false);
 
 }
 
@@ -808,16 +811,25 @@ EDITOR *editor_get()
 
 static bool openDialogSaveDialog(){
     char buf[1024] = {};
-    ImGui::Begin("Save Map", &saveLevelDialog);
+
+    ALLEGRO_PATH *path = al_create_path(editor->level->level_path.c_str());
+    strncat(buf, al_get_path_basename(path), 1024 );
+    strncat(buf,".cbm", 1024);
+    al_destroy_path(path);
+
+    ImGui::Begin("Save Level", &saveLevelDialog, ImVec2(300,300));
     ImGui::InputText("Filename:", buf, 1024);
+
+
     if(ImGui::Button("Save")){
 
-        if(editor->level){
+        if(!editor->level){
             level_init_default(editor->level);
         }
 
+
+
         level_save(get_window_display(), editor->level, buf, false);
-        dialogSaveStatus = true;
         saveLevelDialog = false;
     }
     if(ImGui::Button("Cancel")){
@@ -829,18 +841,19 @@ static bool openDialogSaveDialog(){
 }
 static bool openDialogLoadDialog(){
     char buf[1024] = {};
-    strncpy(buf,editor->level->mapname, 1024);
+
+    ALLEGRO_PATH *path = al_create_path(editor->level->level_path.c_str());
+    strncat(buf, al_get_path_basename(path), 1024 );
+    strncat(buf,".cbm", 1024);
+    al_destroy_path(path);
+
+    strncpy(buf,buf, 1024);
     //strncpy(buf, 1024, editor->level->mapname, strlen(editor->level->mapname));
-    ImGui::Begin("Load Level", &loadLevelDialog);
+    ImGui::Begin("Load Level", &loadLevelDialog, ImVec2(300,300));
     ImGui::InputTextWithHint("Filename:", "Teste", buf, 1024);
     if(ImGui::Button("Load Level")){
 
-        if(editor->level){
-            level_init_default(editor->level);
-        }
-
-        level_load(get_window_display(), editor->level, editor->level->mapname, false);
-        dialogLoadStatus = true;
+        level_load(get_window_display(), editor->level, buf, false);
         loadLevelDialog = false;
     }
     if(ImGui::Button("Cancel")){
@@ -853,10 +866,11 @@ static bool openDialogLoadDialog(){
 
 static bool openDialogToolbar(){
 
+    /*
     if(ImGui::BeginMenu("Menu")){
         ImGui::MenuItem("Teste", "CTRL+I", true, true);
         ImGui::EndMenu();
     }
-
+    */
     return dialogToolbar;
 }

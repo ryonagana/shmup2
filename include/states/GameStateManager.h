@@ -24,10 +24,11 @@ public:
     CGameStateManager();
     void InitStates(); //please call this after add states!
 
-    bool addState(const std::string &name, int id, std::shared_ptr<IGameState> state);
+    bool addState(const std::string &name, GameStateID id, std::shared_ptr<IGameState> state);
     bool removeState(const int id);
     IGameState *stateActive();
-    void SetStateActive(const int id);
+    void SetStateActive(const GameStateID id);
+    void DestroyAllStates(void);
 
 
     ~CGameStateManager();

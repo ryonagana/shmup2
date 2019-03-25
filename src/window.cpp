@@ -164,7 +164,7 @@ void window_init(void){
     /* init IMGUI */
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGui::StyleColorsDark();
+    ImGui::StyleColorsClassic();
     ImGui_ImplAllegro5_Init(get_window_display());
 
     is_window_open = true;

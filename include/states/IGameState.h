@@ -5,12 +5,10 @@
 #include "states/NonCopyable.h"
 #include "states/NonMovable.h"
 
-enum class GAMESTATE_ID : uint32_t {
-    GAMESTATE_MENU,
-    GAMESTATE_GAME,
-    GAMESTATE_SELECT_MAP,
-    GAMESTATE_SELECT_MAP_EDITOR,
-    GAMESTATE_EDITOR
+enum class GameStateID : int {
+    Menu = 1,
+    MainGame,
+    Editor
 };
 
 class IGameState : public NonCopyable, public NonMovable {
@@ -19,7 +17,11 @@ protected:
 
 
 public:
+
+
+
     int id;
+    GameStateID stateId;
     bool active;
     std::string name; // name of this event..
     IGameState(){}

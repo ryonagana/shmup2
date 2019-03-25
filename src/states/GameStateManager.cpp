@@ -31,15 +31,19 @@ void CGameStateManager::InitStates()
     }
 }
 
-bool CGameStateManager::addState(const std::string &name, int id, std::shared_ptr<IGameState> state)
-{
 
+
+bool CGameStateManager::addState(const std::string &name, GameStateID id, std::shared_ptr<IGameState> state){
     states.push_back( std::move(state) );
-    states.back()->id = id;
+    states.back()->id = static_cast<int>(id);
+    states.back()->stateId = id;
     states.back()->name = name;
     states.back()->Init();
     return true;
 }
+
+
+
 
 bool CGameStateManager::removeState(const int id)
 {
@@ -55,13 +59,29 @@ IGameState *CGameStateManager::stateActive()
     return active;
 }
 
-void CGameStateManager::SetStateActive(const int id)
+
+
+void CGameStateManager::SetStateActive(const GameStateID id)
 {
-    auto f = findStateById(id);
+    auto f = findStateById( static_cast<int>(id));
     this->active = f;
 
 }
 
 CGameStateManager::~CGameStateManager(){
 
+}
+
+
+/* this destroy is different for unitialize memory
+ this must be used  when all states will not be used anymore
+must be called before any memory free callings
+it just unitialize states first and free internals
+after this  you can free memory
+calling this after free might cause  SIGSEGV, crashes, memory leaking
+*/
+void CGameStateManager::DestroyAllStates(){
+        for(auto s = states.begin(); s != states.end(); s++){
+                s.base()->get()->Destroy();
+        }
 }

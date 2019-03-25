@@ -23,12 +23,16 @@ private:
     //TODO PARTICLE LIST
 
 public:
+
+
+
     CEngine();
     ~CEngine();
     void Start();
     IGameState *getState();
     void loadNewLevel(const std::string &mapname);
-    void setState(int index);
+    void setState(const GameStateID id);
+    CGameStateManager getStateManager();
     LEVEL *getLoadedLevel();
 
 };

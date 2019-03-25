@@ -10,7 +10,24 @@ static struct SPACESHIP  player_list[MAX_SPACESHIPS]=
         {250,100,3,{0},0}
 };
 
+static ALLEGRO_BITMAP *ship_bmp_temp = nullptr;
 
+
+void spaceship_start(CAMERA *ship_camera){
+    ship_bmp_temp = al_create_bitmap(32,32);
+    al_set_target_bitmap(ship_bmp_temp);
+    al_clear_to_color(al_map_rgb(255,0,0));
+    al_set_target_backbuffer(get_window_display());
+
+
+
+
+
+}
+
+void spaceship_destroy(void){
+    if(ship_bmp_temp) al_destroy_bitmap(ship_bmp_temp);
+}
 
 
 
@@ -136,4 +153,9 @@ void spaceship_set_default_flags(SPACESHIP *sp){
     sp->flags.controlled |= 1;
     sp->flags.controlled |= 0;
 
+}
+
+void spaceship_draw(SPACESHIP *ship, CAMERA *cam)
+{
+   al_draw_bitmap(ship_bmp_temp, ship->x - cam->x , ship->y - cam->y,0);
 }

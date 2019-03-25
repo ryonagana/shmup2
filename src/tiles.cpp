@@ -81,7 +81,7 @@ bool tiles_init(void){
     tiles_sub_bmp[NO_TILE] = al_create_bitmap(32,32);
 
     al_set_target_bitmap(tiles_sub_bmp[NO_TILE]);
-    al_clear_to_color(al_map_rgba_f(99, 110, 114,1.0));
+    al_clear_to_color(al_map_rgba_f(0,255,0,1));
     al_set_target_backbuffer(get_window_display());
 
     if(!tileset){

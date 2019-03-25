@@ -1,5 +1,6 @@
 #include "gamestates/CMenuState.h"
 #include "imgui.h"
+#include "states/IGameState.h"
 #include "examples/imgui_impl_allegro5.h"
 
 
@@ -160,12 +161,12 @@ void CMenuState::Draw()
          ImGui::Begin("Select Map", &windowSelectMap);
 
          for(auto m : this->mapList){
-             std::string name = m->name + ".cbm";
 
-             if( ImGui::Button(name.c_str())){
+
+             if( ImGui::Button(m->name.c_str())){
                 mapSelected = m->name;
                 this->mainEngine->loadNewLevel(m->path);
-                this->mainEngine->setState(2); // goto game
+                this->mainEngine->setState(GameStateID::MainGame); // goto game
 
              }
          }
@@ -183,13 +184,13 @@ void CMenuState::Draw()
          ImGui::Begin("Select Map for Editor:", &windowEditorMode);
 
          for(auto m : this->mapList){
-             std::string name = m->name + ".cbm";
 
-             if( ImGui::Button(name.c_str())){
+
+             if( ImGui::Button(m->name.c_str())){
 
                 mapSelected = m->name;
                 this->mainEngine->loadNewLevel(m->path);
-                this->mainEngine->setState(3); // goto editor
+                this->mainEngine->setState(GameStateID::Editor); // goto editor
 
              }
         }

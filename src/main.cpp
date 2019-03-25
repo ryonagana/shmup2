@@ -35,7 +35,7 @@ int main(int  argc, char *argv[])
             switch(ev.type){
 
                 case ALLEGRO_EVENT_DISPLAY_CLOSE:
-                    window_exit_loop();
+                    mainEngine.setState(GameStateID::Menu);
                 break;
 
 
@@ -44,7 +44,9 @@ int main(int  argc, char *argv[])
                     if(ev.timer.source == get_window_timer()){
                         mainEngine.getState()->Update(&ev);
                         redraw = true;
-                    }else if(ev.timer.source == get_window_actual_time()){
+                    }
+
+                    if(ev.timer.source == get_window_actual_time()){
 
                     }
                     break;
@@ -57,10 +59,11 @@ int main(int  argc, char *argv[])
             redraw = false;
             mainEngine.getState()->Draw();
             al_flip_display();
+
         }
 
     }
-
+    mainEngine.getStateManager().DestroyAllStates();
     window_gracefully_quit("End of Main Loop");
 
     return 0;

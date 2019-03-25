@@ -41,3 +41,20 @@ char* get_file_path(const char *folder, const char *filename){
     al_destroy_path(root);
     return copy_path;
 }
+
+std::string get_file_path_str(const std::string folder, const std::string filename)
+{
+    std::stringstream path;
+    ALLEGRO_PATH *root = al_get_standard_path(ALLEGRO_RESOURCES_PATH);
+
+    if(folder.empty()){
+        al_append_path_component(root, folder.c_str());
+    }
+
+    al_set_path_filename(root, filename.c_str());
+
+    path  << al_path_cstr(root, ALLEGRO_NATIVE_DRIVE_SEP);
+    al_destroy_path(root);
+    return path.str();
+
+}
