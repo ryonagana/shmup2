@@ -248,3 +248,8 @@ int window_get_width(void){
 int window_get_height(void){
      return al_get_display_height(g_display);
 }
+
+void set_window_title(const std::string title)
+{
+    al_set_window_title(get_window_display(), title.c_str());
+}

@@ -71,7 +71,7 @@ int Utils::CRect::getW() const
     return w;
 }
 
-INLINE_FUNCTION int Utils::CRect::getH() const
+int Utils::CRect::getH() const
 {
     return h;
 }

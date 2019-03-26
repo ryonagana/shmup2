@@ -1,5 +1,5 @@
 #include "states/GameStateManager.h"
-
+#include "window.h"
 
 
 IGameState *CGameStateManager::findStateById(int id)
@@ -84,4 +84,9 @@ void CGameStateManager::DestroyAllStates(){
         for(auto s = states.begin(); s != states.end(); s++){
                 s.base()->get()->Destroy();
         }
+}
+
+void CGameStateManager::setWindowTitle(const std::string name)
+{
+    set_window_title(name);
 }

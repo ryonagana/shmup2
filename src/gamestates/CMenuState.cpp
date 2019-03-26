@@ -139,8 +139,8 @@ bool CMenuState::windowSelectMapDialog()
 
 
         if( ImGui::Button(m->name.c_str())){
-           mapSelected = m->name;
-           this->mainEngine->loadNewLevel(m->path);
+           mapSelected = m->name + ".cbm";
+           this->mainEngine->loadNewLevel(mapSelected);
            this->mainEngine->setState(GameStateID::MainGame); // goto game
 
         }

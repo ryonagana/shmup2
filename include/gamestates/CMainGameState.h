@@ -15,8 +15,11 @@ private:
     CEngine *engine;
     SPACESHIP *ship;
     CAMERA    ship_camera;
+    LEVEL *level;
 
     ALLEGRO_BITMAP *ship_bmp;
+
+    bool collisionHighlight; // for debug purposes only;
 
 
     // IGameState interface

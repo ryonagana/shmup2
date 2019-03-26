@@ -57,6 +57,7 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
             //al_draw_bitmap(tiles_get_by_id( static_cast<int>( level->bg_layer[y][x].id)), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y, 0 );
 
             // the map tiles
+
             al_draw_bitmap( tiles_get_by_id( static_cast<int>(level->map_layer[y][x].id) ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
 
             //draw the ship

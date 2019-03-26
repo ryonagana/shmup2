@@ -29,6 +29,7 @@ public:
     IGameState *stateActive();
     void SetStateActive(const GameStateID id);
     void DestroyAllStates(void);
+    void setWindowTitle(const std::string name);
 
 
     ~CGameStateManager();

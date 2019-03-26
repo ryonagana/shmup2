@@ -1,10 +1,11 @@
 #pragma once
-
+#include "shared.h"
 namespace Utils {
     class CRect {
 
     private:
-        int x,y,w,h;
+        int x,y;
+        int w,h;
     public:
         static CRect Zero();
         CRect(int xa = 0, int ya = 0, int wa = 0, int ha = 0);

@@ -35,7 +35,8 @@ ALLEGRO_TIMER *get_window_actual_time(void);
 ALLEGRO_BITMAP *get_window_screen(void);
 
 int64_t get_window_time_ms(void);
-void     set_window_time_ms(int64_t time);
+void    set_window_time_ms(int64_t time);
+void    set_window_title(const std::string title);
 
 #define TICKSPERFRAME 60.0
 #define WINDOW_STOP_TIMER() do { al_stop_timer(get_window_timer()); }while(0);
