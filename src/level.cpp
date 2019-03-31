@@ -68,16 +68,17 @@ void level_init_default(LEVEL* level){
 bool level_load(LEVEL *lvl, const std::string map_name){
 
 
-
+    bool valid_header = false;
     sf::FileInputStream fs;
     fs.open(map_name);
+
 
     fs.read(&lvl->magic,static_cast<sf::Int64>(sizeof (char) * strnlen(MAP_ID, 6)));
 
     //al_fread(fp, lvl->magic, sizeof (char) * strlen(MAP_ID));
 
     fs.read(&lvl->ver, sizeof(unsigned char));
-    bool valid_header = false;
+
 
     if(lvl->magic[0] == 'C' && lvl->magic[1] == 'B' && lvl->magic[2] == 'M' && lvl->magic[3] == 'A' && lvl->magic[4] == 'P'){
         valid_header = true;

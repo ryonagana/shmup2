@@ -11,6 +11,8 @@ SOURCES += \
     src/CEngine.cpp \
     src/states/GameStateManager.cpp \
     src/states/IGameState.cpp \
+    src/states/NonCopyable.cpp \
+    src/states/NonMovable.cpp \
     src/level.cpp \
     src/shared.cpp \
     src/gamestates/CMainGameState.cpp \
@@ -20,7 +22,6 @@ SOURCES += \
     #src/mouse.cpp \
     #src/spaceship.cpp \
     #src/mixer.cpp \
-
     #src/menu.cpp \
     #src/path.cpp \
     #src/dir.cpp \
@@ -35,8 +36,6 @@ SOURCES += \
     #src/emitter.cpp \
     #src/gamestates/CMainGameState.cpp \
     #src/gamestates/CMenuState.cpp \
-    #src/states/NonCopyable.cpp \
-    #src/states/NonMovable.cpp \
     #src/Utils/CRandom.cpp \
     #src/Utils/CRect.cpp \
     #src/Utils/CText.cpp \
@@ -54,6 +53,8 @@ HEADERS += \
     include/CEngine.h \
     include/states/GameStateManager.h \
     include/states/IGameState.h \
+    include/states/NonCopyable.h \
+    include/states/NonMovable.h \
     include/level.h \
     include/shared.h \
     include/gamestates/CMainGameState.h \
@@ -82,8 +83,7 @@ HEADERS += \
     #include/states/GameStateManager.h \
     #include/gamestates/CMainGameState.h \
     #include/gamestates/CMenuState.h \
-    #include/states/NonCopyable.h \
-    #include/states/NonMovable.h \
+
     #include/Utils/CRandom.h \
     #include/Utils/CRect.h \
     #include/Utils/CText.h \
