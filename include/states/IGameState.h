@@ -1,6 +1,6 @@
 #pragma once
 #include <iostream>
-#include <allegro5/allegro.h>
+#include <SFML/System.hpp>
 #include <memory>
 #include "states/NonCopyable.h"
 #include "states/NonMovable.h"
@@ -33,8 +33,8 @@ public:
     virtual void Destroy() = 0; // destroy
 
     /* this pure virtual function os for every state must have this draw function */
-    virtual void Update(ALLEGRO_EVENT *e) = 0;  //must  be put inside  ALLEGRO_EVENT_TIMER
-    virtual void HandleInput(ALLEGRO_EVENT *e) = 0;  //this must be outside ALLEGRO_EVENT_TIMER is related to keyboard, mouse, joypad
+    virtual void Update(sf::Time elapsed) = 0;  //must  be put inside  ALLEGRO_EVENT_TIMER
+    virtual void HandleInput(sf::Time elapsed) = 0;  //this must be outside ALLEGRO_EVENT_TIMER is related to keyboard, mouse, joypad
     virtual void Draw() = 0; // mst be put when things is being Draw
 
 

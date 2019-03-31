@@ -13,7 +13,7 @@ public:
     virtual void Init() override;
     virtual void Start() override;
     virtual void Destroy() override;
-    virtual void Update(ALLEGRO_EVENT *e) override;
-    virtual void HandleInput(ALLEGRO_EVENT *e) override;
+    virtual void Update(sf::Time elapsed) override;
+    virtual void HandleInput(sf::Time elapsed) override;
     virtual void Draw() override;
 };

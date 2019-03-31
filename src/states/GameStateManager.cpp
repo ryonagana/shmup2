@@ -88,5 +88,5 @@ void CGameStateManager::DestroyAllStates(){
 
 void CGameStateManager::setWindowTitle(const std::string name)
 {
-    set_window_title(name);
+    //set_window_title(name);
 }

@@ -28,16 +28,16 @@ void CEditorState::Destroy()
 {
 }
 
-void CEditorState::Update(ALLEGRO_EVENT *e)
+void CEditorState::Update(sf::Time elapsed)
 {
-    editor_update(e);
+    //editor_update(e);
 }
 
-void CEditorState::HandleInput(ALLEGRO_EVENT *e)
+void CEditorState::HandleInput(sf::Time elapsed)
 {
 
 
-    editor_update_input(e);
+   // editor_update_input(elapsed);
 }
 
 void CEditorState::Draw()

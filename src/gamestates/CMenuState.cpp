@@ -211,10 +211,10 @@ void CMenuState::Destroy()
     ImGui::DestroyContext();
 }
 
-void CMenuState::Update(ALLEGRO_EVENT *e)
+void CMenuState::Update(sf::Time elapsed)
 {
 
-    if(e->type == ALLEGRO_EVENT_DISPLAY_RESIZE){
+    if(elapsed->type == ALLEGRO_EVENT_DISPLAY_RESIZE){
          ImGui_ImplAllegro5_InvalidateDeviceObjects();
          al_acknowledge_resize(get_window_display());
          ImGui_ImplAllegro5_CreateDeviceObjects();
@@ -222,30 +222,30 @@ void CMenuState::Update(ALLEGRO_EVENT *e)
 
 }
 
-void CMenuState::HandleInput(ALLEGRO_EVENT *e){
+void CMenuState::HandleInput(sf::Time elapsed){
 
 
-     ImGui_ImplAllegro5_ProcessEvent(e);
+     ImGui_ImplAllegro5_ProcessEvent(elapsed);
 
 
 
 
-    if(e->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN){
-        if(e->mouse.button & 1){
+    if(elapsed->type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN){
+        if(elapsed->mouse.button & 1){
            mouse_get()->lButton = true;
         }
     }
 
-    if(e->type == ALLEGRO_EVENT_MOUSE_BUTTON_UP){
-        if(e->mouse.button & 1){
+    if(elapsed->type == ALLEGRO_EVENT_MOUSE_BUTTON_UP){
+        if(elapsed->mouse.button & 1){
             mouse_get()->lButton = false;
         }
     }
 
-    if(e->type == ALLEGRO_EVENT_MOUSE_AXES){
-        mouse_get()->x = e->mouse.x;
-        mouse_get()->y = e->mouse.y;
-        mouse_get()->z = e->mouse.dz;
+    if(elapsed->type == ALLEGRO_EVENT_MOUSE_AXES){
+        mouse_get()->x = elapsed->mouse.x;
+        mouse_get()->y = elapsed->mouse.y;
+        mouse_get()->z = elapsed->mouse.dz;
     }
 
 }

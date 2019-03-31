@@ -8,6 +8,7 @@
 #include "imgui.h"
 #include "GUI/imgui_impl_allegro5.h"
 
+#include "Utils/CWindow.h"
 
 int main(int  argc, char *argv[])
 {
@@ -15,13 +16,37 @@ int main(int  argc, char *argv[])
     UNUSED_PARAM(argv);
 
     srand(static_cast<unsigned int>(std::time(nullptr)));
-    window_init();
-    bool redraw = false;
-    CEngine mainEngine;
+    CWindow window(sf::VideoMode(800,600,32),"SHMUP LIGHTLY BROILED!?");
+    CEngine mainEngine(&window);
 
-    //mainEngine.Start();
 
-    // main allegro event
+    sf::Clock clock;
+
+
+    while(window.getWindow()->isOpen()){
+        sf::Event event;
+        sf::Time elapsedTime = clock.restart();
+
+        while(window.getWindow()->pollEvent(event)){
+            if(event.type == sf::Event::Closed){
+                window.getWindow()->close();
+            }
+        }
+
+         mainEngine.getState()->Update(elapsedTime);
+
+
+         window.getWindow()->clear();
+
+         mainEngine.getState()->Draw();
+
+         window.getWindow()->display();
+
+    }
+
+
+
+    /*
     ALLEGRO_EVENT ev;
 
     while(window_open()){
@@ -67,6 +92,7 @@ int main(int  argc, char *argv[])
     window_gracefully_quit("End of Main Loop");
 
     return 0;
+    */
 
 }
 
