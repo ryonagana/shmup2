@@ -1,20 +1,19 @@
 #include "tiles.h"
-#include "tiles.h"
-#include "path.h"
 #include "shared.h"
-#include "window.h"
-
 #include <algorithm>
 #include <vector>
 
+/*
 static ALLEGRO_BITMAP *tileset = nullptr;
 static ALLEGRO_BITMAP *special_tileset = nullptr;
 
 static ALLEGRO_BITMAP* tiles_sub_bmp[TILE_COUNT + 1];
 static ALLEGRO_BITMAP* tiles_special_sub_bmp[SPECIAL_TILE_COUNT];
+*/
 
 
-
+static sf::Texture tileset;
+static sf::Sprite tile_sub_bmp[TILE_COUNT];
 
 
 static void tiles_load_from_file(const char *filename);
@@ -34,6 +33,22 @@ static char* tile_names[TILE_COUNT + 1] = {
 */
 
 bool tiles_init(void){
+
+    tileset.loadFromFile("tile/spritesheet.png");
+
+    tile_names.push_back( new TILEINFO(sf::Vector2i(0,0), "No Tile", NO_TILE));
+     tile_names.push_back( new TILEINFO(sf::Vector2i(32,0), "Ground 01 Flat", TILE_GROUND01_F));
+    tile_names.push_back( new TILEINFO(sf::Vector2i(96,0), "Ground 01 R", TILE_GROUND01_TOP_R));
+    tile_names.push_back( new TILEINFO(sf::Vector2i(128,0), "Ground 01 L", TILE_GROUND01_TOP_L));
+
+
+    for(int i = 0; i < tile_names.size(); i++){
+        sf::Sprite *spr = new sf::Sprite(tileset,sf::IntRect(tile_names[i]->pos, sf::Vector2i(32,32)));
+        tile_sub_bmp[i] = *spr;
+    }
+
+
+    /*
     char *filepath = get_file_path("tile", "spritesheet.png");
     bool tileset_not_found = true;
 
@@ -104,33 +119,37 @@ bool tiles_init(void){
     tiles_special_sub_bmp[SPECIAL_TILE_PLAYER_POS] = al_create_sub_bitmap(special_tileset,0,0,32,32);
 
     return true;
-
+    */
 
 }
 
 
-ALLEGRO_BITMAP* tilemap_get_bmp(void){
-    if(tileset == nullptr) return nullptr;
-    return tileset;
+sf::Sprite tilemap_get_bmp(void){
+   sf::Sprite spr;
+   spr.setTexture(tileset);
+   return spr;
 }
 
 void tiles_destroy(void){
 
+    /*
     for(unsigned int i = 0; i < TILE_COUNT; i++){
         if(tiles_sub_bmp[i]) al_destroy_bitmap(tiles_sub_bmp[i]);
     }
 
     if(tileset) al_destroy_bitmap(tileset);
+    */
 }
 
 
-ALLEGRO_BITMAP *tiles_get_by_id(unsigned char id){
-    return tiles_sub_bmp[id] != nullptr ? tiles_sub_bmp[id] : tiles_sub_bmp[NO_TILE];
+
+sf::Sprite tiles_get_by_id(unsigned char id){
+    sf::Sprite spr;
+    spr.setTexture(tileset);
+    return tile_sub_bmp[id];
 }
 
-ALLEGRO_BITMAP *special_tiles_get_by_id(unsigned char id){
-    return tiles_special_sub_bmp[id] != nullptr ? tiles_special_sub_bmp[id] : tiles_sub_bmp[NO_TILE];
-}
+
 
 void tiles_set_properties(TILE *tile){
     switch (tile->id) {
@@ -162,63 +181,3 @@ TILEINFO *tiles_get_name(TILE_ID id){
 
 }
 
-static void tiles_load_from_file(const char *filename){
-    ALLEGRO_FILE *fp = nullptr;
-    char *fullpath = nullptr;
-
-    fullpath = get_file_path(nullptr, filename);
-    LOG("LOAD TILE LIST: %s", fullpath);
-    if(!al_filename_exists(fullpath)){
-        al_show_native_message_box(get_window_display(), "Error:", "An Error Occured!", "Missing tiles.txt sorry", nullptr , 0);
-        window_exit_loop();
-        window_gracefully_quit("tiles do not exists");
-        return;
-    }
-
-    fp = al_fopen(fullpath, "rb");
-
-    if(!fp){
-        al_show_native_message_box(get_window_display(), "Error:", "An Error Occured!", "Missing tiles.txt sorry", nullptr , 0);
-        window_gracefully_quit("filename cant find tiles.txt");
-        return;
-    }
-
-    char linefeed[127];
-    char *line = nullptr;
-
-     al_fgets(fp, linefeed, sizeof(char) * 127);
-
-     while(al_fgets(fp,linefeed, sizeof(char) * 127) != nullptr){
-        int id, offsetx, offsety, width, height;
-
-        line = strtok(linefeed,";");
-        if(*line == '\n') break;
-
-        id = atoi(line);
-        line = nullptr;
-
-        line = strtok(nullptr, ";");
-        offsetx = atoi(line);
-        line = nullptr;
-
-        line = strtok(nullptr, ";");
-        offsety = atoi(line);
-        line = nullptr;
-
-        line = strtok(nullptr, ";");
-        width  = atoi(line);
-        line = nullptr;
-
-        line = strtok(nullptr, ";");
-        height = atoi(line);
-        line = nullptr;
-
-        memset(linefeed,0, sizeof(char) * 127);
-        printf("\nID: %d X: %d Y: %d WIDTH: %d HEIGHT: %d\n\n", id, offsetx, offsety, width, height);
-        tiles_sub_bmp[id] = al_create_sub_bitmap(tileset,offsetx,offsety,width,height);
-
-     }
-
-    al_fclose(fp);
-
-}

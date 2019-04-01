@@ -1,10 +1,9 @@
 #include "editor.h"
 #include "tiles.h"
 #include "render.h"
-#include "thread.h"
 #include "emitter.h"
-#include "imgui.h"
-#include "GUI/imgui_impl_allegro5.h"
+#include <imgui/imgui.h>
+
 
 static EDITOR *editor = nullptr;
 static bool opened_dialog = false;
@@ -18,8 +17,7 @@ static ALLEGRO_BITMAP *tile_selected_miniature = nullptr;
 
 
 static ALLEGRO_THREAD *dialog_thread = nullptr;
-static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data);
-static THREAD_INFO thread_info;
+
 
 static char map_path[4096];
 
@@ -165,22 +163,6 @@ void editor_init(void){
         }
     }
 
-
-    /* THREAD INITIALIZATION */
-
-    thread_create(&thread_info);
-
-    al_lock_mutex(thread_info.mutex);
-    editor_thread_data.end = 0;
-    editor_thread_data.editor = editor;
-    al_unlock_mutex(thread_info.mutex);
-
-    dialog_thread = al_create_thread(editor_dialog_thread, &editor_thread_data);
-    al_start_thread(dialog_thread);
-
-   /* THREAD INITIALIZATION END */
-
-
     //editor_load_tile_file("editor.txt");
 
 
@@ -213,7 +195,7 @@ LEVEL* editor_load_path(const char *filename){
 
     strncpy(path, filename, 1024);
 
-    if(!level_load(get_window_display(), level, path, false)){
+    if(!level_load(level, path)){
         return nullptr;
     }
 
@@ -345,19 +327,13 @@ void editor_update(ALLEGRO_EVENT *e)
         opened_dialog = false;
         editor->state = EDITOR_STATE_SAVE;
 
-        al_lock_mutex(thread_info.mutex);
-        editor_thread_data.end = 1;
-        editor_thread_data.type = EDITOR_SAVE_DIALOG;
-        al_unlock_mutex(thread_info.mutex);
+
 
     }
 
 
     if(editor->state == EDITOR_STATE_LOAD){
-        al_lock_mutex(thread_info.mutex);
-        editor_thread_data.end = 1;
-        editor_thread_data.type = EDITOR_LOAD_DIALOG;
-        al_unlock_mutex(thread_info.mutex);
+
     }
 
     if( (mouse_get()->x / TILE_SIZE) >  CANVAS_GRID_W - 1 ){
@@ -514,19 +490,7 @@ void editor_destroy(void)
 
     if(editor_default_font) al_destroy_font(editor_default_font);
 
-    if(thread_info.mutex) {
-        al_destroy_mutex(thread_info.mutex);
-        thread_info.mutex = nullptr;
-    }
 
-    if(thread_info.cond) {
-        al_destroy_cond(thread_info.cond);
-        thread_info.cond = nullptr;
-    }
-
-    if(dialog_thread){
-        al_destroy_thread(dialog_thread);
-    }
 
 
 
@@ -713,41 +677,7 @@ static void editor_select_tile(unsigned char tid){
     editor->selected_tile = tid;
 }
 
-static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
-    EDITOR_THREAD_DATA *d = (EDITOR_THREAD_DATA*) data;
 
-
-    while(!al_get_thread_should_stop(thread)){
-
-        if(d->end){
-
-            switch(d->type){
-                case EDITOR_SAVE_DIALOG:
-                    level_save(get_window_display(), d->editor->level, nullptr, true);
-                break;
-
-                case EDITOR_LOAD_DIALOG:
-                    level_load(get_window_display(), d->editor->level, nullptr, true);
-                break;
-
-            }
-
-        }
-
-        al_lock_mutex(thread_info.mutex);
-        d->end = 0;
-        al_unlock_mutex(thread_info.mutex);
-
-        /* this thread is meant to run fast because a thread will keep running in background
-        waiting for the keys shortcuts. so 1 second  is enough to to call them
-        */
-        al_rest(1.0);
-    }
-
-
-    return nullptr;
-
-}
 
 static void editor_load_tile_file(const char* tile_file){
     char *path = nullptr;
@@ -827,7 +757,7 @@ static bool openDialogSaveDialog(){
 
 
 
-        level_save(get_window_display(), editor->level, buf, false);
+        level_save(editor->level, buf);
         saveLevelDialog = false;
     }
     if(ImGui::Button("Cancel")){
@@ -851,7 +781,7 @@ static bool openDialogLoadDialog(){
     ImGui::InputTextWithHint("Filename:", "Teste", buf, 1024);
     if(ImGui::Button("Load Level")){
 
-        level_load(get_window_display(), editor->level, buf, false);
+        level_load(editor->level, buf);
         loadLevelDialog = false;
     }
     if(ImGui::Button("Cancel")){

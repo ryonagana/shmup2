@@ -17,7 +17,8 @@ CMainGameState::~CMainGameState(){
 
 void CMainGameState::Init()
 {
-    level_load(this->level, "map/teste01.cbm");
+    level_load(this->engine->getLoadedLevel(), "map/teste01.cbm");
+    this->level = this->engine->getLoadedLevel();
     spaceship_start(&ship, &camera);
     spaceship_camera_init(engine->getRenderWindow()->getWindow()->getSize().x, engine->getRenderWindow()->getWindow()->getSize().y, &camera, &ship);
 }
@@ -45,14 +46,14 @@ void CMainGameState::Update(sf::Time elapsed)
 
 void CMainGameState::Draw()
 {
-    /*
+
     for (int y = 0; y < this->level->map_width; y++) {
         for (int x = 0; x < this->level->map_width; x++) {
-
+            engine->getRenderWindow()->getWindow()->draw(tiles_get_by_id( this->level->map_layer[y][x].id));
         }
 
     }
-    */
+
 
     spaceship_draw(this->engine->getRenderWindow()->getWindow(), &ship, &camera);
     spaceship_scrolling_update(this->engine->getRenderWindow()->getWindow(), &ship, &camera, 22,72);

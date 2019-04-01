@@ -7,6 +7,10 @@ QMAKE_CXX = g++
 
 SOURCES += \
     src/main.cpp \
+    #lib/imgui/imgui.cpp \
+    #lib/imgui/imgui_draw.cpp \
+    #lib/imgui/imgui_widgets.cpp \
+    #lib/imgui-sfml/imgui-SFML.cpp \
     src/Utils/CWindow.cpp \
     src/CEngine.cpp \
     src/states/GameStateManager.cpp \
@@ -17,6 +21,8 @@ SOURCES += \
     src/shared.cpp \
     src/gamestates/CMainGameState.cpp \
     src/spaceship.cpp \
+    #src/editor.cpp \
+    src/tiles.cpp \
     #src/window.cpp \
     #src/keyboard.cpp \
     #src/mouse.cpp \
@@ -26,7 +32,6 @@ SOURCES += \
     #src/path.cpp \
     #src/dir.cpp \
     #src/render.cpp \
-    #src/tiles.cpp \
     #src/config.cpp \
     #src/editor.cpp \
     #src/thread.cpp \
@@ -39,9 +44,7 @@ SOURCES += \
     #src/Utils/CRandom.cpp \
     #src/Utils/CRect.cpp \
     #src/Utils/CText.cpp \
-    #lib/imgui/imgui_draw.cpp \
-    #lib/imgui/imgui.cpp \
-    #lib/imgui/imgui_widgets.cpp \
+
     #src/GUI/imgui_impl_allegro5.cpp \
     #src/gamestates/CEditorState.cpp \
 
@@ -56,9 +59,12 @@ HEADERS += \
     include/states/NonCopyable.h \
     include/states/NonMovable.h \
     include/level.h \
+    include/tiles.h \
     include/shared.h \
     include/gamestates/CMainGameState.h \
     include/spaceship.h \
+    #include/editor.h \
+    lib/imgui/imgui.h \
 #include/window.h \
     #include/CEngine.h \
 
@@ -72,9 +78,9 @@ HEADERS += \
     #include/dir.h \
     #include/render.h \
 
-    #include/tiles.h \
+
     #include/config.h \
-    #include/editor.h \
+
     #include/thread.h \
     #include/text.h \
     #include/particle.h \
@@ -87,7 +93,7 @@ HEADERS += \
     #include/Utils/CRandom.h \
     #include/Utils/CRect.h \
     #include/Utils/CText.h \
-    #lib/imgui/imgui.h \
+
     #include/GUI/imgui_impl_allegro5.h \
     #include/gamestates/CEditorState.h \
 
@@ -128,6 +134,9 @@ unix: {
 
     INCLUDEPATH += lib/imgui
     DEPENDPATH  += lib/imgui
+
+    INCLUDEPATH += lib/imgui-sfml
+    DEPENDPATH  += lib/imgui=sfml
 
 
     INCLUDEPATH += -I/usr/local/include

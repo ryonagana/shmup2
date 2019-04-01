@@ -2,17 +2,9 @@
 #define EDITOR_HEADER
 #include <cstdio>
 #include <cstdlib>
-#include "window.h"
-#include <allegro5/allegro.h>
-#include <allegro5/allegro_color.h>
-#include "keyboard.h"
 #include "level.h"
-#include "window.h"
 #include "tiles.h"
-#include "config.h"
-#include "mouse.h"
 #include "shared.h"
-#include "path.h"
 
 
 typedef struct CAMERA_EDITOR {
