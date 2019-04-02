@@ -8,6 +8,7 @@
 #include "level.h"
 
 
+#define TILE_SIZE (32)
 
 typedef enum SPECIAL_TILES_ID {
     SPECIAL_TILE_PLAYER_POS,
@@ -32,15 +33,18 @@ typedef struct TILEINFO {
     std::string name;
     TILE_ID id;
     sf::Vector2i pos;
+    sf::Texture  *texture;
     TILEINFO(){
         name = "";
+        texture = nullptr;
         id = NO_TILE;
     }
 
-    TILEINFO(const sf::Vector2i pos, const std::string &tname , TILE_ID tid = NO_TILE){
+    TILEINFO(const sf::Vector2i pos, const std::string &tname , TILE_ID tid = NO_TILE, sf::Texture *spr = nullptr){
         name = tname;
         id = tid;
         this->pos = pos;
+        this->texture = spr;
 
     }
 

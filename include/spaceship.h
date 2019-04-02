@@ -68,6 +68,6 @@ void spaceship_set_default_flags(SPACESHIP *sp);
 void spaceship_draw(sf::RenderWindow *win, SPACESHIP *ship, CAMERA *cam);
 
 void spaceship_camera_init(float x, float y, CAMERA *camera, SPACESHIP* ship);
-void spaceship_scrolling_update(sf::RenderWindow *window, SPACESHIP *spaceship, CAMERA *scrolling,  int level_width, int level_height);
+void spaceship_scrolling_update(sf::Time elapsed, sf::RenderWindow *window, SPACESHIP *spaceship, CAMERA *scrolling,  int level_width, int level_height);
 
 #endif

@@ -12,7 +12,7 @@ class CMainGameState : public IGameState {
 private:
     CEngine *engine;
     LEVEL *level;
-    SPACESHIP ship;
+    SPACESHIP *ship;
     CAMERA    camera;
 
     // IGameState interface

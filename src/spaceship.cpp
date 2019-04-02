@@ -4,13 +4,13 @@
 
 static struct SPACESHIP  player_list[MAX_SPACESHIPS]=
 {
-        {250,
-        100,
+        {0,
+        0,
         {0,0,0,0},
         140,{0},SPACESHIP_DIRECTION::LEFT,nullptr},
 
-        {250,
-         100,
+        {0,
+         0,
          {0,0,0,0},
          1,{0},SPACESHIP_DIRECTION::LEFT, nullptr}
 };
@@ -51,10 +51,10 @@ void spaceship_destroy(void){
 
 
 
-void spaceship_scrolling_update(sf::RenderWindow *window, SPACESHIP *spaceship, CAMERA *scrolling,  int level_width, int level_height)
+void spaceship_scrolling_update(sf::Time elapsed, sf::RenderWindow *window, SPACESHIP *spaceship, CAMERA *scrolling,  int level_width, int level_height)
 {
     scrolling->x = spaceship->x + TILE_SIZE / 2  - window->getSize().x /  2;
-    scrolling->y = spaceship->y  + TILE_SIZE / 2 - window->getSize().x / 2;
+    scrolling->y = spaceship->y  + TILE_SIZE / 2 - window->getSize().x / 2 ;
 
     level_width  = level_width  * TILE_SIZE;
     level_height = level_height * TILE_SIZE;
