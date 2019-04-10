@@ -56,7 +56,7 @@ typedef struct TILEINFO {
 bool tiles_init(void);
 void tiles_destroy(void);
 sf::Sprite tilemap_get_bmp(void);
-sf::Sprite tiles_get_by_id(unsigned char id);
+sf::Sprite* tiles_get_by_id(unsigned char id);
 sf::Sprite special_tiles_get_by_id(unsigned char id);
 void tiles_set_properties(TILE *tile);
 TILEINFO *tiles_get_name(TILE_ID id);

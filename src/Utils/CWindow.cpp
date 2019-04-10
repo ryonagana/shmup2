@@ -5,6 +5,7 @@ CWindow::CWindow(const sf::VideoMode mode, const std::string &window_caption)
 {
     sf::String name = window_caption;
     renderWindow.create(mode, name);
+    renderWindow.setVerticalSyncEnabled(true);
     tiles_init();
 }
 

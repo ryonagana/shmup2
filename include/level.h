@@ -15,9 +15,6 @@
 
 #define MAX_LEVEL_KEYS 4
 
-#define TILE_SIZE 32
-
-
 #define MAP_ID "CBMAP"
 #define MAP_VER 1
 typedef struct TILE {

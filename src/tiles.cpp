@@ -50,7 +50,7 @@ bool tiles_init(void){
 
     for(int i = 0; i < tile_names.size(); i++){
         sf::Sprite *spr = new sf::Sprite(*tileset,sf::IntRect(tile_names[i]->pos, sf::Vector2i(32,32)));
-        tile_sub_bmp[i] = *spr;
+        tile_sub_bmp[i] = spr;
     }
 
     return true;
@@ -78,7 +78,7 @@ void tiles_destroy(void){
 
 
 
-sf::Sprite tiles_get_by_id(unsigned char id){
+sf::Sprite* tiles_get_by_id(unsigned char id){
   return tile_sub_bmp[id];
 }
 

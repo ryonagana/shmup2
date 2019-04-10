@@ -1,5 +1,6 @@
 #include "spaceship.h"
 #include "shared.h"
+#include "tiles.h"
 
 
 static struct SPACESHIP  player_list[MAX_SPACESHIPS]=
