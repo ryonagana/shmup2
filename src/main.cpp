@@ -1,12 +1,9 @@
 #include "main.h"
-#include "mouse.h"
-#include "editor.h"
-#include "config.h"
-#include "menu.h"
-#include "dir.h"
 #include "CEngine.h"
-
+#include <SFML/System.hpp>
+#include <SFML/Window.hpp>
 #include "Utils/CWindow.h"
+#include "CEngine.h"
 
 int main(int  argc, char *argv[])
 {

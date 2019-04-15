@@ -22,27 +22,11 @@ static sf::RectangleShape ship_spr;
 
 void spaceship_start(SPACESHIP *ship, CAMERA *ship_camera){
 
+    UNUSED_PARAM(ship);
+    UNUSED_PARAM((ship_camera));
     ship_spr.setSize(sf::Vector2f(32,32));
     ship_spr.setFillColor(sf::Color(255,0,0));
     ship_spr.setPosition(player_list[SHIP_P1].x,player_list[SHIP_P1].y);
-    /*
-    ship_bmp_temp = al_create_bitmap(32,32);
-    al_set_target_bitmap(ship_bmp_temp);
-    al_clear_to_color(al_map_rgb(255,0,0));
-    al_set_target_backbuffer(get_window_display());
-    ship->camera = ship_camera;
-
-    if(!debug_txt){
-        debug_txt = al_create_builtin_font();
-    }
-
-
-    player_list[SHIP_P1].rect.setSize(player_list[SHIP_P1].x,player_list[SHIP_P1].y, al_get_bitmap_width( ship_bmp_temp), al_get_bitmap_height( ship_bmp_temp) );
-    player_list[SHIP_P2].rect.setSize(player_list[SHIP_P2].x,player_list[SHIP_P2].y, al_get_bitmap_width( ship_bmp_temp), al_get_bitmap_height( ship_bmp_temp) );
-    */
-
-
-
 
 }
 
@@ -54,8 +38,8 @@ void spaceship_destroy(void){
 
 void spaceship_scrolling_update(sf::Time elapsed, sf::RenderWindow *window, SPACESHIP *spaceship, CAMERA *scrolling,  int level_width, int level_height)
 {
-    scrolling->x = spaceship->x + TILE_SIZE / 2  - window->getSize().x /  2;
-    scrolling->y = spaceship->y  + TILE_SIZE / 2 - window->getSize().x / 2 ;
+    scrolling->x = (spaceship->x + TILE_SIZE / 2  - window->getSize().x /  2);
+    scrolling->y = (spaceship->y  + TILE_SIZE / 2 - window->getSize().y / 2);
 
     level_width  = level_width  * TILE_SIZE;
     level_height = level_height * TILE_SIZE;
@@ -196,7 +180,7 @@ void spaceship_draw(sf::RenderWindow *win, SPACESHIP *ship, CAMERA *cam)
         LOG("Missing Window Ptr.");
         return;
     }
-    sf::Rect<float> camera_pos(sf::Vector2<float>( ship->x - cam->x, ship->y - cam->y), sf::Vector2<float>(32,32));
+
     win->draw(ship_spr);
 
    /*

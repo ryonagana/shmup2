@@ -9,7 +9,6 @@
 #include "level.h"
 #include "states/GameStateManager.h"
 #include "gamestates/CMainGameState.h"
-#include "gamestates/CMenuState.h"
 #include "states/NonMovable.h"
 
 #include "Utils/CWindow.h"

@@ -1,7 +1,7 @@
 #ifndef SPACESHIP_HEADER
 #define SPACESHIP_HEADER
 #include <cstdio>
-#include "window.h"
+//#include "window.h"
 #include "level.h"
 #include "Utils/CRect.h"
 #include <SFML/System.hpp>

@@ -1,6 +1,6 @@
 #include "CEngine.h"
 #include "states/IGameState.h"
-#include "gamestates/CMenuState.h"
+//#include "gamestates/CMenuState.h"
 #include "gamestates/CEditorState.h"
 
 using GameState = std::unique_ptr<IGameState>;

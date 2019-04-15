@@ -1,5 +1,5 @@
 #include "states/GameStateManager.h"
-#include "window.h"
+//#include "window.h"
 
 
 IGameState *CGameStateManager::findStateById(int id)

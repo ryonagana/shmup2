@@ -142,6 +142,10 @@ unix: {
     INCLUDEPATH += -I/usr/local/include
     DEPENDPATH  += /usr/local/include
     LIBS += -L/usr/local/lib -lsfml-system -lsfml-audio -lsfml-graphics -lsfml-window
+
+    INCLUDEPATH += -I/usr/include
+    DEPENDPATH  += /usr/include
+    LIBS += -L/usr/lib64
     #INCLUDEPATH += /usr/include
     #DEPENDPATH  += /usr/include
 }
