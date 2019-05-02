@@ -48,6 +48,8 @@ void  render_background_color(LEVEL *level){
 
 void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
 
+
+
     al_set_target_bitmap(render_layer[MAP_RENDER_LAYER]);
     al_hold_bitmap_drawing(true);
     for(int y = 0; y < level->map_height; y++){
@@ -57,7 +59,7 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
             //al_draw_bitmap(tiles_get_by_id( static_cast<int>( level->bg_layer[y][x].id)), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y, 0 );
 
             // the map tiles
-
+            if(level->obj_layer[y][x].id == NO_TILE ) continue;
             al_draw_bitmap( tiles_get_by_id( static_cast<int>(level->map_layer[y][x].id) ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
 
             //draw the ship
@@ -68,7 +70,7 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
 
         }
     }
-    al_hold_bitmap_drawing(false);
+
     al_set_target_backbuffer(get_window_display());
 
     al_set_target_bitmap(render_layer[OBJ_RENDER_LAYER]);
@@ -76,6 +78,7 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
     for(int y = 0; y < level->map_height; y++){
         for (int x = 0; x < level->map_width ; x++) {
             //draw the highest layer for givbe the illusion the player is behind a wall or something
+            if(level->obj_layer[y][x].id == NO_TILE ) continue;
             al_draw_bitmap( tiles_get_by_id( static_cast<int>(level->obj_layer[y][x].id) ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
         }
     }
@@ -85,6 +88,5 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
 
     al_draw_bitmap(render_layer[MAP_RENDER_LAYER],0,0,0);
     spaceship_draw(ship, scroll);
-    //al_draw_bitmap(render_layer[OBJ_RENDER_LAYER],0,0,0);
-
+    al_draw_bitmap(render_layer[OBJ_RENDER_LAYER],0,0,0);
 }

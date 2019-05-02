@@ -6,6 +6,8 @@
 #include <cctype>
 #include <cstdint>
 #include <cstdbool>
+#include <ostream>
+#include <fstream>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
@@ -40,10 +42,11 @@ typedef struct MAPCOORD {
 typedef struct LEVEL {
     char magic[6]; // CBMAP
     int  ver;
-    char mapname[96];
+    std::string mapname;
+    std::string filename;
+    std::string level_path;
     MAPCOORD player_pos;
     MAPCOORD keys[MAX_LEVEL_KEYS];
-    std::string level_path;
     bool valid_file;
     unsigned char map_width;
     unsigned char map_height;
@@ -54,7 +57,8 @@ typedef struct LEVEL {
     TILE obj_layer[MAX_GRID_Y][MAX_GRID_X];
 
     LEVEL(){
-        *mapname = {};
+        mapname = "";
+        filename = "";
     }
 
 
@@ -66,8 +70,11 @@ void level_init_default(LEVEL* level);
 
 
 
-bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char * mapname, bool dialog);
-bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool dialog);
+bool level_save(LEVEL *lvl, const std::string mapname);
+bool level_load(LEVEL *lvl, const std::string mapname);
+
+bool level_save_memory(LEVEL *lvl);
+bool level_load_memory(LEVEL *lvl);
 
 bool level_file_exists(const char *mapname);
 TILE *level_get_tile(TILE map[MAX_GRID_Y][MAX_GRID_X], int x, int y);

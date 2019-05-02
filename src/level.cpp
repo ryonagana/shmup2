@@ -10,8 +10,9 @@
     Thanks for the Source!
 */
 
-
-
+static void level_write_tiles_to_file(std::ofstream &fs, TILE map[MAX_GRID_Y][MAX_GRID_X], int width, int height);
+static void level_read_tiles_from_file(std::ifstream &fs, TILE map[MAX_GRID_Y][MAX_GRID_X]);
+static bool level_header_is_valid(char magic[6]);
 
 
 void level_init_default(LEVEL* level){
@@ -26,7 +27,7 @@ void level_init_default(LEVEL* level){
     level->valid_file = false;
 
 
-    strncpy(level->mapname, "Mapa Teste", 19);
+    level->mapname = "Default level";
 
     for(unsigned int i = 0; i < 4; i++){
         level->keys[i].x = 25;
@@ -63,232 +64,97 @@ void level_init_default(LEVEL* level){
 
 }
 
-bool level_load(ALLEGRO_DISPLAY *display, LEVEL *lvl, const char *mapname, bool dialog){
-
-   const char *filepath = nullptr;
-
-   if(mapname){
-        filepath = get_file_path("map", mapname);
-        lvl->level_path = filepath;
-
-        if(!al_filename_exists(filepath)){
-           WARN("FILENAME %s not loaded!", filepath);
-           return false;
-       }
-   }
+bool level_load(LEVEL *lvl, const std::string mapname){
+    const char *map_path_ptr = nullptr;
+    char map_path[4096] = {};
+    map_path_ptr = get_file_path("map", mapname.c_str());
+    strncpy(map_path, map_path_ptr, strlen(map_path_ptr) + 1);
+    std::ifstream in(map_path, std::ifstream::binary);
+    delete  map_path_ptr;
+    map_path_ptr = nullptr;
 
 
-    ALLEGRO_FILECHOOSER *openfile_diag = nullptr;
-    if(dialog){
+    in.read(lvl->magic, sizeof(char) * strlen(MAP_ID) );
 
-        openfile_diag = al_create_native_file_dialog(filepath, "Load MAP:", "*.cbm", ALLEGRO_FILECHOOSER_FILE_MUST_EXIST);
-        al_rest(1.0);
-        if(!al_show_native_file_dialog(display, openfile_diag)){
-            if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
-            return false;
-        }
-        filepath = al_get_native_file_dialog_path(openfile_diag,0);
-
+    if(!level_header_is_valid(lvl->magic)){
+        return false;
     }
 
-    char path_lowercase[4096] = "";
-
-    strncpy(path_lowercase, filepath, strlen(filepath) + 1);
-
-
-    strcpy(lvl->mapname, mapname);
-    lvl->level_path = path_lowercase;
+    lvl->mapname = mapname;
+    lvl->filename = lvl->mapname;
+    lvl->level_path = map_path;
 
 
-    ALLEGRO_FILE *fp = al_fopen(lvl->level_path.c_str(),"rb");
-
-    al_fread(fp, lvl->magic, sizeof (char) * strlen(MAP_ID));
-
-
-    lvl->ver= al_fgetc(fp);
-    bool valid_header = false;
-
-    if(lvl->magic[0] == 'C' && lvl->magic[1] == 'B' && lvl->magic[2] == 'M' && lvl->magic[3] == 'A' && lvl->magic[4] == 'P'){
-        valid_header = true;
-    }else {
-        WARN("MAP HEADER INVALID");
-        goto FINISH;
-    }
-
-
+    in >> lvl->ver;
 
     if(lvl->ver > MAP_VER || lvl->ver != MAP_VER){
-       WARN("%s map version incorrect ", filepath);
-       goto FINISH;
+           WARN("%s map version incorrect ", mapname.c_str());
+           return false;
     }
 
-     lvl->player_pos.x = (unsigned char) al_fgetc(fp);
-     lvl->player_pos.y = (unsigned char) al_fgetc(fp);
 
-     for(unsigned int i = 0;i < 4; i++){
-         lvl->keys[i].x = (unsigned char) al_fgetc(fp);
-         lvl->keys[i].y = (unsigned char) al_fgetc(fp);
-     }
+    in >> lvl->player_pos.x;
+    in >> lvl->player_pos.y;
 
+    for(unsigned int i = 0;i < 4; i++){
+        in >> lvl->keys[i].x;
+        in >> lvl->keys[i].y;
+    }
 
+    in >> lvl->map_width;
+    in >> lvl->map_height;
 
-     lvl->map_width = (unsigned char) al_fgetc(fp);
-     lvl->map_height = (unsigned char) al_fgetc(fp);
+    if(lvl->map_width > MAX_GRID_X) lvl->map_width =  MAX_GRID_X;
+    if(lvl->map_height > MAX_GRID_Y) lvl->map_width =  MAX_GRID_Y;
 
-     if(lvl->map_width > MAX_GRID_X) lvl->map_width =  MAX_GRID_X;
-     if(lvl->map_height > MAX_GRID_Y) lvl->map_width =  MAX_GRID_Y;
+    in >> lvl->background_id;
 
-     lvl->background_id = (unsigned char)al_fgetc(fp);
+    level_read_tiles_from_file(in, lvl->bg_layer);
+    level_read_tiles_from_file(in, lvl->map_layer);
+    level_read_tiles_from_file(in, lvl->obj_layer);
 
-     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-         for(unsigned int x = 0; x < MAX_GRID_X;x++){
-             lvl->bg_layer[y][x].id = (unsigned char) al_fgetc(fp);
-             lvl->bg_layer[y][x].block = (unsigned char) al_fgetc(fp);
-             lvl->bg_layer[y][x].passable = (unsigned char) al_fgetc(fp);
-         }
-     }
+    in.close();
 
-     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-         for(unsigned int x = 0; x < MAX_GRID_X;x++){
-             lvl->map_layer[y][x].id = (unsigned char) al_fgetc(fp);
-             lvl->map_layer[y][x].block = (unsigned char) al_fgetc(fp);
-             lvl->map_layer[y][x].passable = (unsigned char) al_fgetc(fp);
-         }
-     }
-
-
-     for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-         for(unsigned int x = 0; x < MAX_GRID_X;x++){
-             lvl->obj_layer[y][x].id = (unsigned char) al_fgetc(fp);
-             lvl->obj_layer[y][x].block = (unsigned char) al_fgetc(fp);
-             lvl->obj_layer[y][x].passable = (unsigned char) al_fgetc(fp);
-         }
-     }
-
-
-     lvl->valid_file = (unsigned char)al_fgetc(fp);
-
-     if(lvl->valid_file == valid_header)
-     {
-        LOG("MAP [ %s ] LOADED SUCCESS!", path_lowercase);
-     }
-
-     if(dialog){
-         if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
-     }
-
-      al_fclose(fp);
-      if(filepath) delete filepath;
-      return true;
-
-FINISH:
-      if(dialog){
-        if(openfile_diag) al_destroy_native_file_dialog(openfile_diag);
-      }
-        if(fp)al_fclose(fp);
-        return false;
-
-
+    return true;
 
 
 }
 
 
-bool level_save(ALLEGRO_DISPLAY *display,LEVEL *lvl, char *mapname, bool dialog){
-    const char * filepath = nullptr;
+bool level_save(LEVEL *lvl, const std::string mapname){
 
-    if(mapname){
-        filepath = get_file_path("map", mapname);
-    }
+    std::ofstream out;
+    const char *map_path_ptr = nullptr;
+    char map_path[4096] = {};
+    map_path_ptr = get_file_path("map", mapname.c_str());
 
+    strncpy(map_path, map_path_ptr, strlen(map_path_ptr) + 1);
+    delete map_path_ptr;
 
-    ALLEGRO_FILECHOOSER *chooser_diag = nullptr;
-
-    if(dialog){
-        chooser_diag = al_create_native_file_dialog(filepath, "Save File..", "*.*", ALLEGRO_FILECHOOSER_SAVE);
-
-        if(!al_show_native_file_dialog(display, chooser_diag)){
-            if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
-            return false;
-        }
-
-        filepath = al_get_native_file_dialog_path(chooser_diag,0);
-
-        if(!filepath){
-            if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
-            return false;
-        }
-
-    }
+    out.open(map_path, std::ofstream::binary);
 
 
-
-    char file_lc[4096] =  ""; // need to fit not only the filename but full path, on windows this  can be huge, so we need to use a big buffer to store the path
-
-    strncpy(file_lc, filepath, strlen(filepath) + 1);
-
-
-    ALLEGRO_FILE *fp = nullptr;
-
-    fp = al_fopen(file_lc,"wb");
-
-    if(fp == nullptr){
-        fprintf(stderr, "level_save(): FILE: %s LINE: %d - cant load %s ", __FILE__, __LINE__, file_lc);
-        if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
-        return false;
-    }
-
-    al_fwrite(fp, lvl->magic, strlen(lvl->magic));
-
-    al_fputc(fp, lvl->ver);
-    al_fputc(fp, lvl->player_pos.x);
-    al_fputc(fp, lvl->player_pos.y);
+    out.write(lvl->magic, 6);
+    out << lvl->ver;
+    out << lvl->player_pos.x;
+    out << lvl->player_pos.y;
 
     for(unsigned int i = 0;i < 4; i++){
-        al_fputc(fp, lvl->keys[i].x);
-        al_fputc(fp, lvl->keys[i].y);
+       out << lvl->keys[i].x;
+       out << lvl->keys[i].y;
     }
 
-    al_fputc(fp, lvl->map_width);
-    al_fputc(fp, lvl->map_height);
+    out << lvl->map_width;
+    out << lvl->map_height;
 
-    al_fputc(fp, lvl->background_id);
+    out << lvl->background_id;
 
-    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-        for(unsigned int x = 0; x < MAX_GRID_X;x++){
-            al_fputc(fp, lvl->bg_layer[y][x].id);
-            al_fputc(fp, lvl->bg_layer[y][x].block);
-            al_fputc(fp, lvl->bg_layer[y][x].passable);
-        }
-    }
+    level_write_tiles_to_file(out, lvl->bg_layer, lvl->map_width, lvl->map_height);
+    level_write_tiles_to_file(out, lvl->map_layer, lvl->map_width, lvl->map_height);
+    level_write_tiles_to_file(out, lvl->obj_layer, lvl->map_width, lvl->map_height);
 
-    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-        for(unsigned int x = 0; x < MAX_GRID_X;x++){
-            al_fputc(fp, lvl->map_layer[y][x].id);
-            al_fputc(fp, lvl->map_layer[y][x].block);
-            al_fputc(fp, lvl->map_layer[y][x].passable);
-        }
-    }
+    out.close();
 
-    for(unsigned int y = 0; y < MAX_GRID_Y;y++){
-        for(unsigned int x = 0; x < MAX_GRID_X;x++){
-            al_fputc(fp, lvl->obj_layer[y][x].id);
-            al_fputc(fp, lvl->obj_layer[y][x].block);
-            al_fputc(fp, lvl->obj_layer[y][x].passable);
-        }
-    }
-
-    lvl->valid_file = true;
-
-     LOG("MAP [ %s ] SAVED SUCCESS!", file_lc);
-
-    al_fclose(fp);
-
-    if(dialog){
-        if(chooser_diag) al_destroy_native_file_dialog(chooser_diag);
-    }
-
-    //if(filepath) free(filepath);
     return true;
 }
 
@@ -348,4 +214,35 @@ void level_map_copy(LEVEL *dest, const LEVEL *orig){
     }
 
     return;
+}
+
+
+static void level_write_tiles_to_file(std::ofstream &fs, TILE map[MAX_GRID_Y][MAX_GRID_X], int width, int height){
+    for(int y = 0; y < MAX_GRID_Y;y++){
+        for(int x = 0; x < MAX_GRID_X;x++){
+           fs << map[y][x].id;
+           fs << map[y][x].block;
+           fs << map[y][x].passable;
+        }
+    }
+}
+
+static void level_read_tiles_from_file(std::ifstream &fs, TILE map[MAX_GRID_Y][MAX_GRID_X]){
+    for(int y = 0; y < MAX_GRID_Y;y++){
+        for(int x = 0; x < MAX_GRID_X;x++){
+           fs >> map[y][x].id;
+           fs >> map[y][x].block;
+           fs >> map[y][x].passable;
+        }
+    }
+}
+
+
+
+static bool level_header_is_valid(char magic[6]){
+    if(magic[0] == 'C' && magic[1] == 'B' && magic[2] == 'M' && magic[3] == 'A' && magic[4] == 'P'){
+       return true;
+    }
+
+    return false;
 }

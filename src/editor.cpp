@@ -7,7 +7,6 @@
 #include "GUI/imgui_impl_allegro5.h"
 
 static EDITOR *editor = nullptr;
-static bool opened_dialog = false;
 static ALLEGRO_BITMAP *editor_cursor = nullptr;
 
 static ALLEGRO_BITMAP *canvas_screen = nullptr;
@@ -17,23 +16,16 @@ static ALLEGRO_FONT *editor_default_font = nullptr;
 static ALLEGRO_BITMAP *tile_selected_miniature = nullptr;
 
 
-static ALLEGRO_THREAD *dialog_thread = nullptr;
-static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data);
-static THREAD_INFO thread_info;
+
 
 static char map_path[4096];
-
-static bool is_special_tile = false;
-
 
 static bool saveLevelDialog = false;
 static bool loadLevelDialog = false;
 
 
-static bool dialogSaveStatus = false;
-static bool dialogLoadStatus = false;
 static bool dialogToolbar = true;
-static  bool confirmSaveDialogWindow = false;
+
 
 
 static bool openDialogSaveDialog();
@@ -45,20 +37,8 @@ typedef enum EDITOR_DIALOG_TYPE {
     EDITOR_LOAD_DIALOG
 }EDITOR_DIALOG_TYPE;
 
-typedef struct EDITOR_THREAD_DATA {
-    EDITOR *editor; /* TODO (fix this struct alignment problem) */
-    int type;
-    int end;
-    char pad[8];
-}EDITOR_THREAD_DATA;
 
 
-static EDITOR_THREAD_DATA editor_thread_data = {
-    nullptr,
-    EDITOR_SAVE_DIALOG,
-    0,
-    {0,0,0}
-};
 
 
 #define GRID_TOOLS_H (30)
@@ -166,19 +146,7 @@ void editor_init(void){
     }
 
 
-    /* THREAD INITIALIZATION */
 
-    thread_create(&thread_info);
-
-    al_lock_mutex(thread_info.mutex);
-    editor_thread_data.end = 0;
-    editor_thread_data.editor = editor;
-    al_unlock_mutex(thread_info.mutex);
-
-    dialog_thread = al_create_thread(editor_dialog_thread, &editor_thread_data);
-    al_start_thread(dialog_thread);
-
-   /* THREAD INITIALIZATION END */
 
 
     //editor_load_tile_file("editor.txt");
@@ -213,7 +181,7 @@ LEVEL* editor_load_path(const char *filename){
 
     strncpy(path, filename, 1024);
 
-    if(!level_load(get_window_display(), level, path, false)){
+    if(!level_load(level, path)){
         return nullptr;
     }
 
@@ -230,7 +198,7 @@ LEVEL* editor_load_path(const char *filename){
 bool editor_load_mem(LEVEL *level){
 
     char *layer_name = nullptr;
-    std::string title = "CB EDITOR - " + std::string(level->mapname) + ".bpm";
+    std::string title = "CB EDITOR - " + std::string(level->mapname);
 
     editor->level  =  level;
     editor->layer  = EDITOR_LAYER_MAP;
@@ -308,15 +276,7 @@ void editor_update_input(ALLEGRO_EVENT *e)
 
     }
 
-    /*
-     * a bug  that cannot state change after EDITOR_LAYER ALL
-    if(keyboard_pressed(ALLEGRO_KEY_4)){
-        if(editor->layer == EDITOR_LAYER_ALL) return;
 
-        editor->layer = EDITOR_LAYER_ALL;
-
-    }
-    */
      editor_layer_to_str(editor->layer);
 
 
@@ -341,24 +301,10 @@ void editor_update(ALLEGRO_EVENT *e)
     //emitter_update(emitter, e->timer.count,RAND_INT(1,100) / 100 , RAND_INT(1,100) / 100,  RAND_NUMBER() * 400, RAND_NUMBER() * 400 , RAND_NUMBER() * 5 );
 
 
-    if(editor->state == EDITOR_STATE_SAVE){
-        opened_dialog = false;
-        editor->state = EDITOR_STATE_SAVE;
-
-        al_lock_mutex(thread_info.mutex);
-        editor_thread_data.end = 1;
-        editor_thread_data.type = EDITOR_SAVE_DIALOG;
-        al_unlock_mutex(thread_info.mutex);
-
-    }
 
 
-    if(editor->state == EDITOR_STATE_LOAD){
-        al_lock_mutex(thread_info.mutex);
-        editor_thread_data.end = 1;
-        editor_thread_data.type = EDITOR_LOAD_DIALOG;
-        al_unlock_mutex(thread_info.mutex);
-    }
+
+
 
     if( (mouse_get()->x / TILE_SIZE) >  CANVAS_GRID_W - 1 ){
         editor->state = EDITOR_STATE_PICK_TILE;
@@ -441,14 +387,10 @@ void editor_update(ALLEGRO_EVENT *e)
 
 void editor_map_to_coord(void)
 {
-    float x1 = (mouse_get()->x / TILE_SIZE) * TILE_SIZE;
-    float x2 = TILE_SIZE * (mouse_get()->x / TILE_SIZE) + TILE_SIZE;
-    float y1 = (mouse_get()->y / TILE_SIZE) * TILE_SIZE;
-    float y2 = TILE_SIZE * (mouse_get()->y / TILE_SIZE) + TILE_SIZE;
-    editor->editor_rect.x1 = x1;
-    editor->editor_rect.y1 = y1;
-    editor->editor_rect.x2 = x2;
-    editor->editor_rect.y2 = y2;
+    editor->editor_rect.x1 = (mouse_get()->x / TILE_SIZE) * TILE_SIZE;
+    editor->editor_rect.y1 = (mouse_get()->y / TILE_SIZE) * TILE_SIZE;
+    editor->editor_rect.x2 = TILE_SIZE * (mouse_get()->x / TILE_SIZE) + TILE_SIZE;
+    editor->editor_rect.y2 = TILE_SIZE * (mouse_get()->y / TILE_SIZE) + TILE_SIZE;
 }
 
 void editor_draw(void)
@@ -474,22 +416,6 @@ void editor_draw(void)
     if(loadLevelDialog)   openDialogLoadDialog();
     if(dialogToolbar)     openDialogToolbar();
 
-    if(confirmSaveDialogWindow){
-            ImGui::Begin("Status:", &confirmSaveDialogWindow);
-            ImGui::BulletText("the Map is not saved.. do you want to save it now?");
-            if(ImGui::Button("Yes..")){
-
-            }
-
-            if(ImGui::Button("No!")){
-
-            }
-
-            ImGui::End();
-    }
-
-
-
     ImGui::Render();
     //al_clear_to_color(al_map_rgb(33,150,243));
     ImGui_ImplAllegro5_RenderDrawData(ImGui::GetDrawData());
@@ -514,19 +440,6 @@ void editor_destroy(void)
 
     if(editor_default_font) al_destroy_font(editor_default_font);
 
-    if(thread_info.mutex) {
-        al_destroy_mutex(thread_info.mutex);
-        thread_info.mutex = nullptr;
-    }
-
-    if(thread_info.cond) {
-        al_destroy_cond(thread_info.cond);
-        thread_info.cond = nullptr;
-    }
-
-    if(dialog_thread){
-        al_destroy_thread(dialog_thread);
-    }
 
 
 
@@ -661,9 +574,9 @@ void editor_render_canvas(void){
             if( x <= editor->level->map_width && y <= editor->level->map_height){
                 TILE_ID tile = (TILE_ID) editor->level->map_layer[y][x].id;
 
-                if(tile != NO_TILE){
-                   al_draw_bitmap( tiles_get_by_id( (unsigned char) tile), (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y,0);
-               }
+
+                al_draw_bitmap( tiles_get_by_id( (unsigned char) tile), (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y,0);
+
             }
 
             al_draw_rectangle((x * TILE_SIZE) - editor->camera->x , (y * TILE_SIZE) - editor->camera->y, (x * TILE_SIZE) + TILE_SIZE - editor->camera->x, (y * TILE_SIZE) + TILE_SIZE - editor->camera->y, al_map_rgb(0,0,153),1.0);
@@ -713,41 +626,7 @@ static void editor_select_tile(unsigned char tid){
     editor->selected_tile = tid;
 }
 
-static void* editor_dialog_thread(ALLEGRO_THREAD *thread, void *data){
-    EDITOR_THREAD_DATA *d = (EDITOR_THREAD_DATA*) data;
 
-
-    while(!al_get_thread_should_stop(thread)){
-
-        if(d->end){
-
-            switch(d->type){
-                case EDITOR_SAVE_DIALOG:
-                    level_save(get_window_display(), d->editor->level, nullptr, true);
-                break;
-
-                case EDITOR_LOAD_DIALOG:
-                    level_load(get_window_display(), d->editor->level, nullptr, true);
-                break;
-
-            }
-
-        }
-
-        al_lock_mutex(thread_info.mutex);
-        d->end = 0;
-        al_unlock_mutex(thread_info.mutex);
-
-        /* this thread is meant to run fast because a thread will keep running in background
-        waiting for the keys shortcuts. so 1 second  is enough to to call them
-        */
-        al_rest(1.0);
-    }
-
-
-    return nullptr;
-
-}
 
 static void editor_load_tile_file(const char* tile_file){
     char *path = nullptr;
@@ -808,27 +687,24 @@ EDITOR *editor_get()
 
 
 static bool openDialogSaveDialog(){
-    char buf[1024] = {};
 
-    ALLEGRO_PATH *path = al_create_path(editor->level->level_path.c_str());
-    strncat(buf, al_get_path_basename(path), 1024 );
-    strncat(buf,".cbm", 1024);
-    al_destroy_path(path);
+
+    static char filename[56] = {};
+
+    strncpy(filename, editor->level->filename.c_str(), editor->level->filename.size());
 
     ImGui::Begin("Save Level", &saveLevelDialog, ImVec2(300,300));
-    ImGui::InputText("Filename:", buf, 1024);
+    ImGui::InputText("Filename:", filename, 1024);
 
 
     if(ImGui::Button("Save")){
-
-        if(!editor->level){
-            level_init_default(editor->level);
+        if(!level_save(editor->level, filename)){
+            WARN("openDialogSaveDialog(): Map Failed to be Saved!");
+            saveLevelDialog = false;
         }
 
+        WARN("openDialogSaveDialog(): MAP SUCCESS SAVED?");
 
-
-        level_save(get_window_display(), editor->level, buf, false);
-        saveLevelDialog = false;
     }
     if(ImGui::Button("Cancel")){
         saveLevelDialog = false;
@@ -836,22 +712,23 @@ static bool openDialogSaveDialog(){
     ImGui::End();
 
     return saveLevelDialog;
+
 }
 static bool openDialogLoadDialog(){
-    char buf[1024] = {};
+    static char buf[1024] = {};
 
-    ALLEGRO_PATH *path = al_create_path(editor->level->level_path.c_str());
-    strncat(buf, al_get_path_basename(path), 1024 );
-    strncat(buf,".cbm", 1024);
-    al_destroy_path(path);
+    strncpy(buf, editor->level->filename.c_str(), 1024);
 
-    strncpy(buf,buf, 1024);
-    //strncpy(buf, 1024, editor->level->mapname, strlen(editor->level->mapname));
     ImGui::Begin("Load Level", &loadLevelDialog, ImVec2(300,300));
-    ImGui::InputTextWithHint("Filename:", "Teste", buf, 1024);
+    ImGui::InputText("Map To Load:", buf, 1024);
     if(ImGui::Button("Load Level")){
+        level_init_default(editor->level);
+        if(!level_load(editor->level, buf)){
+            WARN("Map %s not loaded!", buf);
+            loadLevelDialog = false;
+        }
 
-        level_load(get_window_display(), editor->level, buf, false);
+        LOG("MAP %s LOADED SUCCESSFULLY!", buf);
         loadLevelDialog = false;
     }
     if(ImGui::Button("Cancel")){

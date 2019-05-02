@@ -34,6 +34,7 @@ void CMainGameState::Start()
     al_clear_to_color(al_map_rgb(255,0,0));
     al_set_target_backbuffer(get_window_display());
     level = this->engine->getLoadedLevel();
+    LOG("STARTING : %s", this->engine->getLoadedLevel()->mapname);
     render_start(level);
 
 

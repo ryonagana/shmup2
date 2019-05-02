@@ -47,7 +47,7 @@ IGameState *CEngine::getState()
 
 void CEngine::loadNewLevel(const std::string &mapname)
 {
-    level_load(get_window_display(), &this->loadedLevel, mapname.c_str(), false);
+    level_load(&this->loadedLevel, mapname);
 }
 
 void CEngine::setState(const GameStateID id)

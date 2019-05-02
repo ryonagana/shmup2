@@ -2,7 +2,7 @@
 #include "imgui.h"
 #include "states/IGameState.h"
 #include "examples/imgui_impl_allegro5.h"
-
+#include "path.h"
 
 CMenuState::CMenuState()
 {
@@ -65,9 +65,9 @@ bool CMenuState::windowNewGameDialog()
     ImGui::Begin("Select Map for Editor:", &windowEditorMode,  ImGuiWindowFlags_NoTitleBar |  ImGuiWindowFlags_NoCollapse );
 
     if( ImGui::Button("New Map...")){
-          LEVEL *lvl =  this->mainEngine->getLoadedLevel();
-          level_init_default(lvl); // will destroy all map changes and set to default
           windowNewMap = true;
+
+
     }
 
     for(auto m : this->mapList){
@@ -77,6 +77,7 @@ bool CMenuState::windowNewGameDialog()
 
            mapSelected = m->name;
            this->mainEngine->loadNewLevel(m->path);
+           LOG("MAP SELECTED MENU: %s", m->path.c_str());
            this->mainEngine->setState(GameStateID::Editor); // go to editor
 
         }
@@ -94,7 +95,7 @@ bool CMenuState::windowNewGameDialog()
 
 bool CMenuState::windowNewGameParamsDialog()
 {
-    char buf[1024] = "";
+    static char buf[1024] = "";
     int h = static_cast<int>(this->mainEngine->getLoadedLevel()->map_width);
     int w = static_cast<int>(this->mainEngine->getLoadedLevel()->map_height);
     bool max_h = false, max_w = false;
@@ -113,6 +114,7 @@ bool CMenuState::windowNewGameParamsDialog()
 
     if(ImGui::Button("Ok")){
 
+        /*
         if(max_w){
             ImGui::Text("Sorry Max Width: %d  ", MAX_GRID_X);
 
@@ -121,9 +123,28 @@ bool CMenuState::windowNewGameParamsDialog()
         }else {
               windowNewMap = false;
               windowMainMenu = true;
-              level_save(get_window_display(), this->mainEngine->getLoadedLevel(), "~map_tmp.cbm", false);
+              level_save(this->mainEngine->getLoadedLevel(), "~map_tmp.cbm");
               this->mainEngine->setState(GameStateID::Editor);
         }
+        */
+
+
+         LEVEL *lvl = this->mainEngine->getLoadedLevel();
+
+         std::string new_path = get_file_path("map", buf);
+         level_init_default(lvl);
+         lvl->mapname = buf;
+         lvl->filename = buf;
+         lvl->level_path = new_path;
+         level_save(lvl, buf);
+         this->mainEngine->setState(GameStateID::Editor);
+         windowNewMap = false;
+         windowMainMenu = true;
+
+    }
+
+    if(ImGui::Button("Cancel")){
+        windowNewMap = false;
     }
 
     ImGui::End();
