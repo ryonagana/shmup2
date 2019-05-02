@@ -75,6 +75,8 @@ bool level_load(LEVEL *lvl, const std::string mapname){
 
 
     in.read(lvl->magic, sizeof(char) * strlen(MAP_ID) );
+    in >> lvl->ver;
+
 
     if(!level_header_is_valid(lvl->magic)){
         return false;
@@ -85,7 +87,7 @@ bool level_load(LEVEL *lvl, const std::string mapname){
     lvl->level_path = map_path;
 
 
-    in >> lvl->ver;
+
 
     if(lvl->ver > MAP_VER || lvl->ver != MAP_VER){
            WARN("%s map version incorrect ", mapname.c_str());
@@ -132,6 +134,8 @@ bool level_save(LEVEL *lvl, const std::string mapname){
     delete map_path_ptr;
 
     out.open(map_path, std::ofstream::binary);
+
+
 
 
     out.write(lvl->magic, 6);

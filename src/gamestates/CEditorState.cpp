@@ -18,10 +18,7 @@ void CEditorState::Init()
 
 void CEditorState::Start()
 {
-    if(this->mainEngine->getLoadedLevel() == nullptr){
 
-    }
-        editor_load_mem(this->mainEngine->getLoadedLevel());
 }
 
 void CEditorState::Destroy()

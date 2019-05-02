@@ -65,6 +65,7 @@ bool CMenuState::windowNewGameDialog()
     ImGui::Begin("Select Map for Editor:", &windowEditorMode,  ImGuiWindowFlags_NoTitleBar |  ImGuiWindowFlags_NoCollapse );
 
     if( ImGui::Button("New Map...")){
+          level_init_default(this->mainEngine->getLoadedLevel());
           windowNewMap = true;
 
 
@@ -78,7 +79,7 @@ bool CMenuState::windowNewGameDialog()
            mapSelected = m->name;
            this->mainEngine->loadNewLevel(m->path);
            LOG("MAP SELECTED MENU: %s", m->path.c_str());
-           this->mainEngine->setState(GameStateID::Editor); // go to editor
+          // this->mainEngine->setState(GameStateID::Editor); // go to editor
 
         }
    }
@@ -137,6 +138,7 @@ bool CMenuState::windowNewGameParamsDialog()
          lvl->filename = buf;
          lvl->level_path = new_path;
          level_save(lvl, buf);
+         this->mainEngine->loadNewLevel(buf);
          this->mainEngine->setState(GameStateID::Editor);
          windowNewMap = false;
          windowMainMenu = true;
