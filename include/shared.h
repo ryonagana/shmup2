@@ -59,3 +59,12 @@ void msg_write(int type,  const std::string &file, int line, const std::string f
 #endif
 
 
+typedef  unsigned char  byte;
+typedef  char           sbyte;
+typedef  int_least32_t  sint32;
+typedef  int_least16_t  sint16;
+typedef  uint_least32_t uint32;
+typedef  uint_least16_t uint16;
+typedef  int_least8_t   sint8;
+typedef  uint_least8_t  uint8;
+

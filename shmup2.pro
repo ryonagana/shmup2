@@ -40,7 +40,8 @@ SOURCES += \
     lib/imgui/imgui.cpp \
     lib/imgui/imgui_widgets.cpp \
     src/GUI/imgui_impl_allegro5.cpp \
-    src/gamestates/CEditorState.cpp
+    src/gamestates/CEditorState.cpp \
+    src/Utils/CUtils.cpp
 
 
 HEADERS += \
@@ -76,7 +77,8 @@ HEADERS += \
     include/Utils/CText.h \
     lib/imgui/imgui.h \
     include/GUI/imgui_impl_allegro5.h \
-    include/gamestates/CEditorState.h
+    include/gamestates/CEditorState.h \
+    include/Utils/CUtils.h
 
 CONFIG += c++14
 QMAKE_CXXFLAGS += -std=c++14
@@ -92,8 +94,9 @@ win32: {
     INCLUDEPATH += include/
     DEPENDPATH  += include/
 
-    INCLUDEPATH += lib/imgui
-    DEPENDPATH  += lib/imgui
+
+    INCLUDEPATH += lib/imgui/
+    DEPENDPATH  += lib/imgui/
 
 
     DEFINES += ALLEGRO_STATICLINK
@@ -101,9 +104,11 @@ win32: {
     INCLUDEPATH += $$PWD/../../libs/Allegro524_mingw/include
     DEPENDPATH += $$PWD/../../libs/Allegro524_mingw/include
 
-    LIBS += -L$$PWD/../libs/Allegro524_mingw/lib/ -lallegro_monolith-debug-static -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
-    INCLUDEPATH += $$PWD/../libs/Allegro524_mingw/include
-    DEPENDPATH += $$PWD/../libs/Allegro524_mingw/include
+
+    INCLUDEPATH += $$PWD/../libs/Allegro525_i686_dwarf/include
+    DEPENDPATH += $$PWD/../libs/Allegro525_i686_dwarf/include
+    LIBS += -L$$PWD/../libs/Allegro525_i686_dwarf/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -lwebp -lwebpdecoder -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
+
 
 
 }
@@ -131,4 +136,6 @@ macx: {
     INCLUDEPATH += /usr/local/include
     DEPENDPATH  += /usr/local/include
 }
+
+
 

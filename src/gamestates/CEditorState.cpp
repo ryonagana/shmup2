@@ -19,6 +19,8 @@ void CEditorState::Init()
 void CEditorState::Start()
 {
 
+   editor_set_level(this->mainEngine->getLoadedLevel());
+
 }
 
 void CEditorState::Destroy()

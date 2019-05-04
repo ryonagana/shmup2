@@ -1,7 +1,7 @@
 #include "level.h"
 #include "path.h"
 #include <cstring>
-#include "shared.h"
+
 
 /*
     this level module cant be done without help of Neil Roy's Deluxe Pacman Source code help
@@ -66,60 +66,58 @@ void level_init_default(LEVEL* level){
 
 bool level_load(LEVEL *lvl, const std::string mapname){
     const char *map_path_ptr = nullptr;
+    bool valid = false;
     char map_path[4096] = {};
     map_path_ptr = get_file_path("map", mapname.c_str());
     strncpy(map_path, map_path_ptr, strlen(map_path_ptr) + 1);
-    std::ifstream in(map_path, std::ifstream::binary);
+    std::ifstream in(map_path, std::ios::binary);
     delete  map_path_ptr;
     map_path_ptr = nullptr;
 
-
-    in.read(lvl->magic, sizeof(char) * strlen(MAP_ID) );
-    in >> lvl->ver;
-
-
-    if(!level_header_is_valid(lvl->magic)){
+    if(in.bad()){
+        WARN("File not Found in %s", map_path);
         return false;
     }
 
-    lvl->mapname = mapname;
-    lvl->filename = lvl->mapname;
-    lvl->level_path = map_path;
+    in.read(lvl->magic, sizeof(char) * 5);
 
-
-
-
-    if(lvl->ver > MAP_VER || lvl->ver != MAP_VER){
-           WARN("%s map version incorrect ", mapname.c_str());
-           return false;
+    if(!level_header_is_valid(lvl->magic)){
+        WARN("Wrong File: %s", map_path);
+        return valid;
     }
 
+    valid = true;
+    lvl->ver = in.get();
 
-    in >> lvl->player_pos.x;
-    in >> lvl->player_pos.y;
+
+    if( lvl->ver < MAP_VER ||  lvl->ver != MAP_VER){
+        WARN("Wrong File Version, its not fatal but can cause problems!");
+    }
+
+    lvl->player_pos.x =  static_cast<byte>(in.get());
+    lvl->player_pos.y =  static_cast<byte>(in.get());
 
     for(unsigned int i = 0;i < 4; i++){
-        in >> lvl->keys[i].x;
-        in >> lvl->keys[i].y;
+       lvl->keys[i].x =  static_cast<byte>(in.get());
+       lvl->keys[i].y =  static_cast<byte>(in.get());
     }
 
-    in >> lvl->map_width;
-    in >> lvl->map_height;
 
-    if(lvl->map_width > MAX_GRID_X) lvl->map_width =  MAX_GRID_X;
-    if(lvl->map_height > MAX_GRID_Y) lvl->map_width =  MAX_GRID_Y;
-
-    in >> lvl->background_id;
-
-    level_read_tiles_from_file(in, lvl->bg_layer);
-    level_read_tiles_from_file(in, lvl->map_layer);
-    level_read_tiles_from_file(in, lvl->obj_layer);
-
-    in.close();
-
-    return true;
+     lvl->map_width   =  static_cast<byte>(in.get());
+     lvl->map_height  =  static_cast<byte>(in.get());
+     lvl->background_id =  static_cast<byte>(in.get());
 
 
+     level_read_tiles_from_file(in, lvl->bg_layer);
+     level_read_tiles_from_file(in, lvl->map_layer);
+     level_read_tiles_from_file(in, lvl->obj_layer);
+
+     lvl->mapname = map_path;
+     lvl->filename = mapname;
+     lvl->level_path = lvl->mapname;
+     lvl->valid_file = valid && lvl->ver;
+     in.close();
+     return lvl->valid_file;
 }
 
 
@@ -137,26 +135,26 @@ bool level_save(LEVEL *lvl, const std::string mapname){
 
 
 
+    out.write(lvl->magic, sizeof(char) * strlen(MAP_ID));
+    out.put( static_cast<char>(lvl->ver));
 
-    out.write(lvl->magic, 6);
-    out << lvl->ver;
-    out << lvl->player_pos.x;
-    out << lvl->player_pos.y;
+    out.put(static_cast<char>(lvl->player_pos.x));
+    out.put(static_cast<char>(lvl->player_pos.y));
+
 
     for(unsigned int i = 0;i < 4; i++){
-       out << lvl->keys[i].x;
-       out << lvl->keys[i].y;
+
+       out.put( static_cast<char>(lvl->keys[i].x));
+       out.put( static_cast<char>(lvl->keys[i].y));
     }
 
-    out << lvl->map_width;
-    out << lvl->map_height;
-
-    out << lvl->background_id;
+    out.put( static_cast<char>(lvl->map_width));
+    out.put( static_cast<char>(lvl->map_height));
+    out.put( static_cast<char>(lvl->background_id));
 
     level_write_tiles_to_file(out, lvl->bg_layer, lvl->map_width, lvl->map_height);
     level_write_tiles_to_file(out, lvl->map_layer, lvl->map_width, lvl->map_height);
     level_write_tiles_to_file(out, lvl->obj_layer, lvl->map_width, lvl->map_height);
-
     out.close();
 
     return true;
@@ -222,21 +220,25 @@ void level_map_copy(LEVEL *dest, const LEVEL *orig){
 
 
 static void level_write_tiles_to_file(std::ofstream &fs, TILE map[MAX_GRID_Y][MAX_GRID_X], int width, int height){
+
+
     for(int y = 0; y < MAX_GRID_Y;y++){
         for(int x = 0; x < MAX_GRID_X;x++){
-           fs << map[y][x].id;
-           fs << map[y][x].block;
-           fs << map[y][x].passable;
+           fs.put(static_cast<char>(map[y][x].id));
+           fs.put(static_cast<char>(map[y][x].block));
+           fs.put(static_cast<char>(map[y][x].passable));
         }
     }
+
+
 }
 
 static void level_read_tiles_from_file(std::ifstream &fs, TILE map[MAX_GRID_Y][MAX_GRID_X]){
     for(int y = 0; y < MAX_GRID_Y;y++){
         for(int x = 0; x < MAX_GRID_X;x++){
-           fs >> map[y][x].id;
-           fs >> map[y][x].block;
-           fs >> map[y][x].passable;
+           map[y][x].id = static_cast<byte>(fs.get());
+           map[y][x].block = static_cast<byte>(fs.get());
+           map[y][x].passable = static_cast<byte>(fs.get());
         }
     }
 }

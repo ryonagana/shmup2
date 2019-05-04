@@ -70,7 +70,7 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
 
         }
     }
-
+    al_hold_bitmap_drawing(false);
     al_set_target_backbuffer(get_window_display());
 
     al_set_target_bitmap(render_layer[OBJ_RENDER_LAYER]);
@@ -88,5 +88,5 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
 
     al_draw_bitmap(render_layer[MAP_RENDER_LAYER],0,0,0);
     spaceship_draw(ship, scroll);
-    al_draw_bitmap(render_layer[OBJ_RENDER_LAYER],0,0,0);
+    //al_draw_bitmap(render_layer[OBJ_RENDER_LAYER],0,0,0);
 }

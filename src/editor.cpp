@@ -698,6 +698,7 @@ static bool openDialogSaveDialog(){
 
 
     if(ImGui::Button("Save")){
+
         if(!level_save(editor->level, filename)){
             WARN("openDialogSaveDialog(): Map Failed to be Saved!");
             saveLevelDialog = false;
@@ -722,7 +723,7 @@ static bool openDialogLoadDialog(){
     ImGui::Begin("Load Level", &loadLevelDialog, ImVec2(300,300));
     ImGui::InputText("Map To Load:", buf, 1024);
     if(ImGui::Button("Load Level")){
-        level_init_default(editor->level);
+        //level_init_default(editor->level);
         if(!level_load(editor->level, buf)){
             WARN("Map %s not loaded!", buf);
             loadLevelDialog = false;
@@ -748,4 +749,10 @@ static bool openDialogToolbar(){
     }
     */
     return dialogToolbar;
+}
+
+void editor_set_level(LEVEL *level)
+{
+    if(!level->valid_file) return;
+    editor->level = level;
 }

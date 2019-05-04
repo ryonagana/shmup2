@@ -71,6 +71,7 @@ typedef struct EDITOR{
 }EDITOR;
 
 void editor_init(void);
+void editor_set_level(LEVEL *level);
 bool editor_load_mem(LEVEL *level);
 LEVEL* editor_load_path(const char *filename);
 void editor_update_input(ALLEGRO_EVENT *e);

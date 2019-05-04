@@ -65,6 +65,7 @@ void CGameStateManager::SetStateActive(const GameStateID id)
 {
     auto f = findStateById( static_cast<int>(id));
     this->active = f;
+    this->active->Start();
 
 }
 

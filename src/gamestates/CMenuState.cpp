@@ -78,8 +78,9 @@ bool CMenuState::windowNewGameDialog()
 
            mapSelected = m->name;
            this->mainEngine->loadNewLevel(m->path);
+
            LOG("MAP SELECTED MENU: %s", m->path.c_str());
-          // this->mainEngine->setState(GameStateID::Editor); // go to editor
+           this->mainEngine->setState(GameStateID::Editor); // go to editor
 
         }
    }
@@ -133,7 +134,7 @@ bool CMenuState::windowNewGameParamsDialog()
          LEVEL *lvl = this->mainEngine->getLoadedLevel();
 
          std::string new_path = get_file_path("map", buf);
-         level_init_default(lvl);
+         //level_init_default(lvl);
          lvl->mapname = buf;
          lvl->filename = buf;
          lvl->level_path = new_path;
@@ -278,10 +279,10 @@ void CMenuState::Draw()
     ImGui_ImplAllegro5_NewFrame();
     ImGui::NewFrame();
 
-    if(windowMainMenu){
-        windowMainMenuDialog();
 
-    }
+    windowMainMenuDialog();
+
+
 
     if(windowSelectMap){
         windowSelectMapDialog();

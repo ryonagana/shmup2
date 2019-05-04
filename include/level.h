@@ -11,6 +11,7 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
+#include "shared.h"
 
 #define MAX_GRID_X 200
 #define MAX_GRID_Y 100
@@ -48,8 +49,8 @@ typedef struct LEVEL {
     MAPCOORD player_pos;
     MAPCOORD keys[MAX_LEVEL_KEYS];
     bool valid_file;
-    unsigned char map_width;
-    unsigned char map_height;
+    byte map_width;
+    byte map_height;
     uint16_t powerup_count;
     unsigned char background_id;
     TILE bg_layer [MAX_GRID_Y][MAX_GRID_X];
