@@ -85,9 +85,6 @@ QMAKE_CXXFLAGS += -std=c++14
 QMAKE_CXXFLAGS_DEBUG += -std=c++14 -Wall -Wextra -fpermissive -pedantic -O0
 QMAKE_CXXFLAGS_RELEASE += -s -std=c++14 -Wall -Wextra -fpermissive -pedantic -Os
 
-debug : {
-        DEFINES += DEBUG_MODE
-}
 
 win32: {
 
@@ -100,14 +97,22 @@ win32: {
 
 
     DEFINES += ALLEGRO_STATICLINK
-    LIBS += -L$$PWD/../../libs/Allegro524_mingw/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
+    debug : {
+            DEFINES += DEBUG_MODE
+            LIBS += -L$$PWD/../../libs/Allegro524_mingw/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
+        }
+
+    release :{
+            LIBS += -L$$PWD/../../libs/Allegro524_mingw/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
+        }
+
     INCLUDEPATH += $$PWD/../../libs/Allegro524_mingw/include
     DEPENDPATH += $$PWD/../../libs/Allegro524_mingw/include
 
 
     INCLUDEPATH += $$PWD/../libs/Allegro525_i686_dwarf/include
     DEPENDPATH += $$PWD/../libs/Allegro525_i686_dwarf/include
-    LIBS += -L$$PWD/../libs/Allegro525_i686_dwarf/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -lwebp -lwebpdecoder -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
+    #LIBS += -L$$PWD/../libs/Allegro525_i686_dwarf/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -lwebp -lwebpdecoder -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
 
 
 

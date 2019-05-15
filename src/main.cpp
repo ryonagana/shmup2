@@ -64,6 +64,7 @@ int main(int  argc, char *argv[])
 
     }
     mainEngine.getStateManager().DestroyAllStates();
+    mainEngine.End();
     window_gracefully_quit("End of Main Loop");
 
     return 0;

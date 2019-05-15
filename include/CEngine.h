@@ -16,7 +16,7 @@
 class CEngine {
 private:
     CGameStateManager stateManager;
-    LEVEL loadedLevel;
+    LEVEL *loadedLevel;
     bool redraw;
     //TODO ENEMIES LIST
     //TODO POWERUP/COINS/GOODIES/LIFE/ITEMS LIST
@@ -29,6 +29,7 @@ public:
     CEngine();
     ~CEngine();
     void Start();
+    void End();
     IGameState *getState();
     void loadNewLevel(const std::string &mapname);
     void setState(const GameStateID id);

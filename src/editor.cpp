@@ -429,7 +429,7 @@ void editor_destroy(void)
     if(editor->camera) delete[] editor->camera;
     editor->camera = nullptr;
 
-    if(editor->level) delete[] editor->level;
+    //if(editor->level) delete[] editor->level;
 
     if(editor) delete[] editor;
     editor = nullptr;

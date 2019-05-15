@@ -47,7 +47,8 @@ IGameState *CEngine::getState()
 
 void CEngine::loadNewLevel(const std::string &mapname)
 {
-    level_load(&this->loadedLevel, mapname);
+    this->loadedLevel = new LEVEL;
+    level_load(this->loadedLevel, mapname);
 }
 
 void CEngine::setState(const GameStateID id)
@@ -63,7 +64,7 @@ CGameStateManager CEngine::getStateManager()
 }
 
 LEVEL *CEngine::getLoadedLevel(){
-    return &loadedLevel;
+    return loadedLevel;
 }
 
 CEngine::~CEngine()
@@ -72,6 +73,12 @@ CEngine::~CEngine()
 }
 
 void CEngine::Start(){
-   stateManager.InitStates();
+    stateManager.InitStates();
+}
+
+void CEngine::End()
+{
+    if(this->loadedLevel != nullptr) delete this->loadedLevel;
+    this->loadedLevel = nullptr;
 }
 
