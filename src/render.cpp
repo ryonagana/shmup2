@@ -14,7 +14,8 @@ static ALLEGRO_BITMAP *render_layer[RENDER_MAX_LAYERS] = {nullptr,nullptr,nullpt
 
 
 void render_start(LEVEL *level){
-    for(int i = 0; i < 3 ; i++){
+    if(level == nullptr) return;
+    for(int i = 0; i < RENDER_MAX_LAYERS ; i++){
         render_layer[i] = al_create_bitmap(TILE_SIZE * level->map_width, TILE_SIZE * level->map_height);
     }
 }
@@ -31,7 +32,7 @@ void  render_background_color(LEVEL *level){
         switch(level->background_id){
 
             case 1:
-                col = al_map_rgba(0,0,0,255);
+                col = al_map_rgba(52, 152, 219,255);
             break;
             case 2:
                 col = al_map_rgba(91,45,255,255);
@@ -52,6 +53,7 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
 
     al_set_target_bitmap(render_layer[MAP_RENDER_LAYER]);
     al_hold_bitmap_drawing(true);
+
     for(int y = 0; y < level->map_height; y++){
         for (int x = 0; x < level->map_width ; x++) {
 
@@ -59,7 +61,7 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
             //al_draw_bitmap(tiles_get_by_id( static_cast<int>( level->bg_layer[y][x].id)), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y, 0 );
 
             // the map tiles
-            if(level->obj_layer[y][x].id == NO_TILE ) continue;
+            if(level->map_layer[y][x].id == NO_TILE ) continue;
             al_draw_bitmap( tiles_get_by_id( static_cast<int>(level->map_layer[y][x].id) ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
 
             //draw the ship
@@ -75,11 +77,13 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
 
     al_set_target_bitmap(render_layer[OBJ_RENDER_LAYER]);
     al_hold_bitmap_drawing(true);
+
     for(int y = 0; y < level->map_height; y++){
         for (int x = 0; x < level->map_width ; x++) {
             //draw the highest layer for givbe the illusion the player is behind a wall or something
-            if(level->obj_layer[y][x].id == NO_TILE ) continue;
-            al_draw_bitmap( tiles_get_by_id( static_cast<int>(level->obj_layer[y][x].id) ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
+            if(level->obj_layer[y][x].id != NO_TILE ){
+                al_draw_bitmap( tiles_get_by_id( static_cast<int>(level->obj_layer[y][x].id) ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
+            }
         }
     }
     al_hold_bitmap_drawing(false);

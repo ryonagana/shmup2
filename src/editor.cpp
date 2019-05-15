@@ -529,6 +529,8 @@ void editor_render_coord_text(){
     //al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 85 ,0, "TileName: %s", tiles_get_name(static_cast<TILE_ID>(editor->selected_tile))->name.c_str() == nullptr ? "" : tiles_get_name(static_cast<TILE_ID>(editor->selected_tile))->name.c_str()  );
     al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 50 ,0, "Tile X: %d", editor->tile_selected_data.tilex);
     al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 35,0, "Tile Y: %d",editor->tile_selected_data.tiley);
+    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 25,0, "CAMERA X: %d",editor->tile_selected_data.tiley);
+     al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) -15,0, "CAMERA Y: %d",editor->tile_selected_data.tiley);
 }
 
 TILE *editor_select_layer(EDITOR_LAYER_STATE state, int tilex, int tiley){
