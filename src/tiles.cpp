@@ -7,6 +7,52 @@
 #include <algorithm>
 #include <vector>
 
+#define MAX_TILE_COUNT 255
+
+static ALLEGRO_BITMAP *tileset = nullptr;
+static Utils::CRect tileArray[MAX_TILE_COUNT] = {};
+
+
+
+bool tiles_init(void){
+
+    tileArray[NO_TILE] = {0,0,0,0};
+    tileArray[TILE_GROUND01_F] = {0,0,32,32};
+    tileArray[TILE_GROUND01_TOP_L] = {0,128,32,32};
+    tileArray[TILE_GROUND01_TOP_R] = {0,96,32,32};
+    tileArray[TILE_GROUND02_ROCK_F] = {0,25,32,32};
+    tileArray[TILE_GROUND02_ROCK_TOP] = {0,25,32,32};
+
+
+
+    char *path = get_file_path("tile", "spritesheet.png");
+
+    tileset = al_load_bitmap(path);
+
+    if(!tileset){
+        delete path;
+        return false;
+    }
+
+
+
+
+    return true;
+
+}
+
+void tiles_destroy(void){
+    if(tileset) al_destroy_bitmap(tileset);
+}
+
+
+
+Utils::CRect tiles_get_by_id(unsigned char id){
+
+    return tileArray[id];
+}
+
+/*
 static ALLEGRO_BITMAP *tileset = nullptr;
 static ALLEGRO_BITMAP *special_tileset = nullptr;
 
@@ -23,7 +69,7 @@ static void tiles_load_from_file(const char *filename);
 
 static std::vector<TILEINFO*> tile_names;
 
-/*
+
 static char* tile_names[TILE_COUNT + 1] = {
     "No Tile\0",
     "Tile Ground 01  Flat\0",
@@ -31,7 +77,7 @@ static char* tile_names[TILE_COUNT + 1] = {
     "Tile Ground 01  Yop L\0",
     nullptr,
 };
-*/
+
 
 bool tiles_init(void){
     char *filepath = get_file_path("tile", "spritesheet.png");
@@ -132,27 +178,6 @@ ALLEGRO_BITMAP *special_tiles_get_by_id(unsigned char id){
     return tiles_special_sub_bmp[id] != nullptr ? tiles_special_sub_bmp[id] : tiles_sub_bmp[NO_TILE];
 }
 
-void tiles_set_properties(TILE *tile){
-    switch (tile->id) {
-        case NO_TILE:
-            tile->block = false;
-            tile->passable = true;
-        break;
-        case TILE_GROUND01_F:
-            tile->block = true;
-            tile->passable = false;
-        break;
-
-        case TILE_GROUND01_TOP_L:
-            tile->block = true;
-            tile->passable = false;
-        break;
-        case TILE_GROUND01_TOP_R:
-            tile->block = true;
-            tile->passable = false;
-        break;
-    }
-}
 
 
 TILEINFO *tiles_get_name(TILE_ID id){
@@ -222,3 +247,43 @@ static void tiles_load_from_file(const char *filename){
     al_fclose(fp);
 
 }
+*/
+
+void tiles_draw(const Utils::CRect r, float x, float y)
+{
+    al_draw_bitmap_region(tileset, r.getX(), r.getY(), r.getW(), r.getH(), x,y,0);
+}
+
+ALLEGRO_BITMAP *tiles_draw_tile_bmp(ALLEGRO_BITMAP *dst, const Utils::CRect r)
+{
+    if(dst == nullptr) return nullptr;
+
+    al_set_target_bitmap(dst);
+    tiles_draw(r,0,0);
+    al_set_target_backbuffer(get_window_display());
+
+    return dst;
+}
+
+void tiles_set_properties(TILE *tile){
+    switch (tile->id) {
+        case NO_TILE:
+            tile->block = false;
+            tile->passable = true;
+        break;
+        case TILE_GROUND01_F:
+            tile->block = true;
+            tile->passable = false;
+        break;
+
+        case TILE_GROUND01_TOP_L:
+            tile->block = true;
+            tile->passable = false;
+        break;
+        case TILE_GROUND01_TOP_R:
+            tile->block = true;
+            tile->passable = false;
+        break;
+    }
+}
+

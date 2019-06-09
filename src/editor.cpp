@@ -125,8 +125,14 @@ void editor_init(void){
     canvas_screen = al_create_bitmap( CANVAS_GRID_W * TILE_SIZE , CANVAS_GRID_H * TILE_SIZE );
     tools_screen = al_create_bitmap(  5 * TILE_SIZE,  CANVAS_GRID_H * TILE_SIZE );
     info_screen = al_create_bitmap( (CANVAS_GRID_W + GRID_TOOLS_W ) * TILE_SIZE, 5 * TILE_SIZE);
+    tile_selected_miniature = al_create_bitmap(32,32);
 
-    tile_selected_miniature = tiles_get_by_id(editor->selected_tile);
+    //Utils::CRect r  = tiles_get_by_id(editor->selected_tile);
+
+    //tiles_draw_tile_bmp(tile_selected_miniature, r->rect);
+
+    //tile_selected_miniature = tiles_draw_tile_bmp()  //tiles_get_by_id(editor->selected_tile);
+
     editor_clear_screen(canvas_screen, al_map_rgb(0,0,0));
     editor_clear_screen(tools_screen, al_map_rgb(0,127,0));
     editor_default_font = al_create_builtin_font();
@@ -401,7 +407,11 @@ void editor_draw(void)
 
     editor_render_canvas();
     editor_render_bg();
-    tile_selected_miniature =  tiles_get_by_id(editor->selected_tile);
+
+    Utils::CRect r  = tiles_get_by_id(editor->selected_tile);
+
+    tiles_draw_tile_bmp(tile_selected_miniature, r);
+    //tile_selected_miniature =  tiles_get_by_id(editor->selected_tile);
 
     editor_render_coord_text();
     editor_render_tools();
@@ -574,11 +584,15 @@ void editor_render_canvas(void){
          for(int x = 0; x < MAX_GRID_X; x++){
 
             if( x <= editor->level->map_width && y <= editor->level->map_height){
+
+
                 TILE_ID tile = (TILE_ID) editor->level->map_layer[y][x].id;
 
-
-                al_draw_bitmap( tiles_get_by_id( (unsigned char) tile), (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y,0);
-
+                if(tile != NO_TILE){
+                    Utils::CRect r  = tiles_get_by_id(tile);
+                    tiles_draw(r, (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y);
+                    //al_draw_bitmap( tiles_get_by_id( (unsigned char) tile), (TILE_SIZE * x) - editor->camera->x, (TILE_SIZE * y) - editor->camera->y,0);
+                }
             }
 
             al_draw_rectangle((x * TILE_SIZE) - editor->camera->x , (y * TILE_SIZE) - editor->camera->y, (x * TILE_SIZE) + TILE_SIZE - editor->camera->x, (y * TILE_SIZE) + TILE_SIZE - editor->camera->y, al_map_rgb(0,0,153),1.0);
@@ -595,7 +609,10 @@ void editor_render_canvas(void){
 
 void editor_render_canvas_cursor(void){
 
-    al_draw_bitmap(tiles_get_by_id(editor->selected_tile) ,editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER,0);
+    Utils::CRect r  = tiles_get_by_id(editor->selected_tile);
+    //tiles_draw,editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER);
+    tiles_draw(r, editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER);
+    //al_draw_bitmap(tiles_get_by_id(editor->selected_tile) ,editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER,0);
     al_draw_bitmap(editor_cursor, editor->editor_rect.x1, editor->editor_rect.y1 + EDITOR_TOP_SPACER, 0);
 }
 
@@ -614,7 +631,9 @@ void editor_render_tools(void){
         for(unsigned  int x = 0; x < GRID_TOOLS_W ; x++){
 
             if(editor_tiles[y][x].id == NO_TILE) continue;
-                al_draw_bitmap( tiles_get_by_id( editor_tiles[y][x].id), TILE_TO_SIZE(x)  + TILE_TO_SIZE( CANVAS_GRID_W) , TILE_TO_SIZE(y) + EDITOR_TOP_SPACER,0);
+                 Utils::CRect r  = tiles_get_by_id(editor_tiles[y][x].id);
+                 tiles_draw(r,  TILE_TO_SIZE(x)  + TILE_TO_SIZE( CANVAS_GRID_W) , TILE_TO_SIZE(y) + EDITOR_TOP_SPACER);
+                //al_draw_bitmap( tiles_get_by_id( editor_tiles[y][x].id), TILE_TO_SIZE(x)  + TILE_TO_SIZE( CANVAS_GRID_W) , TILE_TO_SIZE(y) + EDITOR_TOP_SPACER,0);
                 al_draw_rectangle( (x * TILE_SIZE)  + TILE_TO_SIZE( CANVAS_GRID_W ), (y * TILE_SIZE) + EDITOR_TOP_SPACER, ((x * TILE_SIZE) + TILE_SIZE) +  TILE_TO_SIZE( CANVAS_GRID_W ), ((y * TILE_SIZE) + TILE_SIZE) + EDITOR_TOP_SPACER, al_map_rgb(255,195,0),1.0);
 
         }

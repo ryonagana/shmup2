@@ -62,7 +62,11 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
 
             // the map tiles
             if(level->map_layer[y][x].id == NO_TILE ) continue;
-            al_draw_bitmap( tiles_get_by_id( static_cast<int>(level->map_layer[y][x].id) ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
+
+            Utils::CRect r = tiles_get_by_id(level->map_layer[y][x].id);
+            tiles_draw(r, (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y);
+
+            //al_draw_bitmap( tiles_get_by_id( static_cast<int>(level->map_layer[y][x].id) ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
 
             //draw the ship
             //spaceship_draw(ship, scroll);
@@ -82,7 +86,14 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
         for (int x = 0; x < level->map_width ; x++) {
             //draw the highest layer for givbe the illusion the player is behind a wall or something
             if(level->obj_layer[y][x].id != NO_TILE ){
-                al_draw_bitmap( tiles_get_by_id( static_cast<int>(level->obj_layer[y][x].id) ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
+
+
+                Utils::CRect r  = tiles_get_by_id( static_cast<int>(level->map_layer[y][x].id));
+
+
+                tiles_draw(r,(TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y);
+
+                //al_draw_bitmap( tiles_get_by_id( static_cast<int>(level->obj_layer[y][x].id) ), (TILE_SIZE * x) - scroll->x, (TILE_SIZE * y) - scroll->y,0);
             }
         }
     }

@@ -6,7 +6,7 @@
 #include <allegro5/allegro5.h>
 #include <allegro5/allegro_native_dialog.h>
 #include "level.h"
-
+#include "Utils/CRect.h"
 
 
 typedef enum SPECIAL_TILES_ID {
@@ -29,16 +29,16 @@ typedef enum TILE_ID {
 
 
 typedef struct TILEINFO {
-    std::string name;
+
     TILE_ID id;
+    Utils::CRect rect;
     TILEINFO(){
-        name = "";
         id = NO_TILE;
     }
 
-    TILEINFO(const std::string &tname , TILE_ID tid = NO_TILE){
-        name = tname;
+    TILEINFO(TILE_ID tid = NO_TILE, const Utils::CRect r = {0,0,0,0}){
         id = tid;
+        rect = r;
     }
 
 }TILEINFO;
@@ -48,9 +48,18 @@ typedef struct TILEINFO {
 
 bool tiles_init(void);
 void tiles_destroy(void);
+
+Utils::CRect tiles_get_by_id(unsigned char id);
+void tiles_draw(const Utils::CRect r, float x, float y);
+ALLEGRO_BITMAP* tiles_draw_tile_bmp(ALLEGRO_BITMAP *dst, const Utils::CRect r);
+void tiles_set_properties(TILE *tile);
+
+
+/*
 ALLEGRO_BITMAP *tilemap_get_bmp(void);
 ALLEGRO_BITMAP *tiles_get_by_id(unsigned char id);
 ALLEGRO_BITMAP *special_tiles_get_by_id(unsigned char id);
 void tiles_set_properties(TILE *tile);
 TILEINFO *tiles_get_name(TILE_ID id);
+*/
 #endif
