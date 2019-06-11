@@ -355,7 +355,7 @@ void editor_update(ALLEGRO_EVENT *e)
             if(t->id == editor->selected_tile) return;
 
 
-            editor_tile_put(t, (TILE_ID) editor->selected_tile);
+            editor_tile_put(t, static_cast<TILE_ID>(editor->selected_tile));
 
             printf("\nTILE: x: %d y: %d\n", tile_x, tile_y);
             printf("\nTILE ID: %d BLOCK: %d PASSABLE: %d\n", t->id, t->block, t->passable);
@@ -525,7 +525,7 @@ static void editor_layer_to_str(EDITOR_LAYER_STATE state)
 
 static void editor_tile_put(TILE *map, TILE_ID id)
 {
-    map->id = (unsigned char) id;
+    map->id =static_cast<byte>(id);
     tiles_set_properties(map);
 
 }
@@ -572,7 +572,7 @@ TILE *editor_select_layer(EDITOR_LAYER_STATE state, int tilex, int tiley){
 
 static void editor_register_tile(TILE_ID id, int tx, int ty)
 {
-    editor_tiles[ty][tx].id = (unsigned char) id;
+    editor_tiles[ty][tx].id = static_cast<byte>(id);
 }
 
 void editor_render_canvas(void){
@@ -586,7 +586,7 @@ void editor_render_canvas(void){
             if( x <= editor->level->map_width && y <= editor->level->map_height){
 
 
-                TILE_ID tile = (TILE_ID) editor->level->map_layer[y][x].id;
+                TILE_ID tile = static_cast<TILE_ID>( editor->level->map_layer[y][x].id);
 
                 if(tile != NO_TILE){
                     Utils::CRect r  = tiles_get_by_id(tile);
@@ -646,59 +646,6 @@ static void editor_select_tile(unsigned char tid){
     editor->old_selected_tile = editor->selected_tile;
     editor->selected_tile = tid;
 }
-
-
-
-static void editor_load_tile_file(const char* tile_file){
-    char *path = nullptr;
-    static ALLEGRO_FILE *fp_file =  nullptr;
-
-
-    if(!fp_file){
-        path = get_file_path(nullptr,tile_file);
-
-        if(!al_filename_exists(path)){
-            WARN("TILE EDITOR  -- %s -- NOT FOUND", path);
-            return;
-        }
-
-        fp_file = al_fopen(path, "rb");
-
-    }
-
-
-   char linebuf[127];
-   char *text = nullptr;
-
-   memset(linebuf,0, sizeof(char) * 127);
-   al_fgets(fp_file, linebuf, sizeof(char) * 127);
-
-
-   while( (al_fgets(fp_file, linebuf, sizeof(char) * 127)) != nullptr && !al_feof(fp_file) ){
-       int id,row,col;
-
-       text = strtok(linebuf,";");
-       if(*text == '\n') break;
-
-       id = atoi(text);
-       text = nullptr;
-       text = strtok(nullptr, ";");
-       row = atoi(text);
-       text = nullptr;
-       text = strtok(nullptr, ";");
-       col = atoi(text);
-
-       memset(linebuf,0, sizeof(char) * 127);
-       editor_register_tile( static_cast<TILE_ID>(id), row, col);
-
-   }
-
-   LOG("Editor Tiles Loaded With Success!");
-   LOG("Editor.txt: [%s]", path);
-   al_fclose(fp_file);
-
-}
-
 
 
 EDITOR *editor_get()

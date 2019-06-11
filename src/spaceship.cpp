@@ -196,5 +196,5 @@ void spaceship_draw(SPACESHIP *ship, CAMERA *cam)
    if( ship->flags.collision  ){
     al_draw_text(debug_txt, al_map_rgb(255,0,0), ship->x - cam->x , (ship->y - cam->y) - 25 , 0, "collision");
    }
-   al_draw_rectangle(ship->rect.getX(),ship->rect.getY(), ship->rect.getX() + TILE_SIZE, ship->rect.getY() + TILE_SIZE, al_map_rgb(0,0,255),1);
+   al_draw_rectangle(ship->rect.getX() - 5,ship->rect.getY() - 5, (ship->rect.getX() + TILE_SIZE) + 5, (ship->rect.getY() + TILE_SIZE) + 5, al_map_rgb(0,0,255),1);
 }

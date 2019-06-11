@@ -16,8 +16,12 @@ private:
     SPACESHIP *ship;
     CAMERA    ship_camera;
     LEVEL *level;
-
+    bool hasCollided;
     ALLEGRO_BITMAP *ship_bmp;
+    ALLEGRO_FONT *font = nullptr;
+
+    int sx = 4;
+
 
     bool collisionHighlight; // for debug purposes only;
 

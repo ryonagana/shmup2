@@ -18,8 +18,11 @@ CEngine::CEngine()
     stateManager.addState("Game"  , GameStateID::MainGame, std::make_shared<CMainGameState>(this));
     stateManager.addState("Editor", GameStateID::Editor, std::make_shared<CEditorState>(this));
 
+#if 0
     stateManager.SetStateActive(GameStateID::Menu);
-
+#endif
+    loadNewLevel("teste01.cbm");
+    stateManager.SetStateActive(GameStateID::MainGame);
     stateManager.InitStates();
 
     redraw = false;

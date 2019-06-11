@@ -28,14 +28,19 @@ int main(int  argc, char *argv[])
 
         ALLEGRO_TIMEOUT timeout;
 
-        al_init_timeout(&timeout, 0.6);
+        al_init_timeout(&timeout, 0.001);
         al_wait_for_event_until(get_window_queue(), &ev, &timeout);
 
 
             switch(ev.type){
 
                 case ALLEGRO_EVENT_DISPLAY_CLOSE:
+#ifndef DEBUG_MODE
+                    window_exit_loop();
+#else
                     mainEngine.setState(GameStateID::Menu);
+#endif
+
                 break;
 
 
