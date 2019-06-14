@@ -119,17 +119,24 @@ win32: {
 }
 
 unix: {
+
     INCLUDEPATH += include/
     DEPENDPATH  += include/
 
     INCLUDEPATH += lib/imgui
     DEPENDPATH  += lib/imgui
 
-    INCLUDEPATH += -I/usr/local/include
+    INCLUDEPATH += -I/usr/local/include'
     DEPENDPATH  += /usr/local/include
     LIBS += -L/usr/local/lib -lallegro -lallegro_main -lallegro_image -lallegro_font -lallegro_ttf -lallegro_dialog -lallegro_audio -lallegro_acodec -lallegro_primitives
-    #INCLUDEPATH += /usr/include
-    #DEPENDPATH  += /usr/include
+
+    INCLUDEPATH += -I/usr/include/allegro5
+    DEPENDPATH  += /usr/include/allegro5
+
+    LIBS += -L/usr/lib64 -lallegro -lallegro_main -lallegro_image -lallegro_font -lallegro_ttf -lallegro_dialog -lallegro_audio -lallegro_acodec -lallegro_primitives
+
+
+
 }
 
 macx: {
