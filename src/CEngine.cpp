@@ -21,7 +21,7 @@ CEngine::CEngine()
 #if 0
     stateManager.SetStateActive(GameStateID::Menu);
 #endif
-    loadNewLevel("teste01.cbm");
+    loadNewLevel("testemapa.cbm");
     stateManager.SetStateActive(GameStateID::MainGame);
     stateManager.InitStates();
 

@@ -12,6 +12,8 @@ Utils::CRect::CRect(float xa, float ya, int wa, int ha) : x(xa), y(ya), w(wa), h
 
 bool Utils::CRect::HasIntersection(Utils::CRect b) const
 {
+
+
     if(this->Bottom() <= b.Top()){
         return false;
     }
@@ -56,22 +58,32 @@ void Utils::CRect::setSize(float x, float y, int w, int h)
     return;
 }
 
-float Utils::CRect::getX() const
+float Utils::CRect::X() const
 {
     return x;
 }
 
-float Utils::CRect::getY() const
+void Utils::CRect::setX(float value)
+{
+    x = value;
+}
+
+float Utils::CRect::Y() const
 {
     return y;
 }
 
-float Utils::CRect::getW() const
+void Utils::CRect::setY(float value)
+{
+    y = value;
+}
+
+float Utils::CRect::W() const
 {
     return w;
 }
 
-float Utils::CRect::getH() const
+float Utils::CRect::H() const
 {
     return h;
 }

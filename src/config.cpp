@@ -20,6 +20,7 @@ void config_create_default(ALLEGRO_FILE *fp_cfg){
     settings.music_on.i_field = 1;
     settings.opengl.i_field = 1;
     settings.editor_mode.i_field = 1;
+    settings.fullscreen.i_field = 0;
 
 
 

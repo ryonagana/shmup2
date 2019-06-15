@@ -25,7 +25,7 @@ typedef struct SETTINGS {
         sfx_on.b_field = true;
         music_on.b_field = true;
         opengl.b_field = true;
-        fullscreen.b_field = true;
+        fullscreen.b_field = false;
         editor_mode.b_field = true;
     }
 

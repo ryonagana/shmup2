@@ -1,12 +1,15 @@
 #pragma once
 #include "shared.h"
+
+
 namespace Utils {
     class CRect {
 
-    private:
-        float x,y;
-        int w,h;
     public:
+
+        float x,y;
+        int   w,h;
+
         static CRect Zero();
         CRect(float xa = 0, float ya = 0, int wa = 0, int ha = 0);
 
@@ -33,10 +36,12 @@ namespace Utils {
         int Bottom() const;
 
         void setSize(float x, float y, int w, int h);
-        float getX() const;
-        float getY() const;
-        float getW() const;
-        float getH() const;
+        float X() const;
+        void  setX(float value);
+        float Y() const;
+        void  setY(float value);
+        float W() const;
+        float H() const;
 
 
     };

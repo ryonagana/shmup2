@@ -251,7 +251,7 @@ static void tiles_load_from_file(const char *filename){
 
 void tiles_draw(const Utils::CRect r, float x, float y)
 {
-    al_draw_bitmap_region(tileset, r.getX(), r.getY(), r.getW(), r.getH(), x,y,0);
+    al_draw_bitmap_region(tileset, r.X(), r.Y(), r.W(), r.H(), x,y,0);
 }
 
 ALLEGRO_BITMAP *tiles_draw_tile_bmp(ALLEGRO_BITMAP *dst, const Utils::CRect r)

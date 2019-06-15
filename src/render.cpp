@@ -59,6 +59,7 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
     //clears everythiong inside the bitmap before render
     // we need this cause the clear must be inside the bitmap
     render_background_color(level);
+
     for(int y = 0; y < level->map_height; y++){
         for (int x = 0; x < level->map_width ; x++) {
 
