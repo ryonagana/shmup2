@@ -40,7 +40,8 @@ void spaceship_start(SPACESHIP *ship, CAMERA *ship_camera){
     player_list[SHIP_P2].rect.setSize(player_list[SHIP_P2].x,player_list[SHIP_P2].y, al_get_bitmap_width( ship_bmp_temp), al_get_bitmap_height( ship_bmp_temp) );
 
 
-
+    ship->rect.x = player_list[SHIP_P1].x;
+    ship->rect.y = player_list[SHIP_P1].y;
 
 
 }

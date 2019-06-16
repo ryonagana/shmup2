@@ -1,6 +1,7 @@
 #include "level.h"
 #include "path.h"
 #include <cstring>
+#include "tiles.h"
 
 
 /*
@@ -38,7 +39,7 @@ void level_init_default(LEVEL* level){
 
     for(int y = 0; y < MAX_GRID_Y; y++){
         for(int x = 0; x < MAX_GRID_X;x++){
-            level->bg_layer[y][x].id = 99;
+            level->bg_layer[y][x].id = NO_TILE;
             level->bg_layer[y][x].block = false;
             level->bg_layer[y][x].passable = true;
         }
@@ -46,7 +47,7 @@ void level_init_default(LEVEL* level){
 
     for(int y = 0; y < MAX_GRID_Y; y++){
         for(int x = 0; x < MAX_GRID_X;x++){
-            level->map_layer[y][x].id = 99;
+            level->map_layer[y][x].id = NO_TILE;
             level->map_layer[y][x].block = false;
             level->map_layer[y][x].passable = false;
         }
@@ -54,7 +55,7 @@ void level_init_default(LEVEL* level){
 
     for(int y = 0; y < MAX_GRID_Y; y++){
         for(int x = 0; x < MAX_GRID_X;x++){
-            level->obj_layer[y][x].id = 99;
+            level->obj_layer[y][x].id = NO_TILE;
             level->obj_layer[y][x].block = false;
             level->obj_layer[y][x].passable = true;
         }

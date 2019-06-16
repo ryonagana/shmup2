@@ -20,9 +20,11 @@ CEngine::CEngine()
 
 #if 0
     stateManager.SetStateActive(GameStateID::Menu);
-#endif
-    loadNewLevel("testemapa.cbm");
+#else
+    loadNewLevel("mapateste.cbm");
     stateManager.SetStateActive(GameStateID::MainGame);
+#endif
+
     stateManager.InitStates();
 
     redraw = false;
