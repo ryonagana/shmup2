@@ -41,7 +41,8 @@ typedef struct SPACESHIP{
     float x;
     float y;
     Utils::CRect rect;
-    float speed;
+    float speed_x;
+    float speed_y;
 
     union {
         uint32_t all_flags;

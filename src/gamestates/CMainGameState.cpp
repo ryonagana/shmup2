@@ -71,12 +71,28 @@ void CMainGameState::Update(ALLEGRO_EVENT *e)
     TILE tile = this->level->map_layer[tile_y][tile_x];
     TILE_ID tile_id = static_cast<TILE_ID>(tile.id);
 
-    Utils::CRect collision = {static_cast<float>(tile_x * TILE_SIZE), static_cast<float>(tile_y * TILE_SIZE), TILE_SIZE, TILE_SIZE };
+    Utils::CRect tile_coll = {static_cast<float>(tile_x * TILE_SIZE), static_cast<float>(tile_y * TILE_SIZE), TILE_SIZE, TILE_SIZE };
 
-    if( ship->rect.HasIntersection(collision)    && tile_id != NO_TILE){
-        ship->x  = collision.X() - TILE_SIZE;
-        ship->y  = collision.Y() - TILE_SIZE;
+    tile_coll.Update();
+
+
+    if(tile_id != NO_TILE){
+
+        Utils::CRect::RectangleSide collision_side = ship->rect.HasIntersection(tile_coll);
+
+        printf("%d - tile_x: %d  tile_y: %d\n",  collision_side, tile_x, tile_y);
     }
+
+    /*
+    if( (ship->rect.X() < 0) || ( (ship->rect.X() + TILE_SIZE) > window_get_width()) ||  (ship->rect.HasIntersection(collision)    && tile_id != NO_TILE)){
+        ship->x = collision.Left() - ship->rect.W();
+    }
+
+    if( (ship->rect.Y() < 0) || ( (ship->rect.Y() + TILE_SIZE) > window_get_height()) ||  (ship->rect.HasIntersection(collision)    && tile_id != NO_TILE)){
+        ship->y = collision.Bottom() - ship->rect.H();
+    }
+    */
+
     //printf("%.2f, %.2f\n\n", collision.X(), collision.Y());
 
 }

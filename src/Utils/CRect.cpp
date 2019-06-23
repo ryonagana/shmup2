@@ -2,51 +2,48 @@
 #include "shared.h"
 Utils::CRect Utils::CRect::Zero()
 {
-  return CRect();
+    return CRect();
 }
 
 
 Utils::CRect::CRect(float xa, float ya, int wa, int ha) : x(xa), y(ya), w(wa), h(ha){
 
+    left   = static_cast<int>(x);
+    right  = static_cast<int>(x + w);
+    bottom = static_cast<int>(y + h);
+    top    = static_cast<int>(y);
+
 }
 
-bool Utils::CRect::HasIntersection(Utils::CRect b) const
+Utils::CRect::RectangleSide Utils::CRect::HasIntersection(Utils::CRect b)
 {
 
+    return Intersects(*this, b);
 
-    if(this->Bottom() <= b.Top()){
-        return false;
-    }
-
-    if(this->Top() >= b.Bottom()){
-        return false;
-    }
-
-    if(this->Right() <= b.Left()){
-        return false;
-    }
-
-    if(this->Left() >= b.Right()){
-        return false;
-    }
-
-    return true;
 }
 
-INLINE_FUNCTION int Utils::CRect::Left() const{
-    return static_cast<int>(x);
+void Utils::CRect::Update()
+{
+    left = static_cast<int>(x);
+    top = static_cast<int>(y);
+    right = static_cast<int>(x + w);
+    bottom = static_cast<int>(y + h);
 }
 
-INLINE_FUNCTION int Utils::CRect::Right() const{
-    return static_cast<int>(x + w);
+int Utils::CRect::Left() const{
+    return left;
 }
 
-INLINE_FUNCTION int Utils::CRect::Top() const {
-    return static_cast<int>(y);
+int Utils::CRect::Right() const{
+    return right;
 }
 
-INLINE_FUNCTION int Utils::CRect::Bottom() const {
-    return static_cast<int>(y + h);
+int Utils::CRect::Top() const {
+    return top;
+}
+
+int Utils::CRect::Bottom() const {
+    return bottom;
 }
 
 void Utils::CRect::setSize(float x, float y, int w, int h)
@@ -89,23 +86,48 @@ float Utils::CRect::H() const
 }
 
 
-bool Utils::CRect::Intersects(CRect a, CRect b)
+Utils::CRect::RectangleSide Utils::CRect::Intersects(CRect a, CRect b)
 {
-    if(a.Bottom() <= b.Top()){
-        return false;
+
+    RectangleSide side = RectangleSide::NoCollision;
+
+    if(a.right < b.left || a.top > b.bottom || a.left > b.right || a.bottom < b.top){
+
+        if(a.right >= b.left && a.left <= b.left){
+            side = RectangleSide::Right;
+        }
+
+        if(a.top <= b.bottom && a.bottom >= b.bottom){
+            side = RectangleSide::Top;
+        }
+
+        if(a.left <= b.right && a.right >= b.right){
+            side = RectangleSide::Left;
+        }
+
+        if(a.bottom >= b.top && a.top <= b.top){
+            side = RectangleSide::Bottom;
+        }
+
+        /*
+        if(a.Bottom() <= b.Top()){
+            side = RectangleSide::Bottom;
+        }
+
+        if(a.Top() >= b.Bottom()){
+            side =  RectangleSide::Top;
+        }
+
+        if(a.Right() <= b.Left()){
+            side =  RectangleSide::Left;
+        }
+
+        if(a.Left() >= b.Right()){
+            side =  RectangleSide::Right;
+        }
+        */
+
     }
 
-    if(a.Top() >= b.Bottom()){
-        return false;
-    }
-
-    if(a.Right() <= b.Left()){
-        return false;
-    }
-
-    if(a.Left() >= b.Right()){
-        return false;
-    }
-
-    return true;
+    return side;
 }

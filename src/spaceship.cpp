@@ -10,12 +10,12 @@ static struct SPACESHIP  player_list[MAX_SPACESHIPS]=
         {250,
         100,
         Utils::CRect::Zero(),
-        3,{0},SPACESHIP_DIRECTION::LEFT,nullptr},
+        3,3,{0},SPACESHIP_DIRECTION::LEFT,nullptr},
 
         {250,
          100,
          Utils::CRect::Zero(),
-         3,{0},SPACESHIP_DIRECTION::LEFT, nullptr}
+         3,3,{0},SPACESHIP_DIRECTION::LEFT, nullptr}
 };
 
 
@@ -40,8 +40,8 @@ void spaceship_start(SPACESHIP *ship, CAMERA *ship_camera){
     player_list[SHIP_P2].rect.setSize(player_list[SHIP_P2].x,player_list[SHIP_P2].y, al_get_bitmap_width( ship_bmp_temp), al_get_bitmap_height( ship_bmp_temp) );
 
 
-    ship->rect.x = player_list[SHIP_P1].x;
-    ship->rect.y = player_list[SHIP_P1].y;
+    ship->rect.setX(player_list[SHIP_P1].x);
+    ship->rect.setY(player_list[SHIP_P1].y);
 
 
 }
@@ -114,8 +114,8 @@ void spaceship_move(int num,   float x, float y)
     struct SPACESHIP* player = nullptr;
     player = spaceship_get_player(num);
 
-    player->x += x * player->speed;
-    player->y += y * player->speed;
+    player->x += x * player->speed_x;
+    player->y += y * player->speed_y;
 
 
     player->rect.setSize(player->x - player->camera ->x ,player->y - player->camera ->y, al_get_bitmap_width(ship_bmp_temp) + 3 , al_get_bitmap_height(ship_bmp_temp) + 3);
@@ -180,6 +180,7 @@ void spaceship_update(int player_num){
          p->direction = SPACESHIP_DIRECTION::RIGHT;
     }
 
+    p->rect.Update();
 
 }
 
@@ -199,5 +200,5 @@ void spaceship_draw(SPACESHIP *ship, CAMERA *cam)
    if( ship->flags.collision  ){
     al_draw_text(debug_txt, al_map_rgb(255,0,0), ship->x - cam->x , (ship->y - cam->y) - 25 , 0, "collision");
    }
-   al_draw_rectangle(ship->rect.X() - 5,ship->rect.Y() - 5, (ship->rect.X() + TILE_SIZE) + 5, (ship->rect.Y() + TILE_SIZE) + 5, al_map_rgb(0,0,255),1);
+   al_draw_rectangle(ship->rect.X(),ship->rect.Y(), (ship->rect.X() + TILE_SIZE), (ship->rect.Y() + TILE_SIZE), al_map_rgb(0,0,255),1);
 }

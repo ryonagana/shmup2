@@ -7,8 +7,15 @@ namespace Utils {
 
     public:
 
-        float x,y;
-        int   w,h;
+        enum class RectangleSide : int {
+            NoCollision = 0,
+            Top = 1,
+            Bottom = 2,
+            Left = 4,
+            Right = 8
+        };
+
+
 
         static CRect Zero();
         CRect(float xa = 0, float ya = 0, int wa = 0, int ha = 0);
@@ -27,9 +34,11 @@ namespace Utils {
 
 
 
-        static bool Intersects(CRect a, CRect b);
 
-        bool HasIntersection(CRect b) const;
+        RectangleSide HasIntersection(CRect b);
+
+        void Update();
+
         int Left() const;
         int Right() const;
         int Top() const ;
@@ -43,6 +52,12 @@ namespace Utils {
         float W() const;
         float H() const;
 
+        private:
+            RectangleSide Intersects(CRect a, CRect b);
+
+            float x,y;
+            int   w,h;
+            int left, right, top, bottom;
 
     };
 }
