@@ -179,6 +179,8 @@ void spaceship_update(int player_num){
         spaceship_move(player_num,1,0);
          p->direction = SPACESHIP_DIRECTION::RIGHT;
     }
+
+
 }
 
 void spaceship_set_default_flags(SPACESHIP *sp){

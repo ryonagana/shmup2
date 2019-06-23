@@ -65,7 +65,9 @@ bool CMenuState::windowNewGameDialog()
     ImGui::Begin("Select Map for Editor:", &windowEditorMode,  ImGuiWindowFlags_NoTitleBar |  ImGuiWindowFlags_NoCollapse );
 
     if( ImGui::Button("New Map...")){
-          level_init_default(this->mainEngine->getLoadedLevel());
+          LEVEL *lvl = this->mainEngine->getLoadedLevel();
+          level_init_default(lvl);
+          this->mainEngine->setLevel(lvl);
           windowNewMap = true;
 
 

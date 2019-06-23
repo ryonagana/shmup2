@@ -59,27 +59,25 @@ void CMainGameState::Destroy()
 
 void CMainGameState::Update(ALLEGRO_EVENT *e)
 {
+
+
+
     spaceship_update(SHIP_P1);
     spaceship_scrolling_update(this->ship, &this->ship_camera,this->engine->getLoadedLevel()->map_width, this->engine->getLoadedLevel()->map_width);
 
-    for(int y  = 0; y < this->engine->getLoadedLevel()->map_height; y++){
-        for(int x = 0; x < this->engine->getLoadedLevel()->map_width; x++){
-            TILE tile = this->engine->getLoadedLevel()->map_layer[y][x];
-            TILE_ID id = static_cast<TILE_ID>(tile.id);
-            Utils::CRect r = { static_cast<float>(x * TILE_SIZE), static_cast<float>(y * TILE_SIZE), TILE_SIZE, TILE_SIZE };
+    int tile_x = (static_cast<int>(ship->x) / TILE_SIZE) >= 0 ?  (static_cast<int>(ship->x) / TILE_SIZE) : 0;
+    int tile_y = (static_cast<int>(ship->y) / TILE_SIZE) >= 0 ?  (static_cast<int>(ship->y) / TILE_SIZE) : 0;
 
-            int tile_x = ship->x / TILE_SIZE;
-            int tile_y = ship->y / TILE_SIZE;
+    TILE tile = this->level->map_layer[tile_y][tile_x];
+    TILE_ID tile_id = static_cast<TILE_ID>(tile.id);
 
-            if(id != NO_TILE){
-                if(ship->rect.HasIntersection(r)){
-                    //ship->x = r.W() - ship->rect.W();
-                    LOG("%d - %d %d", static_cast<int>(id), tile_x, tile_y);
-                }
-            }
+    Utils::CRect collision = {static_cast<float>(tile_x * TILE_SIZE), static_cast<float>(tile_y * TILE_SIZE), TILE_SIZE, TILE_SIZE };
 
-        }
+    if( ship->rect.HasIntersection(collision)    && tile_id != NO_TILE){
+        ship->x  = collision.X() - TILE_SIZE;
+        ship->y  = collision.Y() - TILE_SIZE;
     }
+    //printf("%.2f, %.2f\n\n", collision.X(), collision.Y());
 
 }
 

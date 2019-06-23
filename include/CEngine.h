@@ -32,6 +32,7 @@ public:
     void End();
     IGameState *getState();
     void loadNewLevel(const std::string &mapname);
+    void setLevel(LEVEL *level);
     void setState(const GameStateID id);
     CGameStateManager getStateManager();
     LEVEL *getLoadedLevel();

@@ -21,7 +21,7 @@ CEngine::CEngine()
 #if 0
     stateManager.SetStateActive(GameStateID::Menu);
 #else
-    loadNewLevel("mapateste.cbm");
+    loadNewLevel("t1.cbm");
     stateManager.SetStateActive(GameStateID::MainGame);
 #endif
 
@@ -54,8 +54,15 @@ IGameState *CEngine::getState()
 void CEngine::loadNewLevel(const std::string &mapname)
 {
     if(this->level == nullptr) return;
+    //clear the map before load
+    level_init_default(this->level);
 
     level_load(this->level, mapname);
+}
+
+void CEngine::setLevel(LEVEL *level)
+{
+    this->level = level;
 }
 
 void CEngine::setState(const GameStateID id)
