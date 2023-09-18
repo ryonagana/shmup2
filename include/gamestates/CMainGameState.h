@@ -12,17 +12,13 @@ class CEngine;
 class CMainGameState : public IGameState {
 
 private:
+    std::vector<SPACESHIP*> ships;
     CEngine *engine;
-    SPACESHIP *ship;
     CAMERA    ship_camera;
     LEVEL *level;
     bool hasCollided;
     ALLEGRO_BITMAP *ship_bmp;
-    ALLEGRO_FONT *font = nullptr;
-
     int sx = 4;
-
-
     bool collisionHighlight; // for debug purposes only;
 
 
@@ -37,6 +33,7 @@ public:
     virtual void Update(ALLEGRO_EVENT *e) override;
     virtual void HandleInput(ALLEGRO_EVENT *e) override;
     virtual void Draw() override;
+    virtual void WindowHandlerUpdate(ALLEGRO_EVENT *e) override;
 
 
 };

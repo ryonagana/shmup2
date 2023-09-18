@@ -16,6 +16,7 @@
 class CEngine {
 private:
     CGameStateManager stateManager;
+    GameWindow& gameWindow;
     LEVEL *level;
     bool redraw;
     //TODO ENEMIES LIST
@@ -26,14 +27,16 @@ public:
 
 
 
-    CEngine();
+    CEngine(GameWindow & gw);
     ~CEngine();
     void Start();
+    void Loop();
     void End();
     IGameState *getState();
+    GameWindow& getWindow() { return gameWindow; }
     void loadNewLevel(const std::string &mapname);
     void setLevel(LEVEL *level);
-    void setState(const GameStateID id);
+    void setState(const std::string& name);
     CGameStateManager getStateManager();
     LEVEL *getLoadedLevel();
 

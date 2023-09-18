@@ -5,50 +5,16 @@
 
 using GameState = std::unique_ptr<IGameState>;
 
-CEngine::CEngine()
+CEngine::CEngine(GameWindow &gw) : stateManager(*this),
+                                   gameWindow(gw)
 {
-
-   // menuState = std::make_unique<IGameState>();
-
-   // stateManager.addState("Menu",1, menuState);
-
-    this->level = new LEVEL;
-
-    stateManager.addState("Menu"  , GameStateID::Menu , std::make_shared<CMenuState>(this));
-    stateManager.addState("Game"  , GameStateID::MainGame, std::make_shared<CMainGameState>(this));
-    stateManager.addState("Editor", GameStateID::Editor, std::make_shared<CEditorState>(this));
-
-#if 0
-    stateManager.SetStateActive(GameStateID::Menu);
-#else
-    loadNewLevel("t1.cbm");
-    stateManager.SetStateActive(GameStateID::MainGame);
-#endif
-
-    stateManager.InitStates();
-
-    redraw = false;
-    //stateManager.addState("Menu",1, std::make_unique<IGameState>(new  CMainGameState(nullptr)));
-
-    //stateManager.addState("Teste",0, std::unique_ptr<GameState>(new CMenuState(nullptr)));
-    //stateManager.addState("Teste 2",1, std::std::unique_ptr<GameState>(new CMainGameState(nullptr)));
-
-    /*
-    if(!stateManager.SetStateActive(1)){
-        std::stringstream msg;
-        msg << "State Not Loaded Correctly! Sorry" << std::endl;
-        WARN(msg.str());
-        al_show_native_message_box(get_window_display(), "Error!", "Error:", msg.str().c_str(),"OK", 0);
-    }
-    */
-
 
 
 }
 
 IGameState *CEngine::getState()
 {
-    return stateManager.stateActive();
+    return stateManager.getActiveState();
 }
 
 void CEngine::loadNewLevel(const std::string &mapname)
@@ -65,10 +31,10 @@ void CEngine::setLevel(LEVEL *level)
     this->level = level;
 }
 
-void CEngine::setState(const GameStateID id)
+void CEngine::setState(const std::string& name)
 {
-    stateManager.SetStateActive(id);
-    stateManager.stateActive()->Start();
+    stateManager.SetStateActive(name);
+    stateManager.getActiveState()->Start();
     return;
 }
 
@@ -84,10 +50,57 @@ LEVEL *CEngine::getLoadedLevel(){
 CEngine::~CEngine()
 {
 
+      delete[] this->level;
 }
 
 void CEngine::Start(){
-    stateManager.InitStates();
+    init_path();
+
+
+    this->level = new LEVEL;
+
+#if 0
+    stateManager.SetStateActive(GameStateID::Menu);
+#else
+    loadNewLevel("t1.cbm");
+    stateManager.SetStateActive("Game");
+#endif
+
+    redraw = false;
+
+
+
+    stateManager.addState("Menu",  std::make_shared<CMenuState>(this));
+    stateManager.addState("Game",  std::make_shared<CMainGameState>(this));
+    stateManager.addState("Editor",std::make_shared<CEditorState>(this));
+
+
+    stateManager.SetStateActive("Game");
+}
+
+void CEngine::Loop()
+{
+#if 1
+    while(gameWindow.isWindowOpen()){
+        ALLEGRO_EVENT e;
+        al_wait_for_event(gameWindow.getQueue(),&e);
+
+        if(redraw && al_event_queue_is_empty(gameWindow.getQueue())){
+            redraw = false;
+            al_clear_to_color(al_map_rgb(255,0,0));
+            stateManager.getActiveState()->Draw();
+            al_flip_display();
+        }
+
+        if(e.type == ALLEGRO_EVENT_TIMER){
+            stateManager.getActiveState()->Update(&e);
+            redraw = true;
+        }
+
+        stateManager.getActiveState()->HandleInput(&e);
+        stateManager.getActiveState()->WindowHandlerUpdate(&e);
+    }
+#endif
 }
 
 void CEngine::End()

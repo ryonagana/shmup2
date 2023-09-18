@@ -8,10 +8,12 @@
 #include <cstdbool>
 #include <ostream>
 #include <fstream>
+#include <vector>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_native_dialog.h>
 #include "shared.h"
+#include "spaceship.h"
 
 #define MAX_GRID_X 200
 #define MAX_GRID_Y 100
@@ -24,18 +26,42 @@
 #define TILE_SIZE 32
 
 
-#define MAP_ID "CBMAP"
+#define MAP_ID "CBMAP\0"
 #define MAP_VER 1
 typedef struct TILE {
-    unsigned char id;
+    int32_t id;
     bool passable;
     bool block;
+    int flags;
 }TILE;
+
+
 
 typedef struct MAPCOORD {
     unsigned char x,y;
 }MAPCOORD;
 
+
+/*
+class Map {
+public:
+    Map();
+    ~Map();
+
+    bool Save(const std::string& filepath);
+    bool Load(const std::string& filepath);
+private:
+    char m_magic[6];
+    std::vector<TILE> m_tiles_layer;
+    std::vector<TILE> m_bg_layer;
+    //std::vector<TILE> obj_layer;
+    std::string m_map_name;
+    SPACESHIP *m_player;
+    int m_width;
+    int m_height;
+
+};
+*/
 
 
 

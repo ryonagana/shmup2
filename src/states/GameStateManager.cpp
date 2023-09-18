@@ -1,14 +1,17 @@
 #include "states/GameStateManager.h"
 #include "window.h"
+#include "CEngine.h"
 
 
-IGameState *CGameStateManager::findStateById(int id)
+IGameState *CGameStateManager::findStateById(const std::string& name)
 {
-    auto f = std::find_if(states.begin(), states.end(), [&id](const std::shared_ptr<IGameState> &state) -> bool {
-            return state.get()->id == id;
-    });
+    auto f = states.find(name);
 
-    return f->get();
+    if(f == states.end()){
+        return NULL;
+    }
+
+    return f->second.get();
 
 }
 
@@ -18,27 +21,22 @@ bool CGameStateManager::findAndRemoveById(int id)
     return false;
 }
 
-CGameStateManager::CGameStateManager()
+CGameStateManager::CGameStateManager(CEngine &parent) : engine(parent)
 {
-    states  = std::vector< std::shared_ptr<IGameState>>();
+    //states  = std::vector< std::shared_ptr<IGameState>>();
 
 }
 
-void CGameStateManager::InitStates()
-{
-    for(auto s = states.begin(); s != states.end(); s++){
-            s.base()->get()->Start();
+
+
+bool CGameStateManager::addState(const std::string &name, std::shared_ptr<IGameState> state){
+
+    if(!state.get()){
+        return false;
     }
-}
-
-
-
-bool CGameStateManager::addState(const std::string &name, GameStateID id, std::shared_ptr<IGameState> state){
-    states.push_back( std::move(state) );
-    states.back()->id = static_cast<int>(id);
-    states.back()->stateId = id;
-    states.back()->name = name;
-    states.back()->Init();
+    state->name = name;
+    state->Init();
+    states.insert({name, std::move(state)});
     return true;
 }
 
@@ -47,26 +45,31 @@ bool CGameStateManager::addState(const std::string &name, GameStateID id, std::s
 
 bool CGameStateManager::removeState(const int id)
 {
+    UNUSED(id);
     //auto state = findStateById(id);
 
-
-    //auto f = states.erase(states.begin(), states.end() + )
+    //auto f = state.erase(states.begin(), states.end());
     return false;
 }
 
-IGameState *CGameStateManager::stateActive()
+IGameState *CGameStateManager::getActiveState()
 {
     return active;
 }
 
 
 
-void CGameStateManager::SetStateActive(const GameStateID id)
+void CGameStateManager::SetStateActive(const std::string& name)
 {
-    auto f = findStateById( static_cast<int>(id));
-    this->active = f;
-    this->active->Start();
 
+    auto f =  states.find(name);
+
+    if(f == states.end()){
+        return;
+    }
+
+    this->active = f->second.get();
+    this->active->Start();
 }
 
 CGameStateManager::~CGameStateManager(){
@@ -82,12 +85,19 @@ after this  you can free memory
 calling this after free might cause  SIGSEGV, crashes, memory leaking
 */
 void CGameStateManager::DestroyAllStates(){
+        /*
         for(auto s = states.begin(); s != states.end(); s++){
                 s.base()->get()->Destroy();
         }
+        */
+    for(auto& s : states){
+        s.second->Destroy();
+    }
 }
 
 void CGameStateManager::setWindowTitle(const std::string name)
 {
-    set_window_title(name);
+    UNUSED(name);
+    return;
+    //set_window_title(name);
 }

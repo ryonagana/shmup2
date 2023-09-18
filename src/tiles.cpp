@@ -256,11 +256,12 @@ void tiles_draw(const Utils::CRect r, float x, float y)
 
 ALLEGRO_BITMAP *tiles_draw_tile_bmp(ALLEGRO_BITMAP *dst, const Utils::CRect r)
 {
-    if(dst == nullptr) return nullptr;
+    if(dst == nullptr)
+        return nullptr;
 
     al_set_target_bitmap(dst);
     tiles_draw(r,0,0);
-    al_set_target_backbuffer(get_window_display());
+    al_set_target_backbuffer(GameWindow::getInstance().getDisplay());
 
     return dst;
 }

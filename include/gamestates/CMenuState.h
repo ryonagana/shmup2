@@ -90,6 +90,7 @@ public:
     virtual void Update(ALLEGRO_EVENT *e) override;
     virtual void Draw() override;
     virtual void HandleInput(ALLEGRO_EVENT *e) override;
+    virtual void WindowHandlerUpdate(ALLEGRO_EVENT *e) override;
 
 
 };

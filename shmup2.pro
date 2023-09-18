@@ -6,6 +6,7 @@ CONFIG -= qt
 QMAKE_CXX = g++
 
 SOURCES += \
+    src/fs.cpp \
     src/main.cpp \
     src/states/IGameState.cpp \
     src/CEngine.cpp \
@@ -45,6 +46,7 @@ SOURCES += \
 
 
 HEADERS += \
+    include/fs.h \
     include/window.h \
     include/states/IGameState.h \
     include/CEngine.h \
@@ -80,13 +82,13 @@ HEADERS += \
     include/gamestates/CEditorState.h \
     include/Utils/CUtils.h
 
-CONFIG += c++14
-QMAKE_CXXFLAGS += -std=c++14
-QMAKE_CXXFLAGS_DEBUG += -std=c++14 -Wall -Wextra -fpermissive -pedantic -O0
-QMAKE_CXXFLAGS_RELEASE += -s -std=c++14 -Wall -Wextra -fpermissive -pedantic -Os
+
+QMAKE_CXXFLAGS_DEBUG += -std=c++17 -Wall -Wextra -fpermissive -Wpedantic -O0 -g
+QMAKE_CXXFLAGS_RELEASE += -s -std=c++17 -Wall -Wextra -fpermissive -pedantic -Os
 
 
 win32: {
+    DEFINES += DEBUG_MODE
 
     INCLUDEPATH += include/
     DEPENDPATH  += include/
@@ -96,26 +98,16 @@ win32: {
     DEPENDPATH  += lib/imgui/
 
 
-    DEFINES += ALLEGRO_STATICLINK
-    debug : {
-            DEFINES += DEBUG_MODE
-            LIBS += -L$$PWD/../libs/Allegro525_i686_dwarf/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -ldsound -lwebp -lwebpdecoder -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
-        }
-
-    release :{
-            LIBS += -L$$PWD/../libs/Allegro525_i686_dwarf/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -ldsound -lwebp -lwebpdecoder -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
-        }
-
-    INCLUDEPATH += $$PWD/../../libs/Allegro524_mingw/include
-    DEPENDPATH += $$PWD/../../libs/Allegro524_mingw/include
-
-
-    INCLUDEPATH += $$PWD/../libs/Allegro525_i686_dwarf/include
-    DEPENDPATH += $$PWD/../libs/Allegro525_i686_dwarf/include
-
-    #LIBS += -L$$PWD/../libs/Allegro525_i686_dwarf/lib/ -lallegro_monolith-debug-static  -static -ljpeg -ldumb -lFLAC  -ltheora -lvorbisfile -lvorbis -logg -lphysfs -lfreetype -lpng16 -lzlibstatic -lwebp -lwebpdecoder -ldsound -lgdiplus -luuid -lkernel32 -lwinmm -lpsapi -lopengl32 -lglu32 -luser32 -lcomdlg32 -lgdi32 -lshell32 -lole32 -ladvapi32 -lws2_32 -lshlwapi -static-libstdc++ -static-libgcc
-
-
+    INCLUDEPATH += D:\projetos\libs\liballegro-5.2.8-release\include
+    LIBS += -LD:\projetos\libs\liballegro-5.2.8-release\lib
+    LIBS += -lallegro \
+            -lallegro_audio \
+            -lallegro_acodec \
+            -lallegro_font \
+            -lallegro_ttf \
+            -lallegro_image \
+            -lallegro_dialog \
+            -lallegro_primitives
 
 }
 

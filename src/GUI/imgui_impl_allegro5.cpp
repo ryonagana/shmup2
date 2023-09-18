@@ -109,6 +109,8 @@ void ImGui_ImplAllegro5_RenderDrawData(ImDrawData* draw_data)
         }
 
         const int* indices = NULL;
+       // *indices = 0;
+
         if (sizeof(ImDrawIdx) == 2)
         {
             // FIXME-OPT: Unfortunately Allegro doesn't support 16-bit indices.. You can '#define ImDrawIdx int' in imconfig.h to request Dear ImGui to output 32-bit indices.

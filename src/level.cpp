@@ -2,7 +2,7 @@
 #include "path.h"
 #include <cstring>
 #include "tiles.h"
-
+#include "fs.h"
 
 /*
     this level module cant be done without help of Neil Roy's Deluxe Pacman Source code help
@@ -10,6 +10,8 @@
     https://nitehackr.github.io/games_index.html
     Thanks for the Source!
 */
+
+
 
 static void level_write_tiles_to_file(std::ofstream &fs, TILE map[MAX_GRID_Y][MAX_GRID_X], int width, int height);
 static void level_read_tiles_from_file(std::ifstream &fs, TILE map[MAX_GRID_Y][MAX_GRID_X]);
@@ -216,12 +218,15 @@ void level_map_copy(LEVEL *dest, const LEVEL *orig){
 
 static void level_write_tiles_to_file(std::ofstream &fs, TILE map[MAX_GRID_Y][MAX_GRID_X], int width, int height){
 
+    UNUSED(width);
+    UNUSED(height);
 
     for(int y = 0; y < MAX_GRID_Y;y++){
         for(int x = 0; x < MAX_GRID_X;x++){
            fs.put(static_cast<char>(map[y][x].id));
            fs.put(static_cast<char>(map[y][x].block));
            fs.put(static_cast<char>(map[y][x].passable));
+           //fs.write(width)
         }
     }
 
@@ -247,3 +252,25 @@ static bool level_header_is_valid(char magic[6]){
 
     return false;
 }
+
+
+/*
+Map::Map()
+{
+    memset(m_magic,0, sizeof(m_magic));
+    strncpy(m_magic, MAP_ID, sizeof(m_magic));
+}
+
+bool Map::Save(const std::string &filepath)
+{
+    std::ifstream in(filepath, std::ios::binary);
+
+    if(in.bad()){
+        return false;
+    }
+
+    FileIO s(filepath, FileIO::FileIOMode::WRITE |  FileIO::FileIOMode::BINARY);
+
+
+}
+*/

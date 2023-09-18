@@ -10,33 +10,31 @@ CMainGameState::CMainGameState(CEngine *parent) : engine(parent){
     level = nullptr;
     hasCollided = false;
 
+    ships.reserve(2);
+    ships.resize(2);
+
+    for(int i = 0; i < 2 ;i++){
+        SPACESHIP *s = new SPACESHIP;
+        spaceship_set_default_flags(s);
+        spaceship_camera_init(&ship_camera, s);
+        spaceship_start(s, &ship_camera);
+        ships.push_back(std::move(s));
+
+    }
+
 }
 
 CMainGameState::~CMainGameState(){
+
 
 }
 
 void CMainGameState::Init()
 {
 
-    this->ship = spaceship_get_player(SHIP_P1);
-    spaceship_set_default_flags(ship);
-    spaceship_camera_init(&ship_camera, ship);
-
-    spaceship_start(ship, &ship_camera);
-
-    ship->x = this->engine->getLoadedLevel()->player_pos.x;
-    ship->y = this->engine->getLoadedLevel()->player_pos.y;
-
-
-    this->ship_bmp = al_create_bitmap(32,32);
-    al_set_target_bitmap(this->ship_bmp);
-    al_clear_to_color(al_map_rgb(255,0,0));
-    al_set_target_backbuffer(get_window_display());
     level = this->engine->getLoadedLevel();
     LOG("STARTING : %s", this->engine->getLoadedLevel()->mapname.c_str());
     render_start(level);
-    font = al_create_builtin_font();
 
 }
 
@@ -53,15 +51,18 @@ void CMainGameState::Start()
 
 void CMainGameState::Destroy()
 {
-    spaceship_destroy();
+    for(auto& s : this->ships){
+        spaceship_destroy(s);
+    }
+
     render_destroy();
 }
 
 void CMainGameState::Update(ALLEGRO_EVENT *e)
 {
 
-
-
+    UNUSED(e);
+#if 0
     spaceship_update(SHIP_P1);
     spaceship_scrolling_update(this->ship, &this->ship_camera,this->engine->getLoadedLevel()->map_width, this->engine->getLoadedLevel()->map_width);
 
@@ -73,6 +74,7 @@ void CMainGameState::Update(ALLEGRO_EVENT *e)
 
     Utils::CRect tile_coll = {static_cast<float>(tile_x * TILE_SIZE), static_cast<float>(tile_y * TILE_SIZE), TILE_SIZE, TILE_SIZE };
 
+
     tile_coll.Update();
 
 
@@ -80,7 +82,7 @@ void CMainGameState::Update(ALLEGRO_EVENT *e)
 
         Utils::CRect::RectangleSide collision_side = ship->rect.HasIntersection(tile_coll);
 
-        printf("%d - tile_x: %d  tile_y: %d\n",  collision_side, tile_x, tile_y);
+        //printf("%d - tile_x: %d  tile_y: %d\n",  collision_side, tile_x, tile_y);
     }
 
     /*
@@ -94,6 +96,8 @@ void CMainGameState::Update(ALLEGRO_EVENT *e)
     */
 
     //printf("%.2f, %.2f\n\n", collision.X(), collision.Y());
+#endif
+
 
 }
 
@@ -101,13 +105,18 @@ void CMainGameState::Draw()
 {
 
     render_background_color(this->engine->getLoadedLevel());
-    render_tilemap(this->engine->getLoadedLevel(), &this->ship_camera, this->ship);
-     al_draw_textf(font,al_map_rgb(255,0,255),0,0,0,"TEST TIMER: %d", sx);
+    render_tilemap(this->engine->getLoadedLevel(), &this->ship_camera, this->ships[0]);
+    al_draw_textf(GameWindow::getInstance().getDebugFont(),al_map_rgb(255,0,255),0,0,0,"TEST TIMER: %d", sx);
     return;
 }
 
-
-
+void CMainGameState::WindowHandlerUpdate(ALLEGRO_EVENT *e)
+{
+    if(e->type == ALLEGRO_EVENT_DISPLAY_CLOSE){
+        engine->End();
+        engine->getWindow().setWindow(false);
+    }
+}
 
 
 void CMainGameState::HandleInput(ALLEGRO_EVENT *e)

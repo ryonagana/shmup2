@@ -11,9 +11,9 @@ void CDirectory::SetPath(const std::string& folder){
     char path[1024] = {};
 
 
-
-    strncpy(path,  get_root_dir(), strlen(get_root_dir()) + 1);
-    strncat(path, folder.c_str(), folder.size());
+    snprintf(path, sizeof(path), "%s//%s", get_root_dir(), folder.c_str());
+    //strncpy(path,  get_root_dir(), strlen(get_root_dir()) + 1);
+    //strncat(path, folder.c_str(), folder.size());
 
     if(this->dir_entry != nullptr ){
         al_change_directory(path);

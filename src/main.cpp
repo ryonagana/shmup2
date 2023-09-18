@@ -9,8 +9,40 @@
 #include "GUI/imgui_impl_allegro5.h"
 
 
+
+int main(int argc, char **argv){
+    UNUSED(argc); UNUSED(argv);
+
+    GameWindow& windowInstance = GameWindow::getInstance();
+
+
+    if(windowInstance.allegroInit() > 0){
+        return 0;
+    }
+
+    if(!windowInstance.createDisplay(800,600,false,true, 60.0, GameWindow::RenderType::OPENGL_NEW,  "SHMUP MORE LIGHT!", 0 )){
+        return 0;
+    }
+
+    CEngine gameEngine(windowInstance);
+
+    gameEngine.Start();
+    gameEngine.Loop();
+    gameEngine.End();
+
+
+    windowInstance.Destroy();
+    windowInstance.Quit("Closed Successfully");
+
+
+    return 0;
+}
+
+
+#if 0
 int main(int  argc, char *argv[])
 {
+
     UNUSED_PARAM(argc);
     UNUSED_PARAM(argv);
 
@@ -75,6 +107,6 @@ int main(int  argc, char *argv[])
     return 0;
 
 }
-
+#endif
 
 

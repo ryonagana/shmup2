@@ -69,10 +69,11 @@ static void editor_register_tile(TILE_ID id, int tx, int ty);
 static void editor_select_tile(unsigned char tid);
 
 
-static void editor_load_tile_file(const char* tile_file);
+//static void editor_load_tile_file(const char* tile_file);
 
 void editor_init(void){
     /* INITIALIZE THE EDITOR STRUCT */
+
 
     editor = new EDITOR;
 
@@ -96,8 +97,8 @@ void editor_init(void){
 
     /* init the camera (in 2d is scrolling) */
     editor->camera = new CAMERA_EDITOR;
-    editor->camera->height = window_get_height();
-    editor->camera->width = window_get_width();
+    editor->camera->height = GameWindow::getInstance().getHeight();
+    editor->camera->width = GameWindow::getInstance().getWidth();
     editor->camera->x = 0;
     editor->camera->y = 0;
 
@@ -118,7 +119,7 @@ void editor_init(void){
         editor_cursor = al_create_bitmap(TILE_SIZE,TILE_SIZE);
         al_set_target_bitmap(editor_cursor);
         al_draw_rectangle(0,0,32,32,al_map_rgb(255,0,0),1.0);
-        al_set_target_backbuffer(get_window_display());
+        al_set_target_backbuffer(GameWindow::getInstance().getDisplay());
     }
 
     /* create the renderable parts */
@@ -211,7 +212,7 @@ bool editor_load_mem(LEVEL *level){
 
 
 
-    al_set_window_title(get_window_display(), title.c_str());
+    al_set_window_title(GameWindow::getInstance().getDisplay(), title.c_str());
 
     editor_layer_to_str(editor->layer);
     if(layer_name) delete[] layer_name;
@@ -224,7 +225,8 @@ void editor_update_input(ALLEGRO_EVENT *e)
     ImGui_ImplAllegro5_ProcessEvent(e);
 
     if(e->type == ALLEGRO_EVENT_DISPLAY_CLOSE){
-        window_exit_loop();
+        //window_exit_loop();
+        GameWindow::getInstance().Quit("Close Window");
     }
 
     if( (keyboard_pressed(ALLEGRO_KEY_LCTRL) && keyboard_pressed(ALLEGRO_KEY_F2)) && editor->state != EDITOR_STATE_LOAD){
@@ -493,7 +495,7 @@ static void editor_clear_screen(ALLEGRO_BITMAP* bmp, ALLEGRO_COLOR col)
 {
     al_set_target_bitmap(bmp);
     al_clear_to_color(col);
-    al_set_target_backbuffer(get_window_display());
+    al_set_target_backbuffer(GameWindow::getInstance().getDisplay());
 }
 
 
@@ -533,14 +535,14 @@ static void editor_tile_put(TILE *map, TILE_ID id)
 void editor_render_coord_text(){
     al_set_target_bitmap(info_screen);
     al_clear_to_color(al_map_rgb(2,22,56));
-    al_set_target_backbuffer(get_window_display());
+    al_set_target_backbuffer(GameWindow::getInstance().getDisplay());
 
     al_draw_bitmap(info_screen,0, (CANVAS_GRID_H * TILE_SIZE) + EDITOR_TOP_SPACER, 0);
-    //al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 85 ,0, "TileName: %s", tiles_get_name(static_cast<TILE_ID>(editor->selected_tile))->name.c_str() == nullptr ? "" : tiles_get_name(static_cast<TILE_ID>(editor->selected_tile))->name.c_str()  );
-    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 50 ,0, "Tile X: %d", editor->tile_selected_data.tilex);
-    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 35,0, "Tile Y: %d",editor->tile_selected_data.tiley);
-    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) - 25,0, "CAMERA X: %d",editor->tile_selected_data.tiley);
-     al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(get_window_display()) -15,0, "CAMERA Y: %d",editor->tile_selected_data.tiley);
+    //al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(GameWindow::getInstance().getDisplay()) - 85 ,0, "TileName: %s", tiles_get_name(static_cast<TILE_ID>(editor->selected_tile))->name.c_str() == nullptr ? "" : tiles_get_name(static_cast<TILE_ID>(editor->selected_tile))->name.c_str()  );
+    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(GameWindow::getInstance().getDisplay()) - 50 ,0, "Tile X: %d", editor->tile_selected_data.tilex);
+    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(GameWindow::getInstance().getDisplay()) - 35,0, "Tile Y: %d",editor->tile_selected_data.tiley);
+    al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(GameWindow::getInstance().getDisplay()) - 25,0, "CAMERA X: %d",editor->tile_selected_data.tiley);
+     al_draw_textf(editor_default_font, al_map_rgb(255,255,255), 10, al_get_display_height(GameWindow::getInstance().getDisplay()) -15,0, "CAMERA Y: %d",editor->tile_selected_data.tiley);
 }
 
 TILE *editor_select_layer(EDITOR_LAYER_STATE state, int tilex, int tiley){
@@ -603,7 +605,7 @@ void editor_render_canvas(void){
 
 
 
-    al_set_target_backbuffer(get_window_display());
+    al_set_target_backbuffer(GameWindow::getInstance().getDisplay());
 }
 
 
@@ -620,7 +622,7 @@ void editor_render_bg(void){
 
     al_draw_bitmap(canvas_screen,0,20,0);
     al_draw_bitmap(tools_screen, (CANVAS_GRID_W * TILE_SIZE), EDITOR_TOP_SPACER,0);
-    al_draw_filled_rectangle(0,EDITOR_TOP_SPACER, al_get_display_width(get_window_display()), 0, al_map_rgb(0,0,0));
+    al_draw_filled_rectangle(0,EDITOR_TOP_SPACER, al_get_display_width(GameWindow::getInstance().getDisplay()), 0, al_map_rgb(0,0,0));
     al_draw_textf(editor_default_font, al_map_rgb(255,0,0), 0,5, ALLEGRO_ALIGN_LEFT, "Layer: %s", state_text);
 }
 

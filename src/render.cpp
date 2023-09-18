@@ -13,9 +13,16 @@
 static ALLEGRO_BITMAP *render_layer[RENDER_MAX_LAYERS] = {nullptr,nullptr,nullptr,nullptr};
 
 void render_start(LEVEL *level){
-    if(level == nullptr) return;
+    int sw = GameWindow::getInstance().getWidth();
+    int sh = GameWindow::getInstance().getHeight();
+
+    if(level == nullptr)
+        return;
+
+
+
     for(int i = 0; i < RENDER_MAX_LAYERS ; i++){
-        render_layer[i] = al_create_bitmap(window_get_width(),window_get_height());
+        render_layer[i] = al_create_bitmap(sw,sh);
     }
 
 
@@ -77,7 +84,7 @@ void  render_tilemap(LEVEL *level, CAMERA *scroll, SPACESHIP *ship){
         }
     }
     al_hold_bitmap_drawing(false);
-    al_set_target_backbuffer(get_window_display());
+    al_set_target_backbuffer(GameWindow::getInstance().getDisplay());
 
 
     al_draw_bitmap(render_layer[MAP_RENDER_LAYER],0,0,0);

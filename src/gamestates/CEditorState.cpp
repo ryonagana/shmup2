@@ -43,3 +43,9 @@ void CEditorState::Draw()
 {
     editor_draw();
 }
+
+void CEditorState::WindowHandlerUpdate(ALLEGRO_EVENT *e)
+{
+    UNUSED(e);
+}
+

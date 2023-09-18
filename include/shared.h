@@ -37,6 +37,7 @@
 #define RAND_INT(min,max) (min + rand() / (RAND_MAX / ( max - min + 1) ) + 1)
 
 #define  UNUSED_PARAM(x) ((void)x)
+#define  UNUSED(x) UNUSED_PARAM((x))
 
 enum MSG_DEBUG_TYPES {
     MSG_LOG = 0,
@@ -49,22 +50,22 @@ void msg_write(int type,  const std::string &file, int line, const std::string f
 
 
 #if defined (DEBUG_MODE)
-    #define LOG(msg, ...) msg_write(MSG_LOG, __FILE__, __LINE__, msg, ##__VA_ARGS__)
-    #define WARN(msg, ...) msg_write(MSG_WARNING, __FILE__, __LINE__, msg, ##__VA_ARGS__)
-    #define CRITICAL(msg, ...) msg_write(MSG_CRITICAL, __FILE__, __LINE__,msg,  ##__VA_ARGS__)
+    #define LOG(...) msg_write(MSG_LOG, __FILE__, __LINE__, __VA_ARGS__)
+    #define WARN(...) msg_write(MSG_WARNING, __FILE__, __LINE__, __VA_ARGS__)
+    #define CRITICAL(...) msg_write(MSG_CRITICAL, __FILE__, __LINE__, __VA_ARGS__)
 #else
-    #define LOG(msg, ...)
-    #define WARN(msg, ...)
-    #define CRITICAL(msg, ...)
+    #define LOG(...)
+    #define WARN(...)
+    #define CRITICAL(...)
 #endif
 
 
 typedef  unsigned char  byte;
 typedef  char           sbyte;
-typedef  int_least32_t  sint32;
-typedef  int_least16_t  sint16;
-typedef  uint_least32_t uint32;
-typedef  uint_least16_t uint16;
-typedef  int_least8_t   sint8;
-typedef  uint_least8_t  uint8;
+typedef  int32_t  sint32;
+typedef  int16_t  sint16;
+typedef  uint32_t uint32;
+typedef  uint16_t uint16;
+typedef  int8_t   sint8;
+typedef  uint8_t  uint8;
 

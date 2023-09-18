@@ -3,14 +3,14 @@
 #include "path.h"
 #include "shared.h"
 
-static MOUSE *mouse_input = nullptr;
+static mouse_t *mouse_input = nullptr;
 
 static ALLEGRO_BITMAP *mouse_cursor = nullptr;
 static ALLEGRO_MOUSE_CURSOR *a5_editor_mouse = nullptr;
 
 void mouse_init(void){
     if(mouse_input == nullptr){
-        mouse_input = new MOUSE;//(MOUSE*) malloc(sizeof(MOUSE));
+        mouse_input = new mouse_t;//(MOUSE*) malloc(sizeof(MOUSE));
     }
 
     mouse_input->lButton = false;
@@ -27,14 +27,14 @@ void mouse_init(void){
         mouse_cursor = al_create_bitmap(16,16);
         al_set_target_bitmap(mouse_cursor);
         al_draw_filled_rectangle(0,16,16,0, al_map_rgb(255,0,255));
-        al_set_target_backbuffer(get_window_display());
+        al_set_target_backbuffer(GameWindow::getInstance().getDisplay());
     }
 
     LOG("Mouse Cursor: %s successfully loaded!", path);
 
 
     a5_editor_mouse = al_create_mouse_cursor(mouse_cursor, 0, 0);
-    al_set_mouse_cursor(get_window_display(), a5_editor_mouse);
+    al_set_mouse_cursor(GameWindow::getInstance().getDisplay(), a5_editor_mouse);
 
     LOG("Mouse Cursor SET Sucess!");
 
@@ -53,7 +53,7 @@ void mouse_destroy(void){
 }
 
 
-MOUSE *mouse_get(void){
+mouse_t *mouse_get(void){
     if(!mouse_input) return nullptr;
     return mouse_input;
 }
@@ -89,5 +89,5 @@ void mouse_update(ALLEGRO_EVENT *e){
 }
 
 void  mouse_set(int x, int y){
-    al_set_mouse_xy(get_window_display(), x,y);
+    al_set_mouse_xy(GameWindow::getInstance().getDisplay(), x,y);
 }

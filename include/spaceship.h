@@ -1,6 +1,8 @@
 #ifndef SPACESHIP_HEADER
 #define SPACESHIP_HEADER
 #include <cstdio>
+#include <string>
+#include <vector>
 #include <allegro5/allegro.h>
 #include "window.h"
 #include "level.h"
@@ -49,7 +51,8 @@ typedef struct SPACESHIP{
         SPACESHIP_FLAG flags;
     };
     SPACESHIP_DIRECTION direction;
-    CAMERA *camera;
+    CAMERA* camera;
+    ALLEGRO_BITMAP *bmp;
 
 
 
@@ -58,13 +61,14 @@ typedef struct SPACESHIP{
 
 
 void spaceship_start(SPACESHIP *ship, CAMERA *ship_camera);
-void spaceship_destroy(void);
-void spaceship_move(int num,   float x, float y);
-SPACESHIP* spaceship_get_player(int num);
-void spaceship_update(int player_num);
+void spaceship_destroy(SPACESHIP *ship);
+void spaceship_move(SPACESHIP *ship,   float x, float y);
+void spaceship_update(SPACESHIP *p);
 bool spaceship_map_limit(SPACESHIP *ship, CAMERA *cam, int level_w, int level_h);
 void spaceship_set_default_flags(SPACESHIP *sp);
 void spaceship_draw(SPACESHIP *ship, CAMERA *cam);
+
+SPACESHIP *spaceship_get(std::vector<SPACESHIP>&& ships, int num);
 
 void spaceship_camera_init(CAMERA *camera, SPACESHIP* ship);
 void spaceship_scrolling_update(SPACESHIP *spaceship, CAMERA *scrolling,  int level_width, int level_height);

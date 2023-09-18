@@ -27,8 +27,8 @@ void menu_create(MENU *menu, int size){
     menu->menu_count = size;
     menu->entries = std::vector<MENU_ENTRY>(); //new (std::nothrow) MENU_ENTRY[size + 1];  //(MENU_ENTRY*) malloc(sizeof(MENU_ENTRY) * size + 1);
     menu->entries.reserve(static_cast<size_t>(size));
-    menu->bg_x = window_get_width() / 2;
-    menu->bg_y = (window_get_height() / 2);
+    menu->bg_x = GameWindow::getInstance().getWidth() / 2;
+    menu->bg_y = (GameWindow::getInstance().getHeight() / 2);
 
     int i = 0;
 
@@ -105,15 +105,20 @@ void menu_remove_entry(MENU *menu, int index){
 void menu_update(MENU* menu, ALLEGRO_EVENT *e){
     static int click_counter = 0;
 
+    int sw,sh;
+
+    sw = GameWindow::getInstance().getWidth();
+    sh = GameWindow::getInstance().getHeight();
+
     if(menu->menu_count <= 0 ) return;
     if(menu->entries_count <= 0) return ;
 
     for(int i = 0; i < menu->entries_count;i++){
 
-        if(mouse_get()->y > (i * 25) + (window_get_height()) / 2){
-            if( mouse_get()->x >  window_get_width() / 2 + 50 ){
-                    menu->bg_x =  window_get_width() / 2;
-                    menu->bg_y =  (25 * i) +  window_get_height() / 2;
+        if(mouse_get()->y > (i * 25) + sh / 2){
+            if( mouse_get()->x >  sw / 2 + 50 ){
+                    menu->bg_x =  sw / 2;
+                    menu->bg_y =  (25 * i) +  sh / 2;
 
                     if(!mouse_get()->lButton && menu_mouse_on_entry(menu->bg_x, menu->bg_y, menu->bg_x + 200, menu->bg_y + 15 )){
                             menu->menu_selected = i;
@@ -141,17 +146,19 @@ void menu_update(MENU* menu, ALLEGRO_EVENT *e){
 
 void menu_input_update(MENU *menu, ALLEGRO_EVENT *e){
 
+    UNUSED(e);
+
     if(menu->menu_selected <= 0)  menu->menu_selected = 0;
     if(menu->menu_selected > menu->entries_count - 1) menu->menu_selected = menu->entries_count - 1;
 
 
     if( keyboard_pressed(ALLEGRO_KEY_UP)){
-        menu->bg_y =  (25 * menu->menu_selected) +  window_get_height() / 2;
+        menu->bg_y =  (25 * menu->menu_selected) +  GameWindow::getInstance().getHeight() / 2;
         menu->menu_selected--;
     }
 
     if( keyboard_pressed(ALLEGRO_KEY_DOWN)){
-        menu->bg_y =  (25 * menu->menu_selected) +  window_get_height() / 2;
+        menu->bg_y =  (25 * menu->menu_selected) +  GameWindow::getInstance().getHeight() / 2;
         menu->menu_selected++;
     }
 
@@ -163,8 +170,11 @@ void menu_input_update(MENU *menu, ALLEGRO_EVENT *e){
 void menu_draw(MENU* menu){
     int i = 0;
 
+    int sw = GameWindow::getInstance().getWidth();
+    int sh = GameWindow::getInstance().getHeight();
+
     if(menu->entries_count <= 0 ) {
-        al_draw_textf(menu_text.font, al_map_rgb(255,0,0), (window_get_width() / 2 + 50) + 2 , (1 * 25) + (window_get_height() / 2), 0,"No Menu Option.");
+        al_draw_textf(menu_text.font, al_map_rgb(255,0,0), (sw / 2 + 50) + 2 , (1 * 25) + (sh / 2), 0,"No Menu Option.");
         return;
     }
 
@@ -172,8 +182,8 @@ void menu_draw(MENU* menu){
 
     for(auto e : menu->entries){
 
-        al_draw_textf(menu_text.font, al_map_rgb(255,0,0), (window_get_width() / 2 + 50) + 2 , (i * 25) + (window_get_height() / 2), 0,"%s", e.menu.c_str());
-        al_draw_textf(menu_text.font, al_map_rgb(255,255,255), window_get_width() / 2 + 50 , (i * 25) + (window_get_height() / 2),0 , "%s",  e.menu.c_str());
+        al_draw_textf(menu_text.font, al_map_rgb(255,0,0), (sw / 2 + 50) + 2 , (i * 25) + (sh / 2), 0,"%s", e.menu.c_str());
+        al_draw_textf(menu_text.font, al_map_rgb(255,255,255), sw / 2 + 50 , (i * 25) + (sh / 2),0 , "%s",  e.menu.c_str());
         i++;
     }
 

@@ -50,7 +50,8 @@ bool CMenuState::windowMainMenuDialog()
     }
 
     if(ImGui::Button("Quit")){
-        window_exit_loop();
+        //window_exit_loop();
+        GameWindow::getInstance().Quit();
 
     }
 
@@ -82,8 +83,7 @@ bool CMenuState::windowNewGameDialog()
            this->mainEngine->loadNewLevel(m->path);
 
            LOG("MAP SELECTED MENU: %s", m->path.c_str());
-           this->mainEngine->setState(GameStateID::Editor); // go to editor
-
+           this->mainEngine->setState("Editor");
         }
    }
 
@@ -102,7 +102,7 @@ bool CMenuState::windowNewGameParamsDialog()
     static char buf[1024] = "";
     int h = static_cast<int>(this->mainEngine->getLoadedLevel()->map_width);
     int w = static_cast<int>(this->mainEngine->getLoadedLevel()->map_height);
-    bool max_h = false, max_w = false;
+   //bool max_h = false, max_w = false;
 
     ImGui::Begin("New Map", &windowNewMap,  ImGuiWindowFlags_NoTitleBar);
 
@@ -110,11 +110,10 @@ bool CMenuState::windowNewGameParamsDialog()
     ImGui::InputInt("Grid Size Width", &w, 1,100);
     ImGui::InputInt("Grid Size Height",&h, 1,100);
 
-    if(w > MAX_GRID_X) max_w = true;
-    else max_w = false;
+    //max_w = w > MAX_GRID_X ? true : false;
+    //max_h = w > MAX_GRID_Y ? true : false;
 
-    if(h > MAX_GRID_Y) max_w = true;
-    else  max_h = false;
+
 
     if(ImGui::Button("Ok")){
 
@@ -142,7 +141,7 @@ bool CMenuState::windowNewGameParamsDialog()
          lvl->level_path = new_path;
          level_save(lvl, buf);
          this->mainEngine->loadNewLevel(buf);
-         this->mainEngine->setState(GameStateID::Editor);
+         this->mainEngine->setState("Editor");
          windowNewMap = false;
          windowMainMenu = true;
 
@@ -167,7 +166,7 @@ bool CMenuState::windowSelectMapDialog()
         if( ImGui::Button(m->name.c_str())){
            mapSelected = m->name + ".cbm";
            this->mainEngine->loadNewLevel(mapSelected);
-           this->mainEngine->setState(GameStateID::MainGame); // goto game
+           this->mainEngine->setState("Game"); // goto game
 
         }
     }
@@ -242,7 +241,7 @@ void CMenuState::Update(ALLEGRO_EVENT *e)
 
     if(e->type == ALLEGRO_EVENT_DISPLAY_RESIZE){
          ImGui_ImplAllegro5_InvalidateDeviceObjects();
-         al_acknowledge_resize(get_window_display());
+         al_acknowledge_resize(GameWindow::getInstance().getDisplay());
          ImGui_ImplAllegro5_CreateDeviceObjects();
     }
 
@@ -274,6 +273,11 @@ void CMenuState::HandleInput(ALLEGRO_EVENT *e){
         mouse_get()->z = e->mouse.dz;
     }
 
+}
+
+void CMenuState::WindowHandlerUpdate(ALLEGRO_EVENT *e)
+{
+    UNUSED(e);
 }
 
 void CMenuState::Draw()

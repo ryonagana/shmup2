@@ -8,7 +8,7 @@
 
 static ALLEGRO_CONFIG *settings_conf = nullptr;
 
-static SETTINGS settings;
+static settings_t settings;
 
 
 void config_create_default(ALLEGRO_FILE *fp_cfg){
@@ -84,10 +84,49 @@ void config_destroy(void){
 }
 
 
-SETTINGS* config_get(void){
+settings_t* config_get(void){
     return &settings;
 }
 
 const char *config_get_key(ALLEGRO_CONFIG *cfg, const char *key){
     return al_get_config_value(cfg, "config",key);
+}
+
+template<typename T>
+T Config::readValue(Config &cfg, const std::string &section, const std::string &key)
+{
+    const char *val = al_get_config_value(cfg.getConfig(), section.c_str(), key.c_str());
+    return static_cast<T>(val);
+}
+
+
+
+void Config::Destroy()
+{
+    if(m_alllegro_settings){
+        al_destroy_config(m_alllegro_settings);
+        m_alllegro_settings = nullptr;
+    }
+}
+
+void Config::setIntValue(Config &cfg, const std::string &section, const std::string &key, int value)
+{
+    char buf[64] = {0};
+    std::snprintf(buf, sizeof(buf), "%d", value);
+
+    al_set_config_value(cfg.getConfig(), section.c_str(), key.c_str(), buf);
+}
+
+void Config::setFloatValue(Config &cfg, const std::string &section, const std::string &key, float value)
+{
+    char buf[64] = {0};
+    std::snprintf(buf, sizeof(buf), "%.2f", value);
+
+    al_set_config_value(cfg.getConfig(), section.c_str(), key.c_str(), buf);
+}
+
+void Config::setCharValue(Config &cfg, const std::string &section, const std::string &key, const char *value)
+{
+
+    al_set_config_value(cfg.getConfig(), section.c_str(), key.c_str(), value);
 }
